@@ -11,7 +11,7 @@
 
   <p:option name="file" required="true"/>
 
-  <p:import href="mathtype2mml-declaration.xml"/>
+  <p:import href="mathtype2mml-declaration.xpl"/>
 
   <tr:mathtype2mml name="mathtype2mml">
     <p:with-option name="href" select="$file"/>
