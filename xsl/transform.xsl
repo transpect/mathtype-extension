@@ -49,6 +49,7 @@
   <xsl:include href="transform/int.xsl"/>
   <xsl:include href="transform/lim.xsl"/>
   <xsl:include href="transform/frac.xsl"/>
+  <xsl:include href="transform/root.xsl"/>
   <xsl:include href="transform/pile.xsl"/>
   <xsl:include href="transform/char.xsl"/>
   <xsl:include href="transform/embellishment.xsl"/>
