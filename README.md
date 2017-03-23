@@ -14,10 +14,9 @@ Usage example:
 
     java -cp $MATHTYPE_CP com.xmlcalabash.drivers.Main -c file:///uri/of/transpect-config.xml mathtype-example.xpl
 
-Configure tr:mathtype step by passing options to it:
+Configure tr:mathtype2mml step by passing options to it:
 
  * file (required):      file name (not URI) of a bin file (containing the OLE/Mathtype Equation)
- * dir (optional): directory containing .bin files for conversion (relative or absolute; not an URI), will write *.mml files in the same directory
 
 Compilation:
 
