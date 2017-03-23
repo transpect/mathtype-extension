@@ -42,6 +42,4 @@
   	 </p:input>
   </p:xslt>
 
-  <p:namespace-rename to="http://www.w3.org/1998/Math/MathML"/>
-
 </p:declare-step>
