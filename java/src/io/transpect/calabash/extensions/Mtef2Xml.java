@@ -1,6 +1,7 @@
 package io.transpect.calabash.extensions;
 
 import java.io.StringReader;
+import java.io.IOException;
 
 import javax.xml.transform.stream.StreamSource;
 
@@ -27,9 +28,11 @@ import net.sf.saxon.s9api.XdmNode;
 
 public class Mtef2Xml extends DefaultStep {
     private WritablePipe result = null;
+	 private Ole2XmlConverter ole2xmlConverter;
 
     public Mtef2Xml(XProcRuntime runtime, XAtomicStep step) {
-        super(runtime,step);
+		  super(runtime,step);
+		  this.ole2xmlConverter = new Ole2XmlConverter();
     }
 
     public void setOutput(String port, WritablePipe pipe) {
@@ -66,10 +69,13 @@ public class Mtef2Xml extends DefaultStep {
 		  try {
 		  		Processor proc = new Processor(false);
             DocumentBuilder builder = proc.newDocumentBuilder();
-            StringReader reader = new StringReader(Ole2XmlConverter.convertFormula(file));
+				this.ole2xmlConverter.convertFormula(file);
+            StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
             XdmNode doc = builder.build(new StreamSource(reader));
+
 		  		tree.addSubtree(doc);
-		  } catch (EvalFailedException e) {
+
+		  } catch (Exception e) {
 		  		System.err.println("[ERROR] Mtef2Xml: " + e.getMessage());
 		  		result.write(createXMLError(e.getMessage(), file, runtime));
 		  }
