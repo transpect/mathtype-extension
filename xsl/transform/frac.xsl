@@ -13,14 +13,14 @@
         </mfrac>
     </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH']">
+    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH']" priority="2">
         <mfrac bevelled="true">
             <xsl:apply-templates select="slot[1] | pile[1]"/>
             <xsl:apply-templates select="slot[2] | pile[2]"/>
         </mfrac>
     </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SMALL']">
+    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SMALL']" priority="2">
         <mstyle scriptlevel="+1">
             <mfrac>
                 <xsl:apply-templates select="slot[1] | pile[1]"/>
@@ -30,11 +30,11 @@
     </xsl:template>
 
 
-    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH' and variation='tvFR_BASE']">
+    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH' and variation='tvFR_BASE']" priority="3">
         <mrow><xsl:apply-templates select="slot[1] | pile[1]"/><mo>/</mo><xsl:apply-templates select="slot[2] | pile[2]"/></mrow>
     </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH' and variation='tvFR_SMALL']">
+    <xsl:template match="tmpl[selector='tmFRACT' and variation='tvFR_SLASH' and variation='tvFR_SMALL']" priority="3">
         <mstyle scriptlevel="+1">
             <mfrac bevelled="true">
                 <xsl:apply-templates select="slot[1] | pile[1]"/>

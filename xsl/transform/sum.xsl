@@ -56,26 +56,42 @@
     </xsl:template>
 
     <!-- Sum operator -->
-    <xsl:template match="tmpl[selector='tmSUMOP']">
-        <munderover>
-            <mstyle mathsize="140%" displaystyle="true"><xsl:apply-templates select="slot[4] | pile[4]"/></mstyle>
-            <xsl:apply-templates select="slot[2] | pile[2]"/>
-            <xsl:apply-templates select="slot[3] | pile[3]"/>
-        </munderover>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmSUMOP']">
+    <munderover>
+      <mstyle displaystyle="true" mathsize="140%">
+        <xsl:apply-templates select="slot[4] | pile[4]"/>
+      </mstyle>
+      <xsl:apply-templates select="slot[2] | pile[2]"/>
+      <xsl:apply-templates select="slot[3] | pile[3]"/>
+    </munderover>
+  </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmSUMOP' and variation='tvBO_UPPER' ]">
-        <mover>
-            <mstyle mathsize="140%" displaystyle="true"><xsl:apply-templates select="slot[4] | pile[4]"/></mstyle>
-            <xsl:apply-templates select="slot[3] | pile[3]"/>
-        </mover>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_UPPER']" priority="1.5">
+    <mover>
+      <mstyle displaystyle="true" mathsize="140%">
+        <xsl:apply-templates select="slot[4] | pile[4]"/>
+      </mstyle>
+      <xsl:apply-templates select="slot[3] | pile[3]"/>
+    </mover>
+  </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmSUMOP' and variation='tvBO_LOWER' ]">
-        <munder>
-            <mstyle mathsize="140%" displaystyle="true"><xsl:apply-templates select="slot[4] | pile[4]"/></mstyle>
-            <xsl:apply-templates select="slot[2] | pile[2]"/>
-        </munder>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_LOWER']" priority="1.5">
+    <munder>
+      <mstyle displaystyle="true" mathsize="140%">
+        <xsl:apply-templates select="slot[4] | pile[4]"/>
+      </mstyle>
+      <xsl:apply-templates select="slot[2] | pile[2]"/>
+    </munder>
+  </xsl:template>
+  
+  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_LOWER' and variation = 'tvBO_UPPER']" priority="2">
+    <munderover>
+      <mstyle displaystyle="true" mathsize="140%">
+        <xsl:apply-templates select="slot[4] | pile[4]"/>
+      </mstyle>
+      <xsl:apply-templates select="slot[2] | pile[2]"/>
+      <xsl:apply-templates select="slot[3] | pile[3]"/>
+    </munderover>
+  </xsl:template>
 
 </xsl:stylesheet>
