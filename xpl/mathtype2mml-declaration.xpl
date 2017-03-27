@@ -25,21 +25,30 @@
   </tr:mtef2xml>
 
   <p:xslt name="xml2mml">
-  	 <p:input port="parameters">
-  		<p:empty/>
-  	 </p:input>
-  	 <p:input port="stylesheet">
-  		<p:document href="../xsl/transform.xsl"/>
-  	 </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/transform.xsl"/>
+    </p:input>
   </p:xslt>
 
-  <p:xslt name="repair-subsup" initial-mode="repair-subsup">
-  	 <p:input port="parameters">
-  		<p:empty/>
-  	 </p:input>
-  	 <p:input port="stylesheet">
-  		<p:document href="../xsl/repair-subsup.xsl"/>
-  	 </p:input>
+  <p:xslt initial-mode="repair-subsup" name="repair-subsup">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/repair-subsup.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt initial-mode="combine-elements" name="combine-elements">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/combine-elements.xsl"/>
+    </p:input>
   </p:xslt>
 
 </p:declare-step>

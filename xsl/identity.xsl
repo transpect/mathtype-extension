@@ -19,7 +19,7 @@
     />
 
   <xsl:strip-space elements="*"/>
-    <xsl:preserve-space elements="ms mn mtext mi mo"/>
+  <xsl:preserve-space elements="ms mn mtext mi mo"/>
 
   <xsl:template match="@* | * | text() | processing-instruction()" mode="#all" priority="-1">
     <xsl:copy copy-namespaces="no">
