@@ -16,6 +16,10 @@
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
   </p:output>
+  <p:output port="mtef-xml" primary="false" sequence="true">
+    <p:documentation>The xml produced by mtef2xml step.</p:documentation>
+    <p:pipe port="result" step="mtef2xml"/>
+  </p:output>
   <p:option name="href">
     <p:documentation>The equation file URI. (OLE-Object)</p:documentation>
   </p:option>
