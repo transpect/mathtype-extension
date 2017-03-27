@@ -15,6 +15,7 @@
   <xsl:template match="char/options[floor(. div 2) mod 2 = 1]">
     <xsl:attribute name="start-function"/>
   </xsl:template>
+  
   <!-- Default char translation for mathmode -->
   <xsl:template match="char[not(variation) or variation != 'textmode']" priority="-0.1">
     <mi>
@@ -28,6 +29,7 @@
       </xsl:message>
     </mi>
   </xsl:template>
+  
   <xsl:template match="char[variation = 'textmode']" priority="-0.1">
     <mtext>
       <xsl:apply-templates select="options"/>
@@ -40,7 +42,8 @@
       </xsl:message>
     </mtext>
   </xsl:template>
-  <xsl:template match="char[(128 - number(typeface)) lt 1]">
+  
+  <xsl:template match="char[//mtef/mtef_version = '3' and (128 - number(typeface)) lt 1]">
     <xsl:variable name="font">
       <!-- TODO handle mtef5 font-encoding -->
       <xsl:variable name="typeface" select="number(typeface/text()) mod 256"/>
@@ -64,47 +67,63 @@
       </xsl:call-template>
     </mi>
   </xsl:template>
-  <xsl:template match="char[typeface = '1']">
-    <mtext>
+  
+  <xsl:template match="char[//mtef/mtef_version = '5' and typeface = (1 to 12)]">
+    <xsl:variable name="char">
+      <xsl:call-template name="charhex">
+        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="element-name">
+      <xsl:choose>
+        <xsl:when test="variation='textmode'">mtext</xsl:when>
+        <xsl:when test="typeface = ('6')">mo</xsl:when>
+        <xsl:when test="typeface = ('2', '8')">mn</xsl:when>
+        <xsl:when test="typeface = ('1', '11', '12')">mtext</xsl:when>
+        <xsl:otherwise>mi</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="typeface" select="number(typeface/text())"/>
+    <xsl:variable name="font" select="//styles[position() = $typeface]"/>
+    <xsl:variable name="mathvariant">
+      <xsl:choose>
+        <xsl:when test="$font/font_style = '0'">normal</xsl:when>
+        <xsl:when test="$font/font_style = '1'">bold</xsl:when>
+        <xsl:when test="$font/font_style = '2'">italic</xsl:when>
+        <xsl:when test="$font/font_style = '3'">bold-italic</xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:element name="{$element-name}">
+      <xsl:attribute name="mathvariant" select="$mathvariant"/>
+      <xsl:apply-templates select="options"/>
+      <xsl:value-of select="$char"/>
+    </xsl:element>
+  </xsl:template>
+  
+  <xsl:template match="char[//mtef/mtef_version = '3' and typeface = (1 to 12)]">
+    <xsl:variable name="char">
+      <xsl:call-template name="charhex">
+        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="element-name">
+      <xsl:choose>
+        <xsl:when test="variation='textmode'">mtext</xsl:when>
+        <xsl:when test="typeface = ('6')">mo</xsl:when>
+        <xsl:when test="typeface = ('2', '8')">mn</xsl:when>
+        <xsl:when test="typeface = ('1', '11', '12')">mtext</xsl:when>
+        <xsl:otherwise>mi</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:element name="{$element-name}">
+      <xsl:if test="typeface = '7'">
+        <xsl:attribute name="mathvariant" select="'bold'"/>
+      </xsl:if>
       <xsl:apply-templates select="options"/>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
-    </mtext>
-  </xsl:template>
-  <xsl:template match="char[typeface = ('2','8')]">
-    <mn>
-      <xsl:apply-templates select="options"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
-    </mn>
-  </xsl:template>
-  <xsl:template match="char[typeface = ('3','4')]">
-    <mi>
-      <xsl:apply-templates select="options"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
-    </mi>
-  </xsl:template>
-  <xsl:template match="char[typeface = '6']">
-    <mo>
-      <xsl:apply-templates select="options"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
-    </mo>
-  </xsl:template>
-  <xsl:template match="char[typeface = '7']">
-    <mstyle mathsize="normal" mathvariant="bold">
-      <mi>
-        <xsl:apply-templates select="options"/>
-        <xsl:call-template name="charhex">
-          <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-        </xsl:call-template>
-      </mi>
-    </mstyle>
+    </xsl:element>
   </xsl:template>
 
   <!-- SPACING -->
