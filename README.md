@@ -10,7 +10,7 @@ Written by Sebastian Bulka, le-tex publishing services GmbH
 
 Usage example:
 
-    MATHTYPE_CP= "/path/to/calabash/distro/xmlcalabash-1.1.15-97.jar:/path/to/calabash/saxon/saxon9he.jar:/path/to/calabash/extensions/transpect/mathtype-extension/:/path/to/calabash/extensions/transpect/mathtype-extension/lib/jruby-complete-9.1.8.0.jar:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/stdlib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/ruby-ole-1.2.12.1/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/nokogiri-1.7.0.1-java/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/bindata-2.3.5/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/mathtype/lib"
+    MATHTYPE_CP= "/path/to/calabash/distro/xmlcalabash-1.1.15-97.jar:/path/to/calabash/saxon/saxon9he.jar:/path/to/calabash/extensions/transpect/mathtype-extension/:/path/to/calabash/extensions/transpect/mathtype-extension/lib/jruby-complete-9.1.8.0.jar:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/stdlib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/ruby-ole-1.2.12.1/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/nokogiri-1.7.0.1-java/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/bindata-2.3.5/lib:/path/to/calabash/extensions/transpect/mathtype-extension/ruby/mathtype-0.0.7.4/lib"
 
     java -cp $MATHTYPE_CP com.xmlcalabash.drivers.Main -c file:///uri/of/transpect-config.xml mathtype-example.xpl
 
