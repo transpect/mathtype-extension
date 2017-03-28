@@ -27,89 +27,50 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
 
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="xs"
-    version="1.0">
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                exclude-result-prefixes="xs"
+                version="2.0">
 
-    <!-- Matrices TODO -->
-    <xsl:template match="matrix[h_just='left']">
-        <mtable columnalign="left">
-            <xsl:variable name="rows" select="number(rows)"/>
-            <xsl:apply-templates select="(slot | pile)[position() mod $rows = 1]" mode="rows-left" />
-        </mtable>
-    </xsl:template>
-
-    <xsl:template match="matrix[h_just='center']">
-        <mtable>
-            <xsl:variable name="rows" select="number(rows)"/>
-            <xsl:apply-templates select="(slot | pile)[position() mod $rows = 1]" mode="rows-center" />
-        </mtable>
-    </xsl:template>
-
-    <xsl:template match="matrix[h_just='right']">
-        <mtable columnalign="right">
-            <xsl:variable name="rows" select="number(rows)"/>
-            <xsl:apply-templates select="(slot | pile)[position() mod $rows = 1]" mode="rows-right" />
-        </mtable>
-    </xsl:template>
-
-    <xsl:template match="slot | pile" mode="rows-left">
-        <xsl:variable name="rows" select="number(parent::*/rows)"/>
-        <mtr columnalign="left">
-            <xsl:apply-templates select="." mode="columns-left" />
-            <xsl:apply-templates select="(following-sibling::slot | following-sibling::pile)[position() &lt; $rows]" mode="columns-left" />
+  <xsl:template match="matrix/h_just[text() = ('left', 'right')]">
+    <xsl:attribute name="columnalign">
+      <xsl:value-of select="./text()"/>
+    </xsl:attribute>
+  </xsl:template>
+  
+  <!-- Matrices TODO -->
+  <xsl:template match="matrix">
+    <xsl:variable name="rows" select="number(rows)"/>
+    <xsl:variable name="cols" select="number(cols)"/>
+    <xsl:if test="not($rows * $cols eq count(slot | pile))">
+      <xsl:message terminate="no">
+        <xsl:text>Number of slots/piles doesnt match table definition! </xsl:text>
+        <xsl:value-of select="count(slot | pile)"/>
+        <xsl:text> slot|pile. </xsl:text>
+        <xsl:value-of select="$rows"/>
+        <xsl:text> rows. </xsl:text>
+        <xsl:value-of select="$rows"/>
+        <xsl:text> cols.</xsl:text>
+      </xsl:message>
+    </xsl:if>
+    <mtable>
+      <xsl:apply-templates select="h_just"/>
+      <xsl:for-each-group group-starting-with="*[(position() mod $cols) eq 0]" select="slot | pile">
+        <mtr>
+          <xsl:apply-templates select="current-group()"/>
         </mtr>
-    </xsl:template>
+      </xsl:for-each-group>
+    </mtable>
+  </xsl:template>
 
-    <xsl:template match="slot | pile" mode="rows-center">
-        <xsl:variable name="rows" select="number(parent::*/rows)"/>
-        <mtr columnalign="center">
-            <xsl:apply-templates select="." mode="columns-center" />
-            <xsl:apply-templates select="(following-sibling::slot | following-sibling::pile)[position() &lt; $rows]" mode="columns-center" />
-        </mtr>
-    </xsl:template>
-
-    <xsl:template match="slot | pile" mode="rows-right">
-        <xsl:variable name="rows" select="number(parent::*/rows)"/>
-        <mtr columnalign="right">
-            <xsl:apply-templates select="." mode="columns-right" />
-            <xsl:apply-templates select="(following-sibling::slot | following-sibling::pile)[position() &lt; $rows]" mode="columns-right" />
-        </mtr>
-    </xsl:template>
-
-    <xsl:template match="pile" mode="columns-left">
-        <mtd columnalign="left">
-            <xsl:apply-templates select="."/>
-        </mtd>
-    </xsl:template>
-
-    <xsl:template match="pile" mode="columns-center">
-        <mtd columnalign="center">
-            <xsl:apply-templates select="."/>
-        </mtd>
-    </xsl:template>
-
-    <xsl:template match="pile" mode="columns-right">
-        <mtd columnalign="right">
-            <xsl:apply-templates select="."/>
-        </mtd>
-    </xsl:template>
-
-    <xsl:template match="slot" mode="columns-left">
-        <mtd columnalign="left">
-            <xsl:apply-templates />
-        </mtd>
-    </xsl:template>
-
-    <xsl:template match="slot" mode="columns-center">
-        <mtd columnalign="center">
-            <xsl:apply-templates />
-        </mtd>
-    </xsl:template>
-
-    <xsl:template match="slot" mode="columns-right">
-        <mtd columnalign="right">
-            <xsl:apply-templates />
-        </mtd>
-    </xsl:template>
+  <xsl:template match="matrix/pile" priority="2">
+    <mtd>
+      <xsl:next-match/>
+    </mtd>
+  </xsl:template>
+  
+  <xsl:template match="matrix/slot" priority="2">
+    <mtd>
+      <xsl:next-match/>
+    </mtd>
+  </xsl:template>
 </xsl:stylesheet>
