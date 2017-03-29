@@ -255,7 +255,6 @@ module Mathtype3
                   "tvFENCE_R"
                  ]
 
-
     FENCE_VARIATIONS = {
       0 => FENCE_BOTH,
       1 => ["tvFENCE_L"], # left fence is present
