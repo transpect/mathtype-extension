@@ -24,9 +24,16 @@
 
   <xsl:template match="mmultiscripts" mode="repair-subsup">
 	 <mmultiscripts>
-      <xsl:apply-templates select="following-sibling::*[1]" mode="#current">
-		  <xsl:with-param name="keep" select="true()"/>
-      </xsl:apply-templates>
+      <xsl:choose>
+        <xsl:when test="following-sibling::*">
+          <xsl:apply-templates select="following-sibling::*[1]" mode="#current">
+            <xsl:with-param name="keep" select="true()"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <mrow/>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:apply-templates select="node()" mode="#current"/>
 	 </mmultiscripts>
   </xsl:template>
