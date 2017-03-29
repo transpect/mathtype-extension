@@ -30,6 +30,7 @@
     </mi>
   </xsl:template>
   
+  <!-- Default char translation for textmode -->
   <xsl:template match="char[variation = 'textmode']" priority="-0.1">
     <mtext>
       <xsl:apply-templates select="options"/>
@@ -41,6 +42,26 @@
         <xsl:value-of select="mt_code_value/text()"/>
       </xsl:message>
     </mtext>
+  </xsl:template>
+  
+  <xsl:template match="char[//mtef/mtef_version = '5' and (128 - number(typeface)) lt 1]">
+    <xsl:variable name="font_index" select="256 - number(typeface)"/>
+    <xsl:variable name="font" select="(//font_style_def)[position() = $font_index]"/>
+    <mi>
+      <xsl:apply-templates select="options"/>
+      <xsl:if test="$font/char_style = 0">
+        <xsl:attribute name="mathvariant">normal</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$font/char_style = 1">
+        <xsl:attribute name="mathvariant">bold</xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$font/char_style = 3">
+        <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
+      </xsl:if>
+      <xsl:call-template name="charhex">
+        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
+      </xsl:call-template>
+    </mi>
   </xsl:template>
   
   <xsl:template match="char[//mtef/mtef_version = '3' and (128 - number(typeface)) lt 1]">
@@ -55,10 +76,10 @@
       <xsl:if test="$font/style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
       </xsl:if>
-      <xsl:if test="$font/style = 2">
+      <xsl:if test="$font/style = 1">
         <xsl:attribute name="mathvariant">bold</xsl:attribute>
       </xsl:if>
-      <!-- spec states 1 for italic and/or 2 for bold, thus 3 for bold-italic is just a guess -->
+      <!-- spec states 1 for italic and/or 2 for bold, but seems 1 = bold, 2 = italic, 3 = bold-italic (see MTEF5 spec) -->
       <xsl:if test="$font/style = 3">
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
