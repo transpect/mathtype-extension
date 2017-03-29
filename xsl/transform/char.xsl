@@ -16,17 +16,17 @@
     <xsl:attribute name="start-function"/>
   </xsl:template>
   
-  <xsl:template match="full[following::char]" mode="mathsize"/>
-  <xsl:template match="sub[following::char]">
+  <xsl:template match="full" mode="mathsize"/>
+  <xsl:template match="sub" mode="mathsize">
     <xsl:attribute name="mathsize" select="'58%'"/>
   </xsl:template>
-  <xsl:template match="sub2[following::char]" mode="mathsize">
+  <xsl:template match="sub2" mode="mathsize">
     <xsl:attribute name="mathsize" select="'42%'"/>
   </xsl:template>
-  <xsl:template match="sym[following::char]" mode="mathsize">
+  <xsl:template match="sym" mode="mathsize">
     <xsl:attribute name="mathsize" select="'150%'"/>
   </xsl:template>
-  <xsl:template match="subsym[following::char]" mode="mathsize">
+  <xsl:template match="subsym" mode="mathsize">
     <xsl:attribute name="mathsize" select="'100%'"/>
   </xsl:template>
   
