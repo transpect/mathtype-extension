@@ -11,7 +11,7 @@
   <xsl:template match="*[count(mtext) ge 2]" mode="combine-mtext">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
-      <xsl:for-each-group group-adjacent="local-name() = 'mtext' and @mathvariant = 'normal'" select="node()">
+      <xsl:for-each-group group-adjacent="local-name() = 'mtext' and (not(preceding-sibling::*[1]/local-name() = 'mtext') or (every $a in ./@* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)))" select="node()">
         <xsl:choose>
           <xsl:when test="current-grouping-key()">
             <mtext>
@@ -30,12 +30,13 @@
   <xsl:template match="*[count(mn) ge 2]" mode="combine-mn">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
-      <xsl:for-each-group group-adjacent="local-name() = 'mn'" select="node()">
+      <xsl:for-each-group group-adjacent="local-name() = 'mn' and (not(preceding-sibling::*[1] = mn) or (every $a in ./@* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)))" select="node()">
       <xsl:choose>
         <xsl:when test="current-grouping-key()">
           <xsl:choose>
             <xsl:when test="current-group()[1]/@start-function">
               <mi mathvariant="normal">
+                <xsl:apply-templates select="current-group()[1]/@* except @start-function"/>
                 <xsl:value-of select="current-group()/text()"/>
               </mi>
             </xsl:when>
@@ -59,8 +60,6 @@
     <xsl:variable name="combine-mn">
       <xsl:apply-templates mode="combine-mn" select="."/>
     </xsl:variable>
-    
-      <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
-    
+    <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
   </xsl:template>
 </xsl:stylesheet>
