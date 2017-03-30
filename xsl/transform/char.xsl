@@ -34,7 +34,7 @@
   <xsl:template match="char[not(variation) or variation != 'textmode']" priority="-0.1">
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
@@ -49,7 +49,7 @@
   <xsl:template match="char[variation = 'textmode']" priority="-0.1">
     <mtext>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
@@ -65,7 +65,7 @@
     <xsl:variable name="font" select="(//font_style_def)[position() = $font_index]"/>
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:if test="$font/char_style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
       </xsl:if>
@@ -90,7 +90,7 @@
     </xsl:variable>
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:if test="$font/style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
       </xsl:if>
@@ -135,7 +135,7 @@
     <xsl:element name="{$element-name}">
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:value-of select="$char"/>
     </xsl:element>
   </xsl:template>
@@ -160,7 +160,7 @@
         <xsl:attribute name="mathvariant" select="'bold'"/>
       </xsl:if>
       <xsl:apply-templates select="options"/>
-      <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
+      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])"><xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/></xsl:if>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
