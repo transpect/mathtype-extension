@@ -148,13 +148,19 @@
   </xsl:template>
 
   <!-- SPACING -->
+  <xsl:template match="char[mt_code_value = '0xEB05' and typeface = '24']" priority="2">
+    <mtext>&#x2003;</mtext>
+  </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
-    <mspace width="0.33em"/>
+    <mtext>&#x2002;</mtext>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB08' and typeface = '24']" priority="2">
-    <mspace width="0.08em"/>
+    <mtext>&#x2009;</mtext>
   </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEF04' and typeface = '24']" priority="2">
+  <xsl:template match="char[mt_code_value = ('0xEF04','0xEB02','0xEF02') and typeface = '24']" priority="2">
     <mtext>&#xa0;</mtext>
+  </xsl:template>
+  <xsl:template match="char[mt_code_value = ('0xEB01') and typeface = '24']" priority="2">
+    <mtext>&#x200b;</mtext>
   </xsl:template>
 </xsl:stylesheet>
