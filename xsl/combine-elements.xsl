@@ -4,10 +4,12 @@
 ]>
 <xsl:stylesheet 
 	 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	 xmlns="http://www.w3.org/1998/Math/MathML"
+	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
 	 version="2.0">
   <xsl:import href="identity.xsl"/>
   <xsl:template match="*[count(mtext) ge 2]" mode="combine-mtext">
-    <xsl:element name="{local-name()}">
+    <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
       <xsl:for-each-group group-adjacent="local-name() = 'mtext' and @mathvariant = 'normal'" select="node()">
         <xsl:choose>
@@ -26,7 +28,7 @@
   </xsl:template>
   
   <xsl:template match="*[count(mn) ge 2]" mode="combine-mn">
-    <xsl:element name="{local-name()}">
+    <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
       <xsl:for-each-group group-adjacent="local-name() = 'mn'" select="node()">
       <xsl:choose>

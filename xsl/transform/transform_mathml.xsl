@@ -11,13 +11,13 @@
         indent="yes"
         saxon:line-length="100000"
         />
-    <xsl:template match="/root" priority="2">
+    <xsl:template match="/*:root" priority="2">
        <root>
           <xsl:apply-templates select="@* | node()"/>
         </root>
     </xsl:template>
 
-    <xsl:template match="file">
+    <xsl:template match="*:file">
         <xsl:message>Processing file#<xsl:value-of select="@position"/></xsl:message>
         <xsl:element name="file">
           <xsl:apply-templates select="@*" mode="#default"/>
