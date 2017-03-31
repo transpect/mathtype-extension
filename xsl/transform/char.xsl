@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet 
-  exclude-result-prefixes="xs" version="2.0"
+  exclude-result-prefixes="xs tr" version="2.0"
   xmlns:tr="http://transpect.io"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns="http://www.w3.org/1998/Math/MathML">
+  
   <xsl:import href="../util/hexToDec.xsl"/>
+  
   <xsl:template match="mi | mo | mn | mtext">
     <xsl:copy-of select="."/>
   </xsl:template>
@@ -114,7 +117,7 @@
         <xsl:when test="$font/font_style = '3'">bold-italic</xsl:when>
       </xsl:choose>
     </xsl:variable>
-    <xsl:element name="{$element-name}">
+    <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:apply-templates select="options"/>
       <xsl:value-of select="$char"/>
@@ -136,7 +139,7 @@
         <xsl:otherwise>mi</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:element name="{$element-name}">
+    <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:if test="typeface = '7'">
         <xsl:attribute name="mathvariant" select="'bold'"/>
       </xsl:if>

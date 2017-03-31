@@ -5,20 +5,21 @@
   xmlns:xs		= "http://www.w3.org/2001/XMLSchema"
   xmlns:saxon		= "http://saxon.sf.net/"
   xmlns:letex		= "http://www.le-tex.de/namespace"
-  exclude-result-prefixes = "xs saxon letex fn"
-  >
+  exclude-result-prefixes = "xs saxon letex fn" 
+  xmlns="http://www.w3.org/1998/Math/MathML"
+  xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
 
   <xsl:include href="identity.xsl"/>
 
-    <xsl:template match="/root">
+    <xsl:template match="/*:root">
         <html>
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-                <title><xsl:value-of select="file[1]/replace(@href,'_[0-9]+.xml$','')"/></title>
+                <title><xsl:value-of select="*:file[1]/replace(@href,'_[0-9]+.xml$','')"/></title>
             </head>
             <body>
-                <xsl:for-each select="file">
+                <xsl:for-each select="*:file">
                     <xsl:sort select="replace(@href,'[^0-9]','')" data-type="number"/>
                     <p>File <xsl:value-of select="@href"/></p>
                     <xsl:result-document href="{replace(@href,'.xml$','.mml')}">
@@ -48,7 +49,7 @@
                         <xsl:for-each-group select="node()" group-adjacent="if(self::mtext) then true() else false()">
                             <xsl:choose>
                                 <xsl:when test="current-grouping-key()">
-                                    <xsl:element name="mtext">
+                                    <xsl:element name="mtext" namespace="http://www.w3.org/1998/Math/MathML">
                                         <xsl:apply-templates select="current-group()/node()"/>
                                     </xsl:element>
                                 </xsl:when>

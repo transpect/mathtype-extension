@@ -6,11 +6,12 @@
   xmlns:saxon		= "http://saxon.sf.net/"
   xmlns:letex		= "http://www.le-tex.de/namespace"
   exclude-result-prefixes = "xs saxon letex fn"
-  >
+  xmlns="http://www.w3.org/1998/Math/MathML"
+  xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
 
   <xsl:include href="identity.xsl"/>
 
-    <xsl:template match="/root">
+    <xsl:template match="/*:root">
        <xsl:apply-templates select="node()"/>
     </xsl:template>
 
@@ -32,7 +33,7 @@
                         <xsl:for-each-group select="node()" group-adjacent="if(self::mtext) then true() else false()">
                             <xsl:choose>
                                 <xsl:when test="current-grouping-key()">
-                                    <xsl:element name="mtext">
+                                    <xsl:element name="mtext" namespace="http://www.w3.org/1998/Math/MathML">
                                         <xsl:apply-templates select="current-group()/node()"/>
                                     </xsl:element>
                                 </xsl:when>
