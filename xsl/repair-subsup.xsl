@@ -1,6 +1,7 @@
 <xsl:stylesheet 
 	 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	 xmlns="http://www.w3.org/1998/Math/MathML"
+	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
 	 version="2.0">
   <xsl:import href="identity.xsl"/>
   

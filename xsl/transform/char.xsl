@@ -151,7 +151,7 @@
   </xsl:template>
 
   <!-- SPACING -->
-  <xsl:template match="char[mt_code_value = '0xEB05' and typeface = '24']" priority="2">
+  <xsl:template match="char[mt_code_value = ('0xEB05','0xEF05') and typeface = '24']" priority="2">
     <mtext>&#x2003;</mtext>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
