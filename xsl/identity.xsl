@@ -6,7 +6,7 @@
   xmlns:saxon		= "http://saxon.sf.net/"
   xmlns:letex		= "http://www.le-tex.de/namespace"
   exclude-result-prefixes = "xs saxon letex fn"
-  >
+  xmlns="http://www.w3.org/1998/Math/MathML">
 
   <!-- ================================================================================ -->
   <!-- OUTPUT FORMAT -->
@@ -22,7 +22,7 @@
   <xsl:preserve-space elements="ms mn mtext mi mo"/>
 
   <xsl:template match="@* | * | text() | processing-instruction()" mode="#all" priority="-1">
-    <xsl:copy copy-namespaces="no">
+    <xsl:copy>
       <xsl:apply-templates select="@*" mode="#current">
         <xsl:sort select="name()"/>
       </xsl:apply-templates>
