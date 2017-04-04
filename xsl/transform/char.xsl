@@ -154,8 +154,8 @@
   <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
     <mspace width="0.33em"/>
   </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEB08' and typeface = '24']" priority="2">
-    <mspace width="0.08em"/>
+  <xsl:template match="char[mt_code_value = '0xEF02' and typeface = '24']" priority="2">
+    <mspace width="0.16em"/>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEF04' and typeface = '24']" priority="2">
     <mtext>&#xa0;</mtext>
