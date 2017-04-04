@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xsl:stylesheet [
+<!ENTITY no-main-tmpl "('tmLIM','tmARROW','tmSUB','tmSUP','tmSUBSUP')">
+<!ENTITY one-main-tmpl "('tmBOX','tmSTRIKE','tmJSTATUS','tmARC','tmHAT','tmTILDE','tmVEC','tmHBRACK','tmHBRACE','tmSUMOP','tmINTOP','tmINTER','tmUNION','tmCOPROD','tmPROD','tmSUM','tmINTEG','tmOBAR','tmUBAR','tmROOT','tmINTERVAL','tmOBRACK','tmCEILING','tmFLOOR','tmDBAR','tmBAR','tmBRACK','tmBRACE','tmPAREN','tmANGLE')">
+<!ENTITY two-main-tmpl "('tmDIRAC','tmLDIV','tmFRACT')">
+]>
 <xsl:stylesheet 
   exclude-result-prefixes="xs tr" version="2.0"
   xmlns:tr="http://transpect.io"
@@ -19,27 +24,30 @@
     <xsl:attribute name="start-function"/>
   </xsl:template>
   
-  <xsl:template match="full" mode="mathsize"/>
-  <xsl:template match="sub" mode="mathsize">
-    <xsl:attribute name="mathsize" select="'58%'"/>
-  </xsl:template>
-  <xsl:template match="sub2" mode="mathsize">
-    <xsl:attribute name="mathsize" select="'42%'"/>
-  </xsl:template>
-  <xsl:template match="sym" mode="mathsize">
-    <xsl:attribute name="mathsize" select="'150%'"/>
-  </xsl:template>
-  <xsl:template match="subsym" mode="mathsize">
-    <xsl:attribute name="mathsize" select="'100%'"/>
+  <xsl:template name="mathsize">
+    <xsl:variable name="tmpl-subsup" select="parent::*/preceding-sibling::selector = &no-main-tmpl;" as="xs:boolean"/>
+    <xsl:variable name="tmpl-one-main" select="((parent::*/preceding-sibling::selector = &one-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile]))" as="xs:boolean"/>
+    <xsl:variable name="tmpl-two-main" select="((parent::*/preceding-sibling::selector = &two-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile][2]))" as="xs:boolean"/>
+    <xsl:variable name="sizename" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]/local-name()"/>
+    <xsl:variable name="size" as="xs:integer">
+      <!-- TODO: MTEF5 user-defined sizes (equation_options) -->
+      <xsl:choose>
+        <xsl:when test="$sizename = 'sub'">58</xsl:when>
+        <xsl:when test="$sizename = 'sub2'">42</xsl:when>
+        <xsl:when test="$sizename = 'sym'">150</xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:if test="boolean($size) and not($tmpl-subsup) and ($tmpl-one-main or $tmpl-two-main)">
+      <xsl:attribute name="mathsize" select="concat($size, '%')"/>
+    </xsl:if>
   </xsl:template>
   
   <!-- Default char translation for mathmode -->
   <xsl:template match="char[not(variation) or variation != 'textmode']" priority="-0.1">
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
-        <xsl:apply-templates mode="mathsize" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]"/>
-      </xsl:if>
+      <xsl:call-template name="mathsize"/>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
@@ -54,9 +62,7 @@
   <xsl:template match="char[variation = 'textmode']" priority="-0.1">
     <mtext>
       <xsl:apply-templates select="options"/>
-      <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
-        <xsl:apply-templates mode="mathsize" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]"/>
-      </xsl:if>
+      <xsl:call-template name="mathsize"/>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
@@ -72,9 +78,7 @@
     <xsl:variable name="font" select="(//font_style_def)[position() = $font_index]"/>
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
-        <xsl:apply-templates mode="mathsize" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]"/>
-      </xsl:if>
+      <xsl:call-template name="mathsize"/>
       <xsl:if test="$font/char_style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
       </xsl:if>
@@ -92,16 +96,13 @@
   
   <xsl:template match="char[//mtef/mtef_version = '3' and (128 - number(typeface)) lt 1]">
     <xsl:variable name="font">
-      <!-- TODO handle mtef5 font-encoding -->
       <xsl:variable name="typeface" select="number(typeface/text()) mod 256"/>
       <!-- (128 minus typeface) mod 256 can be negative, so add 256 before to always be positive -->
       <xsl:sequence select="//font[((256 + 128 - typeface) mod 256) = $typeface]/node()"/>
     </xsl:variable>
     <mi>
       <xsl:apply-templates select="options"/>
-      <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
-        <xsl:apply-templates mode="mathsize" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]"/>
-      </xsl:if>
+      <xsl:call-template name="mathsize"/>
       <xsl:if test="$font/style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
       </xsl:if>
@@ -146,9 +147,7 @@
     <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:apply-templates select="options"/>
-      <xsl:if test="not(ancestor::tmpl[selector=('tmSUB','tmSUP','tmSUBSUP')])">
-        <xsl:apply-templates select="preceding::*[local-name() = ('full','sub','sub2','sym','subsym')][1]" mode="mathsize"/>
-      </xsl:if>
+      <xsl:call-template name="mathsize"/>
       <xsl:value-of select="$char"/>
     </xsl:element>
   </xsl:template>
@@ -174,7 +173,7 @@
       </xsl:if>
       <xsl:apply-templates select="options"/>
       <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
-        <xsl:apply-templates mode="mathsize" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]"/>
+        <xsl:call-template name="mathsize"/>
       </xsl:if>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
