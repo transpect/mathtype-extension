@@ -5,7 +5,7 @@
 	 version="2.0">
   <xsl:import href="identity.xsl"/>
   
-  <xsl:template match="msub|msup|msubsup" mode="repair-subsup">
+  <xsl:template match="msub[count(node()) = 1] | msup[count(node()) = 1] | msubsup[count(node()) le 2]" mode="repair-subsup">
 	 <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
 		<xsl:apply-templates select="preceding-sibling::*[1]" mode="#current">
 		  <xsl:with-param name="keep" select="true()"/>
@@ -15,9 +15,9 @@
   </xsl:template>
 
   <xsl:template
-    match="*[following-sibling::*[1]/local-name() = 'msub'] |
-           *[following-sibling::*[1]/local-name() = 'msup'] |
-           *[following-sibling::*[1]/local-name() = 'msubsup']"
+    match="*[following-sibling::*[1]/self::msub[count(node()) = 1]] |
+           *[following-sibling::*[1]/self::msup[count(node()) = 1]] |
+           *[following-sibling::*[1]/self::msubsup[count(node()) le 2]]"
     mode="repair-subsup">
     <xsl:param name="keep" select="false()"/>
     <xsl:if test="$keep">
@@ -25,7 +25,7 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="mmultiscripts" mode="repair-subsup">
+  <xsl:template match="mmultiscripts[not(count(mprescripts/preceding-sibling::*) mod 2 = 1)]" mode="repair-subsup">
 	 <mmultiscripts>
       <xsl:choose>
         <xsl:when test="following-sibling::*">
@@ -41,7 +41,7 @@
 	 </mmultiscripts>
   </xsl:template>
 
-  <xsl:template match="*[preceding-sibling::*[1]/local-name() = 'mmultiscripts']" mode="repair-subsup">
+  <xsl:template match="*[preceding-sibling::*[1]/self::mmultiscripts[not(count(mprescripts/preceding-sibling::*) mod 2 = 1)]]" mode="repair-subsup">
 	 <xsl:param name="keep" select="false()"/>
 	 <xsl:if test="$keep">
 		<xsl:next-match/>
