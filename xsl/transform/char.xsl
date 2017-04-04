@@ -151,13 +151,24 @@
   </xsl:template>
 
   <!-- SPACING -->
+  <!-- THREE-PER-EM SPACE -->
   <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
     <mspace width="0.33em"/>
   </xsl:template>
+  <!-- THIN SPACE -->
   <xsl:template match="char[mt_code_value = '0xEF02' and typeface = '24']" priority="2">
     <mspace width="0.16em"/>
+  </xsl:template>
+  <!-- HAIR SPACE -->
+  <xsl:template match="char[mt_code_value = '0xEF08' and typeface = '24']" priority="2">
+    <mspace width="0.08em"/>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEF04' and typeface = '24']" priority="2">
     <mtext>&#xa0;</mtext>
   </xsl:template>
+  <!-- BULLET -> DOT OPERATOR -->
+  <xsl:template match="char[mt_code_value = '0xE98F' and typeface = '11']" priority="2">
+    <mo>&#x22c5;</mo>
+  </xsl:template>
+  
 </xsl:stylesheet>
