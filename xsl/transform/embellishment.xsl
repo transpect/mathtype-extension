@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xsl:stylesheet [
-    <!ENTITY msup 'emb1PRIME|emb2PRIME'>
+    <!ENTITY msup 'emb1PRIME|emb2PRIME|emb3PRIME'>
     <!ENTITY mover 'emb1DOT|emb2DOT|emb3DOT|emb4DOT|embTILDE|embHAT|embRARROW|embLARROW|embBARROW|embR1ARROW|embL1ARROW|embOBAR|embFROWN|embSMILE'>
     <!ENTITY munder 'embU_1DOT|embU_2DOT|embU_3DOT|embU_4DOT|embU_RARROW|embU_LARROW|embU_BARROW|embU_R1ARROW|embU_L1ARROW'>
     <!ENTITY munderaccent 'embU_TILDE|embU_BAR|embU_FROWN|embU_SMILE'>

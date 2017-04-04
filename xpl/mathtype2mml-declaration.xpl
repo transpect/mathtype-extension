@@ -8,8 +8,6 @@
   version="1.0"
   type="tr:mathtype2mml">
 
-  <p:import href="mtef2xml-declaration.xpl"/>
-
   <p:documentation>Convert an OLE-Object containing a Mathtype equation to MathML.
   Uses Jruby to create an XML-representation of the MTEF formula.</p:documentation>
 
@@ -23,6 +21,8 @@
   <p:option name="href">
     <p:documentation>The equation file URI. (OLE-Object)</p:documentation>
   </p:option>
+
+  <p:import href="mtef2xml-declaration.xpl"/>
 
   <tr:mtef2xml name="mtef2xml">
 	 <p:with-option name="href" select="$href"/>

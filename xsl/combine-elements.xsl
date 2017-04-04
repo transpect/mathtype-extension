@@ -41,7 +41,7 @@
             </xsl:when>
             <xsl:otherwise>
               <mn>
-                <xsl:apply-templates select="current()[1]/@mathvariant"/>
+                <xsl:apply-templates select="current()[1]/@*"/>
                 <xsl:value-of select="current-group()/text()"/>
               </mn>
             </xsl:otherwise>
