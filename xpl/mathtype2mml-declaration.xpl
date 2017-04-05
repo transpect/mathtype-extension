@@ -8,75 +8,64 @@
   version="1.0"
   type="tr:mathtype2mml">
 
-  <p:import href="mtef2xml-declaration.xpl"/>
-  <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
-
   <p:documentation>Convert an OLE-Object containing a Mathtype equation to MathML.
-  Uses Jruby to create an XML-representation of the MTEF formula.</p:documentation>
+  Uses Jruby to create an XML-representation of the MTEF formula.
+  This step requires xproc-util.
+  Conversion without xproc-util is provided by tr:mathtype2mml-internal.</p:documentation>
 
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
-  </p:output>
-  <p:output port="mtef-xml" primary="false" sequence="true">
-    <p:documentation>The xml produced by mtef2xml step.</p:documentation>
-    <p:pipe port="result" step="mtef2xml"/>
   </p:output>
   <p:option name="href">
     <p:documentation>The equation file URI. (OLE-Object)</p:documentation>
   </p:option>
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="'debug'"/>
-  
+
+  <p:import href="mathtype2mml-declaration-internal.xpl"/>
+  <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
+
   <p:variable name="basename" select="replace($href,  '^.+/(.+)\.[a-z]+$', '$1')"/>
 
-  <tr:mtef2xml name="mtef2xml">
+  <tr:mathtype2mml-internal name="mathtype2mml-internal">
 	 <p:with-option name="href" select="$href"/>
-  </tr:mtef2xml>
+  </tr:mathtype2mml-internal>
 
   <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="mtef-xml" step="mathtype2mml-internal"></p:pipe>
+    </p:input>
     <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/02-mtef2xml')"/>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
 
-  <p:xslt name="xml2mml">
-    <p:input port="parameters">
-      <p:empty/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../xsl/transform.xsl"/>
-    </p:input>
-  </p:xslt>
-
   <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="xml2mml" step="mathtype2mml-internal"></p:pipe>
+    </p:input>
     <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/04-xml2mml')"/>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
 
-  <p:xslt initial-mode="repair-subsup" name="repair-subsup">
-    <p:input port="parameters">
-      <p:empty/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../xsl/repair-subsup.xsl"/>
-    </p:input>
-  </p:xslt>
-  
   <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="repair-subsup" step="mathtype2mml-internal"/>
+    </p:input>
     <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/06-repair-subsup')"/>
     <p:with-option name="active" select="$debug"/>
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
-  
-  <p:xslt initial-mode="combine-elements" name="combine-elements">
-    <p:input port="parameters">
-      <p:empty/>
+
+  <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="combine-elements" step="mathtype2mml-internal"/>
     </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../xsl/combine-elements.xsl"/>
-    </p:input>
-  </p:xslt>
+    <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/08-combine-elements')"/>
+    <p:with-option name="active" select="$debug"/>
+    <p:with-option name="base-uri" select="$debug-dir-uri"/>
+  </tr:store-debug>
   
   <p:xslt>
     <p:input port="stylesheet">
@@ -100,11 +89,5 @@
       <p:empty/>
     </p:input>
   </p:xslt>
-
-  <tr:store-debug>
-    <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/08-combine-elements')"/>
-    <p:with-option name="active" select="$debug"/>
-    <p:with-option name="base-uri" select="$debug-dir-uri"/>
-  </tr:store-debug>
 
 </p:declare-step>
