@@ -151,19 +151,47 @@
   </xsl:template>
 
   <!-- SPACING -->
-  <xsl:template match="char[mt_code_value = ('0xEB05','0xEF05') and typeface = '24']" priority="2">
+
+  <!-- EM SPACE -->
+  <xsl:template match="char[mt_code_value = '0xEB05' and typeface = '24']" priority="2">
     <mtext>&#x2003;</mtext>
   </xsl:template>
+  <xsl:template match="char[mt_code_value = '0xEF05' and typeface = '24']" priority="2">
+    <mtext>&#x2003;</mtext>
+  </xsl:template>
+
+  <!-- THREE-PER-EM SPACE -->
   <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
     <mtext>&#x2002;</mtext>
+  </xsl:template>
+
+  <!-- THIN SPACE -->
+  <xsl:template match="char[mt_code_value = '0xEF02' and typeface = '24']" priority="2">
+    <mspace width="0.16em"/>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB08' and typeface = '24']" priority="2">
     <mtext>&#x2009;</mtext>
   </xsl:template>
-  <xsl:template match="char[mt_code_value = ('0xEF04','0xEB02','0xEF02') and typeface = '24']" priority="2">
+
+  <!-- HAIR SPACE -->
+  <xsl:template match="char[mt_code_value = '0xEF08' and typeface = '24']" priority="2">
+    <mspace width="0.08em"/>
+  </xsl:template>
+  <xsl:template match="char[mt_code_value = '0xEB02' and typeface = '24']" priority="2">
     <mtext>&#xa0;</mtext>
   </xsl:template>
-  <xsl:template match="char[mt_code_value = ('0xEB01') and typeface = '24']" priority="2">
+  <xsl:template match="char[mt_code_value = '0xEF04' and typeface = '24']" priority="2">
+    <mtext>&#xa0;</mtext>
+  </xsl:template>
+
+  <!-- ZERO WIDTH SPACE -->
+  <xsl:template match="char[mt_code_value = '0xEB01' and typeface = '24']" priority="2">
     <mtext>&#x200b;</mtext>
   </xsl:template>
+
+  <!-- BULLET -->
+  <xsl:template match="char[mt_code_value = '0xE98F' and typeface = '11']" priority="2">
+    <mo>&#x2022;</mo>
+  </xsl:template>
+  
 </xsl:stylesheet>

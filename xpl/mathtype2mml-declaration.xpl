@@ -77,6 +77,29 @@
       <p:document href="../xsl/combine-elements.xsl"/>
     </p:input>
   </p:xslt>
+  
+  <p:xslt>
+    <p:input port="stylesheet">
+      <p:inline>
+        <xsl:stylesheet version="2.0" xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
+          <xsl:template match="@*">
+            <xsl:copy>
+              <xsl:apply-templates select="@*"/>
+            </xsl:copy>
+          </xsl:template>
+          
+          <xsl:template match="*">
+            <xsl:element name="mml:{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
+              <xsl:apply-templates select="@*, node()"/>
+            </xsl:element>
+          </xsl:template>
+        </xsl:stylesheet>
+      </p:inline>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+  </p:xslt>
 
   <tr:store-debug>
     <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/08-combine-elements')"/>
