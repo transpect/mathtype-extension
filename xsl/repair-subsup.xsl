@@ -1,8 +1,8 @@
-<xsl:stylesheet 
-	 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	 xmlns="http://www.w3.org/1998/Math/MathML"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	 xmlns="http://www.w3.org/1998/Math/MathML" 
 	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
 	 version="2.0">
+  
   <xsl:import href="identity.xsl"/>
   
   <xsl:template match="msub[count(node()) = 1] | msup[count(node()) = 1] | msubsup[count(node()) le 2]" mode="repair-subsup">
@@ -17,8 +17,7 @@
   <xsl:template
     match="*[following-sibling::*[1]/self::msub[count(node()) = 1]] |
            *[following-sibling::*[1]/self::msup[count(node()) = 1]] |
-           *[following-sibling::*[1]/self::msubsup[count(node()) le 2]]"
-    mode="repair-subsup">
+           *[following-sibling::*[1]/self::msubsup[count(node()) le 2]]" mode="repair-subsup">
     <xsl:param name="keep" select="false()"/>
     <xsl:if test="$keep">
       <xsl:next-match/>
