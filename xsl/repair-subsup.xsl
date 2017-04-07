@@ -6,12 +6,19 @@
   <xsl:import href="identity.xsl"/>
   
   <xsl:template match="msub[count(node()) = 1] | msup[count(node()) = 1] | msubsup[count(node()) le 2]" mode="repair-subsup">
-	 <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
-		<xsl:apply-templates select="preceding-sibling::*[1]" mode="#current">
-		  <xsl:with-param name="keep" select="true()"/>
-		</xsl:apply-templates>
-		<xsl:apply-templates select="node()" mode="#current"/>
-	 </xsl:element>
+    <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
+      <xsl:choose>
+        <xsl:when test="preceding-sibling::*">
+          <xsl:apply-templates mode="#current" select="preceding-sibling::*[1]">
+            <xsl:with-param name="keep" select="true()"/>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <mrow/>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:apply-templates mode="#current" select="node()"/>
+    </xsl:element>
   </xsl:template>
 
   <xsl:template
@@ -25,10 +32,10 @@
   </xsl:template>
 
   <xsl:template match="mmultiscripts[not(count(mprescripts/preceding-sibling::*) mod 2 = 1)]" mode="repair-subsup">
-	 <mmultiscripts>
+    <mmultiscripts>
       <xsl:choose>
         <xsl:when test="following-sibling::*">
-          <xsl:apply-templates select="following-sibling::*[1]" mode="#current">
+          <xsl:apply-templates mode="#current" select="following-sibling::*[1]">
             <xsl:with-param name="keep" select="true()"/>
           </xsl:apply-templates>
         </xsl:when>
@@ -36,8 +43,8 @@
           <mrow/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates select="node()" mode="#current"/>
-	 </mmultiscripts>
+      <xsl:apply-templates mode="#current" select="node()"/>
+    </mmultiscripts>
   </xsl:template>
 
   <xsl:template match="*[preceding-sibling::*[1]/self::mmultiscripts[not(count(mprescripts/preceding-sibling::*) mod 2 = 1)]]" mode="repair-subsup">
