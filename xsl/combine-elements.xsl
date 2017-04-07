@@ -35,7 +35,7 @@
         <xsl:when test="current-grouping-key()">
           <xsl:choose>
             <xsl:when test="current-group()[1]/@start-function">
-              <mi>
+              <mi mathvariant="normal">
                 <xsl:value-of select="current-group()/text()"/>
               </mi>
             </xsl:when>
