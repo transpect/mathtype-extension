@@ -8,16 +8,16 @@
 	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
 	 version="2.0">
   <xsl:import href="identity.xsl"/>
-  <xsl:template match="*[count(mtext) ge 2]" mode="combine-mtext">
-    <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
+  <xsl:template match="*[count(mtext) ge 2 or count(mi[@mathvariant = 'normal']) ge 2]" mode="combine-mtext">
+    <xsl:element name="{local-name()}">
       <xsl:apply-templates mode="#current" select="@*"/>
-      <xsl:for-each-group group-adjacent="local-name() = 'mtext' and @mathvariant = 'normal'" select="node()">
+      <xsl:for-each-group group-adjacent="(.[@mathvariant = 'normal']/local-name()[. = ('mtext', 'mi')], '')[1]" select="node()">
         <xsl:choose>
           <xsl:when test="current-grouping-key()">
-            <mtext>
+            <xsl:element name="{current-grouping-key()}">
               <xsl:apply-templates select="current()[1]/@mathvariant"/>
               <xsl:value-of select="current-group()/text()"/>
-            </mtext>
+            </xsl:element>
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates mode="#current" select="current-group()"/>
@@ -54,13 +54,27 @@
     </xsl:for-each-group>
     </xsl:element>
   </xsl:template>
-  
+
   <xsl:template match="/" mode="combine-elements">
     <xsl:variable name="combine-mn">
       <xsl:apply-templates mode="combine-mn" select="."/>
     </xsl:variable>
-    
-      <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
-    
+    <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
   </xsl:template>
+
+  <xsl:template match="mrow[count(*) = 1]" mode="clean-up">
+    <xsl:apply-templates mode="#current"/>
+  </xsl:template>
+  
+  <xsl:template match="*[mrow][count(*) = 1]/mrow" mode="clean-up">
+    <!-- dissolve mstyle/mrow if mrow is the only element -->
+    <xsl:apply-templates mode="#current"/>
+  </xsl:template>
+
+  <xsl:template match="*[local-name() = ('mtext', 'mo', 'mn')]/@mathvariant[. = 'normal']" mode="clean-up"/>
+
+  <xsl:template match="mi[string-length(.) = 1]/@mathvariant[. = 'italic']" mode="clean-up"/>
+
+  <xsl:template match="mi[string-length(.) gt 1]/@mathvariant[. = 'normal']" mode="clean-up"/>
+
 </xsl:stylesheet>
