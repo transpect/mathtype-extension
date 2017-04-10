@@ -11,11 +11,12 @@
   <xsl:template match="*[count(mtext) ge 2 or count(mi[@mathvariant = 'normal']) ge 2]" mode="combine-mtext">
     <xsl:element name="{local-name()}">
       <xsl:apply-templates mode="#current" select="@*"/>
-      <xsl:for-each-group group-adjacent="(.[@mathvariant = 'normal']/local-name()[. = ('mtext', 'mi')], '')[1]" select="node()">
+      <xsl:for-each-group  select="node()"
+        group-adjacent="(.[@mathvariant = 'normal' or self::mtext[not(@mathvariant)]]/local-name()[. = ('mtext', 'mi')], '')[1]">
         <xsl:choose>
           <xsl:when test="current-grouping-key()">
             <xsl:element name="{current-grouping-key()}">
-              <xsl:apply-templates select="current()[1]/@mathvariant"/>
+              <xsl:apply-templates select="@mathvariant" mode="#current"/>
               <xsl:value-of select="current-group()/text()"/>
             </xsl:element>
           </xsl:when>
