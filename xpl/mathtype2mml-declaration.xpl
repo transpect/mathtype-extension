@@ -72,9 +72,7 @@
       <p:inline>
         <xsl:stylesheet version="2.0" xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
           <xsl:template match="@*">
-            <xsl:copy>
-              <xsl:apply-templates select="@*"/>
-            </xsl:copy>
+            <xsl:copy/>
           </xsl:template>
           
           <xsl:template match="*">
