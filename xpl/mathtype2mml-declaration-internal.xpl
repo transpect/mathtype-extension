@@ -76,7 +76,7 @@
       <p:empty/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="../xsl/combine-elements.xsl"/>
+      <p:document href="../xsl/clean-up.xsl"/>
     </p:input>
   </p:xslt>
   
