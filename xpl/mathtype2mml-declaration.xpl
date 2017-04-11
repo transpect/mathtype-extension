@@ -16,6 +16,7 @@
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
   </p:output>
+  <p:serialization port="result" indent="true" omit-xml-declaration="false"/>
   <p:option name="href">
     <p:documentation>The equation file URI. (OLE-Object)</p:documentation>
   </p:option>
@@ -67,14 +68,21 @@
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
   
+  <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="clean-up" step="mathtype2mml-internal"/>
+    </p:input>
+    <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/10-clean-up')"/>
+    <p:with-option name="active" select="$debug"/>
+    <p:with-option name="base-uri" select="$debug-dir-uri"/>
+  </tr:store-debug>
+  
   <p:xslt>
     <p:input port="stylesheet">
       <p:inline>
         <xsl:stylesheet version="2.0" xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
           <xsl:template match="@*">
-            <xsl:copy>
-              <xsl:apply-templates select="@*"/>
-            </xsl:copy>
+            <xsl:copy/>
           </xsl:template>
           
           <xsl:template match="*">
