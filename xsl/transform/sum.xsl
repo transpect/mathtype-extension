@@ -52,7 +52,7 @@
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
                 <xsl:apply-templates select="slot[3] | pile[3]"/>
             </msubsup>
-        <xsl:apply-templates select="slot[1] | pile[1]"/>
+          <xsl:apply-templates select="slot[1] | pile[1]"/>
         </mstyle>
     </xsl:template>
 

@@ -20,4 +20,4 @@ Configure tr:mathtype2mml step by passing options to it:
 
 Compilation:
 
-    javac -cp $MATHTYPE_CP Ole2Xml.java Ole2XmlConverter.java
+    javac -target 1.7 -source 1.7 -cp $MATHTYPE_CP Ole2Xml.java Ole2XmlConverter.java
