@@ -27,19 +27,9 @@
     </math>
   </xsl:template>
   <xsl:template match="slot">
-    <xsl:variable name="prelim" as="element(*)*">
+    <mrow>
       <xsl:apply-templates/>
-    </xsl:variable>
-    <xsl:choose>
-      <xsl:when test="count($prelim) = 1">
-        <xsl:sequence select="$prelim"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <mrow>
-          <xsl:sequence select="$prelim"/>  
-        </mrow>    
-      </xsl:otherwise>
-    </xsl:choose>
+    </mrow>
   </xsl:template>
   
   <!-- Non-empty text nodes -->
