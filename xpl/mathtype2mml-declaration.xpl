@@ -77,6 +77,25 @@
     <p:with-option name="base-uri" select="$debug-dir-uri"/>
   </tr:store-debug>
   
+  <p:xslt name="whitespace-handle">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/whitespace-handle.xsl"/>
+    </p:input>
+    <p:with-param name="option" select=""></p:with-param>
+  </p:xslt>
+  
+  <tr:store-debug>
+    <p:input port="source">
+      <p:pipe port="result" step="whitespace-handle"/>
+    </p:input>
+    <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/10-whitespace-handle')"/>
+    <p:with-option name="active" select="$debug"/>
+    <p:with-option name="base-uri" select="$debug-dir-uri"/>
+  </tr:store-debug>
+  
   <p:xslt>
     <p:input port="stylesheet">
       <p:inline>
