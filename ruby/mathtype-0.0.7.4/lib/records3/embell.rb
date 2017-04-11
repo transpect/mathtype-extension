@@ -95,8 +95,8 @@ module Mathtype3
 
     nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
 
-
     int8 :_embell
+    int8 :_none
 
     def embell
       EMBELL[_embell]
