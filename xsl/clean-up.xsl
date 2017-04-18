@@ -28,18 +28,40 @@
     <xsl:apply-templates select="node()[1]" mode="clean-up"/>
   </xsl:template>
   
-  <xsl:template match="munderover[count(child::*[2]/node()) = 0]" mode="clean-up" priority="2">
+  <xsl:template match="munderover[count(child::*[2]/node()) = 0]" mode="clean-up">
     <mover>
+      <xsl:apply-templates select="@*" mode="clean-up"/>
       <xsl:apply-templates select="node()[1]" mode="clean-up"/>
       <xsl:apply-templates select="node()[3]" mode="clean-up"/>
     </mover>
   </xsl:template>
 
-  <xsl:template match="munderover[count(child::*[3]/node()) = 0]" mode="clean-up" priority="2">
-    <mover>
+  <xsl:template match="munderover[count(child::*[3]/node()) = 0]" mode="clean-up">
+    <munder>
+      <xsl:apply-templates select="@*" mode="clean-up"/>
       <xsl:apply-templates select="node()[1]" mode="clean-up"/>
       <xsl:apply-templates select="node()[2]" mode="clean-up"/>
-    </mover>
+    </munder>
+  </xsl:template>
+  
+  <xsl:template match="msubsup[count(child::*[position() gt 1]/node()) = 0]" mode="clean-up" priority="2">
+    <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+  </xsl:template>
+  
+  <xsl:template match="msubsup[count(child::*[2]/node()) = 0]" mode="clean-up">
+    <msup>
+      <xsl:apply-templates select="@*" mode="clean-up"/>
+      <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+      <xsl:apply-templates select="node()[3]" mode="clean-up"/>
+    </msup>
+  </xsl:template>
+
+  <xsl:template match="msubsup[count(child::*[3]/node()) = 0]" mode="clean-up">
+    <msub>
+      <xsl:apply-templates select="@*" mode="clean-up"/>
+      <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+      <xsl:apply-templates select="node()[2]" mode="clean-up"/>
+    </msub>
   </xsl:template>
 
 </xsl:stylesheet>

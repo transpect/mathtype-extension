@@ -5,93 +5,38 @@
     xmlns="http://www.w3.org/1998/Math/MathML"
     version="1.0">
 
-     <!-- Summations -->
+  <!-- Summations -->
 
-    <xsl:template match="tmpl[selector='tmSUM' and not(variation='tvBO_UPPER') and not(variation='tvBO_LOWER')]" priority="1.5">
-        <mstyle displaystyle="true">
-            <mo>&#x2211;</mo>
-            <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </mstyle>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmSUM'][variation = 'tvBO_SUM']">
+    <mstyle displaystyle="true">
+      <munderover>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][4]"/>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][2]"/>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][3]"/>
+      </munderover>
+      <xsl:apply-templates select="*[self::slot or self::pile or self::char][1]"/>
+    </mstyle>
+  </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmSUM' and variation='tvBO_LOWER']" priority="1">
-        <mstyle displaystyle="true">
-            <munder>
-                <mo>&#x2211;</mo>
-                <xsl:apply-templates select="slot[2] | pile[2]"/>
-            </munder>
-            <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </mstyle>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmSUM' and not(variation = 'tvBO_SUM')]">
+    <mstyle displaystyle="true">
+      <msubsup>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][4]"/>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][2]"/>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][3]"/>
+      </msubsup>
+      <xsl:apply-templates select="*[self::slot or self::pile or self::char][1]"/>
+    </mstyle>
+  </xsl:template>
 
-    <xsl:template match="tmpl[selector='tmSUM']">
-        <mstyle displaystyle="true">
-            <munderover>
-                <mo>&#x2211;</mo>
-                <xsl:apply-templates select="slot[2] | pile[2]"/>
-                <xsl:apply-templates select="slot[3] | pile[3]"/>
-            </munderover>
-            <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </mstyle>
-    </xsl:template>
-
-    <xsl:template match="tmpl[selector='tmSUM' and not(variation='tvBO_SUM') and variation='tvBO_LOWER']">
-        <mstyle displaystyle="true">
-            <msub>
-                <mo>&#x2211;</mo>
-                <xsl:apply-templates select="slot[2] | pile[2]"/>
-            </msub>
-        <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </mstyle>
-    </xsl:template>
-
-    <xsl:template match="tmpl[selector='tmSUM' and not(variation='tvBO_SUM')]">
-        <mstyle displaystyle="true">
-            <msubsup>
-                <mo>&#x2211;</mo>
-                <xsl:apply-templates select="slot[2] | pile[2]"/>
-                <xsl:apply-templates select="slot[3] | pile[3]"/>
-            </msubsup>
-          <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </mstyle>
-    </xsl:template>
-
-    <!-- Sum operator -->
+  <!-- Sum operator -->
   <xsl:template match="tmpl[selector = 'tmSUMOP']">
     <munderover>
       <mstyle displaystyle="true" mathsize="140%">
-        <xsl:apply-templates select="slot[4] | pile[4]"/>
+        <xsl:apply-templates select="*[self::slot or self::pile or self::char][4]"/>
       </mstyle>
-      <xsl:apply-templates select="slot[2] | pile[2]"/>
-      <xsl:apply-templates select="slot[3] | pile[3]"/>
-    </munderover>
-  </xsl:template>
-
-  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_UPPER']" priority="1.5">
-    <mover>
-      <mstyle displaystyle="true" mathsize="140%">
-        <xsl:apply-templates select="slot[4] | pile[4]"/>
-      </mstyle>
-      <xsl:apply-templates select="slot[3] | pile[3]"/>
-    </mover>
-  </xsl:template>
-
-  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_LOWER']" priority="1.5">
-    <munder>
-      <mstyle displaystyle="true" mathsize="140%">
-        <xsl:apply-templates select="slot[4] | pile[4]"/>
-      </mstyle>
-      <xsl:apply-templates select="slot[2] | pile[2]"/>
-    </munder>
-  </xsl:template>
-  
-  <xsl:template match="tmpl[selector = 'tmSUMOP' and variation = 'tvBO_LOWER' and variation = 'tvBO_UPPER']" priority="2">
-    <munderover>
-      <mstyle displaystyle="true" mathsize="140%">
-        <xsl:apply-templates select="slot[4] | pile[4]"/>
-      </mstyle>
-      <xsl:apply-templates select="slot[2] | pile[2]"/>
-      <xsl:apply-templates select="slot[3] | pile[3]"/>
+      <xsl:apply-templates select="*[self::slot or self::pile or self::char][2]"/>
+      <xsl:apply-templates select="*[self::slot or self::pile or self::char][3]"/>
     </munderover>
   </xsl:template>
 

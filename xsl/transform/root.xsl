@@ -7,17 +7,17 @@
 
      <!-- Roots -->
 
-     <xsl:template match="tmpl[selector='tmROOT'][variation = 'tvROOT_SQ']">
-        <msqrt>
-            <xsl:apply-templates select="slot[1] | pile[1]"/>
-        </msqrt>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmROOT'][variation = 'tvROOT_SQ']">
+    <msqrt>
+      <xsl:apply-templates select="slot[1] | pile[1]"/>
+    </msqrt>
+  </xsl:template>
   
-  <xsl:template match="tmpl[selector='tmROOT'][variation = 'tvROOT_NTH']">
-        <mroot>
-            <xsl:apply-templates select="slot[1] | pile[1]"/>
-            <xsl:apply-templates select="slot[2] | pile[2]"/>
-        </mroot>
-    </xsl:template>
+  <xsl:template match="tmpl[selector = 'tmROOT'][variation = 'tvROOT_NTH']">
+    <mroot>
+      <xsl:apply-templates select="slot[1] | pile[1]"/>
+      <xsl:apply-templates select="slot[2] | pile[2]"/>
+    </mroot>
+  </xsl:template>
 
 </xsl:stylesheet>
