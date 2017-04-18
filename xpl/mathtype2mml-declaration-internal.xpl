@@ -22,6 +22,10 @@
     <p:documentation>First mml produced, possibly invalid.</p:documentation>
     <p:pipe port="result" step="xml2mml"/>
   </p:output>
+  <p:output port="operator-elements" primary="false" sequence="true">
+    <p:documentation>Put Operator-like elements like '(' in mo.</p:documentation>
+    <p:pipe port="result" step="operator-elements"/>
+  </p:output>
   <p:output port="repair-subsup" primary="false" sequence="true">
     <p:documentation>The mml with a (possibly empty) base element for each exponent (msub|msup|msubsup|mmultiscripts).</p:documentation>
     <p:pipe port="result" step="repair-subsup"/>
@@ -50,6 +54,15 @@
     </p:input>
     <p:input port="stylesheet">
       <p:document href="../xsl/transform.xsl"/>
+    </p:input>
+  </p:xslt>
+
+  <p:xslt initial-mode="operator-elements" name="operator-elements">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/operator-elements.xsl"/>
     </p:input>
   </p:xslt>
 
