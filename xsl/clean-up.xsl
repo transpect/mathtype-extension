@@ -24,4 +24,22 @@
 
   <xsl:template match="mi[string-length(.) gt 1]/@mathvariant[. = 'normal']" mode="clean-up"/>
 
+  <xsl:template match="munderover[count(child::*[position() gt 1]/node()) = 0]" mode="clean-up" priority="2">
+    <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+  </xsl:template>
+  
+  <xsl:template match="munderover[count(child::*[2]/node()) = 0]" mode="clean-up" priority="2">
+    <mover>
+      <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+      <xsl:apply-templates select="node()[3]" mode="clean-up"/>
+    </mover>
+  </xsl:template>
+
+  <xsl:template match="munderover[count(child::*[3]/node()) = 0]" mode="clean-up" priority="2">
+    <mover>
+      <xsl:apply-templates select="node()[1]" mode="clean-up"/>
+      <xsl:apply-templates select="node()[2]" mode="clean-up"/>
+    </mover>
+  </xsl:template>
+
 </xsl:stylesheet>
