@@ -198,7 +198,7 @@
 
   <!-- THIN SPACE -->
   <xsl:template match="char[mt_code_value = '0xEF02' and typeface = '24']" priority="2">
-    <mspace width="0.16em"/>
+    <mtext>&#x2009;</mtext>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB08' and typeface = '24']" priority="2">
     <mtext>&#x2009;</mtext>
@@ -206,7 +206,7 @@
 
   <!-- HAIR SPACE -->
   <xsl:template match="char[mt_code_value = '0xEF08' and typeface = '24']" priority="2">
-    <mspace width="0.08em"/>
+    <mtext>&#xa0;</mtext>
   </xsl:template>
   <xsl:template match="char[mt_code_value = '0xEB02' and typeface = '24']" priority="2">
     <mtext>&#xa0;</mtext>
