@@ -13,7 +13,7 @@
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
   
-  <xsl:template match="*[mrow][count(*) = 1]/mrow" mode="clean-up">
+  <xsl:template match="*[mrow][count(*) = 1]/mrow" mode="clean-up" priority="1.1">
     <!-- dissolve mstyle/mrow if mrow is the only element -->
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
