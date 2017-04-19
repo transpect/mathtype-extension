@@ -62,13 +62,20 @@
     </xsl:element>
   </xsl:template>
 
-  <xsl:template match="mn[text() = $functions]" mode="detect-functions">
-    <mi>
-      <xsl:apply-templates select="@* except @start-function" mode="#current"/>
+  <xsl:template match="mi/@start-function" mode="detect-functions"/>
+  <xsl:template match="mn" mode="detect-functions">
+    <xsl:variable name="name">
+      <xsl:choose>
+        <xsl:when test="text() = $functions">mi</xsl:when>
+        <xsl:otherwise>mn</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:element name="{$name}">
+      <xsl:apply-templates mode="#current" select="@* except @start-function"/>
       <xsl:value-of select="text()"/>
-    </mi>
+    </xsl:element>
   </xsl:template>
-
+  
   <xsl:template match="/" mode="combine-elements">
     <xsl:variable name="combine-mn">
       <xsl:apply-templates mode="combine-mn" select="."/>
