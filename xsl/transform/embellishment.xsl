@@ -3,7 +3,7 @@
     <!ENTITY msup 'emb1PRIME|emb2PRIME|emb3PRIME'>
     <!ENTITY mover 'emb1DOT|emb2DOT|emb3DOT|emb4DOT|embTILDE|embHAT|embRARROW|embLARROW|embBARROW|embR1ARROW|embL1ARROW|embOBAR|embFROWN|embSMILE'>
     <!ENTITY munder 'embU_1DOT|embU_2DOT|embU_3DOT|embU_4DOT|embU_RARROW|embU_LARROW|embU_BARROW|embU_R1ARROW|embU_L1ARROW'>
-    <!ENTITY munderaccent 'embU_TILDE|embU_BAR|embU_FROWN|embU_SMILE'>
+    <!ENTITY munderaccent 'embU_TILDE|embU_BAR$|embU_FROWN|embU_SMILE'>
     <!ENTITY menclose 'embNOT|embX_BARS|embMBAR|embUP_BAR|embDOWN_BAR'>
     <!ENTITY mmultiscripts 'embBPRIME'>
 ]>
@@ -14,39 +14,39 @@
     exclude-result-prefixes="xs"
     version="2.0">
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&msup;')]" priority="2">
+    <xsl:template match="char[embell and matches(embell/embell/text(),'(&msup;)')]" priority="2">
         <msup>
             <xsl:next-match/>
             <xsl:apply-templates select="embell"/>
         </msup>
     </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&mover;')]" priority="2">
+    <xsl:template match="char[embell and matches(embell/embell/text(),'(&mover;)')]" priority="2">
         <mover accent="true">
             <xsl:next-match/>
             <xsl:apply-templates select="embell"/>
         </mover>
     </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&munder;')]" priority="2">
+    <xsl:template match="char[embell and matches(embell/embell/text(),'(&munder;)')]" priority="2">
         <munder>
             <xsl:next-match/>
             <xsl:apply-templates select="embell"/>
         </munder>
     </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&munderaccent;')]" priority="2">
-        <munder>
-            <xsl:attribute name="accentunder">true</xsl:attribute>
-            <xsl:next-match/>
-            <xsl:apply-templates select="embell"/>
-        </munder>
-    </xsl:template>
+  <xsl:template match="char[embell and matches(embell/embell/text(), '(&munderaccent;)')]" priority="2">
+    <munder>
+      <xsl:attribute name="accentunder">true</xsl:attribute>
+      <xsl:next-match/>
+      <xsl:apply-templates select="embell"/>
+    </munder>
+  </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&menclose;')]" priority="2">
+    <xsl:template match="char[embell and matches(embell/embell/text(),'(&menclose;)')]" priority="2">
         <menclose>
             <xsl:choose>
-                <xsl:when test="matches(embell/embell/text(),'&menclose;')">
+                <xsl:when test="matches(embell/embell/text(),'(&menclose;)')">
                     <xsl:attribute name="notation">
                         <xsl:choose>
                             <xsl:when test="matches(embell/embell/text(),'embNOT')">updiagonalstrike</xsl:when>
@@ -62,7 +62,7 @@
         </menclose>
     </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'&mmultiscripts;')]" priority="2">
+    <xsl:template match="char[embell and matches(embell/embell/text(),'(&mmultiscripts;)')]" priority="2">
         <mmultiscripts>
             <xsl:next-match/>
             <mprescripts/>
