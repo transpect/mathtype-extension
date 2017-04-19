@@ -39,8 +39,8 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
     </xsl:attribute>
   </xsl:template>
   
-  <!-- Matrices TODO -->
   <xsl:template match="matrix">
+    <!-- TODO: frames -->
     <xsl:variable name="rows" select="number(rows)" as="xs:double"/>
     <xsl:variable name="cols" select="number(cols)" as="xs:double"/>
     <xsl:if test="not($rows * $cols eq count(slot | pile))">
