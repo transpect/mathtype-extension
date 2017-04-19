@@ -28,8 +28,9 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:mml="http://www.w3.org/1998/Math/MathML"
                 xmlns="http://www.w3.org/1998/Math/MathML"
-                exclude-result-prefixes="xs"
+                exclude-result-prefixes="xs mml"
                 version="2.0">
 
   <xsl:template match="matrix/h_just[text() = ('left', 'right')]">
@@ -40,8 +41,8 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
   
   <!-- Matrices TODO -->
   <xsl:template match="matrix">
-    <xsl:variable name="rows" select="number(rows)"/>
-    <xsl:variable name="cols" select="number(cols)"/>
+    <xsl:variable name="rows" select="number(rows)" as="xs:double"/>
+    <xsl:variable name="cols" select="number(cols)" as="xs:double"/>
     <xsl:if test="not($rows * $cols eq count(slot | pile))">
       <xsl:message terminate="no">
         <xsl:text>Number of slots/piles doesnt match table definition! </xsl:text>
@@ -53,15 +54,41 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
         <xsl:text> cols.</xsl:text>
       </xsl:message>
     </xsl:if>
+    <xsl:variable name="matrix_elements">
+      <xsl:apply-templates select="slot | pile"/>
+    </xsl:variable>
+    <xsl:variable name="with-start-rows-att">
+      <xsl:apply-templates mode="matrix-preprocess" select="$matrix_elements">
+        <xsl:with-param name="cols" select="$cols"/>
+      </xsl:apply-templates>
+    </xsl:variable>
     <mtable>
       <xsl:apply-templates select="h_just"/>
-      <xsl:for-each-group group-starting-with="*[(position() mod $cols) eq 0]" select="slot | pile">
+      <xsl:for-each-group group-starting-with="mml:mtd[start-row]" select="$with-start-rows-att/mml:*">
         <mtr>
-          <xsl:apply-templates select="current-group()"/>
+          <xsl:apply-templates mode="matrix-postprocess" select="current-group()"/>
         </mtr>
       </xsl:for-each-group>
     </mtable>
   </xsl:template>
+  
+  <xsl:template match="mml:mtd" mode="matrix-preprocess">
+    <xsl:param as="xs:double" name="cols" required="yes"/>
+    <mtd>
+      <xsl:if test="$cols = 1 or position() mod $cols eq 1">
+        <start-row xmlns=""/>
+      </xsl:if>
+      <xsl:copy-of select="@*, node()"/>
+    </mtd>
+  </xsl:template>
+
+  <xsl:template match="mml:mtd" mode="matrix-postprocess">
+    <mtd>
+      <xsl:copy-of select="@*, node() except start-row"/>
+    </mtd>
+  </xsl:template>
+
+  <xsl:template match="start-row" mode="matrix-postprocess"/>
 
   <xsl:template match="matrix/pile" priority="2">
     <mtd>
