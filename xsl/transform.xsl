@@ -17,7 +17,7 @@
     </math>
   </xsl:template>
   <xsl:template match="mtef[equation_options = 'block']">
-    <math display="block">
+    <math><!--  display="block" -->
       <xsl:apply-templates select="eqn_prefs[1]/following-sibling::*"/>
     </math>
   </xsl:template>
