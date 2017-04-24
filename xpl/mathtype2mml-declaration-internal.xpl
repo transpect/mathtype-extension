@@ -65,6 +65,11 @@
       </dl>
     </p:documentation>
   </p:option>
+  <p:option name="debug" select="'no'">
+    <p:documentation>
+      <p>Output xsl:message for debugging (like 'unmatched element' for unsupported features).<br/>Default: 'no'.</p>
+    </p:documentation>
+  </p:option>
   <p:option name="em-width" select="'1em'">
     <p:documentation>Only active with option mml-space-handling set to 'mspace'. Value for mspace/width with Mathtype em-width. Default is '1em'.</p:documentation>
   </p:option>

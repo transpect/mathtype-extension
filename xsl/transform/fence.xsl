@@ -110,7 +110,9 @@
         <xsl:when test="mt_code_value = '0xEC0C'">&#x23b5;</xsl:when>
         <xsl:when test="mt_code_value = '0xEC0D'">&#x23b4;</xsl:when>
         <xsl:otherwise>
-          <xsl:message>No Match! <xsl:value-of select="mt_code_value"/></xsl:message>
+          <xsl:if test="$debug">
+            <xsl:message>Fence unknown: <xsl:value-of select="mt_code_value"/></xsl:message>
+          </xsl:if>
           <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
         </xsl:otherwise>
       </xsl:choose>

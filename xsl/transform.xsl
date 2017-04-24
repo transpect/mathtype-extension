@@ -8,6 +8,8 @@
   
   <xsl:preserve-space elements="mi ms mo mn mtext"/>
   
+  <xsl:param name="debug" select="'no'"/>
+  
   <xsl:template match="root">
     <xsl:apply-templates select=".//mtef"/>
   </xsl:template>
@@ -38,14 +40,18 @@
   </xsl:template>
   
   <!-- fail silently only for explicit elements -->
-  <xsl:template match="options | end | full | mtef_version | platform | product | product_version | product_subversion"/>
+  <xsl:template match="options | end | full | mtef_version | platform | product | product_version | product_subversion | sub
+                      | sub2 | symbol | subsym | font"
+  />
   
   <!-- message for not yet matched elements -->
   <xsl:template match="*">
-    <xsl:message terminate="no">
-      <xsl:text>Unmatched Element: </xsl:text>
-      <xsl:value-of select="local-name()"/>
-    </xsl:message>
+    <xsl:if test="$debug = 'yes'">
+      <xsl:message terminate="no">
+        <xsl:text>Unmatched Element: </xsl:text>
+        <xsl:value-of select="local-name()"/>
+      </xsl:message>
+    </xsl:if>
   </xsl:template>
   
   <xsl:include href="transform/int.xsl"/>

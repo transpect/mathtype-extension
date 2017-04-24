@@ -51,10 +51,12 @@
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
-      <xsl:message terminate="no">
-        <xsl:text>default character match: </xsl:text>
-        <xsl:value-of select="mt_code_value/text()"/>
-      </xsl:message>
+      <xsl:if test="$debug">
+        <xsl:message terminate="no">
+          <xsl:text>default character match: </xsl:text>
+          <xsl:value-of select="mt_code_value/text()"/>
+        </xsl:message>
+      </xsl:if>
     </mi>
   </xsl:template>
   
@@ -66,10 +68,12 @@
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
-      <xsl:message terminate="no">
-        <xsl:text>default character match: </xsl:text>
-        <xsl:value-of select="mt_code_value/text()"/>
-      </xsl:message>
+      <xsl:if test="$debug">
+        <xsl:message terminate="no">
+          <xsl:text>default character match: </xsl:text>
+          <xsl:value-of select="mt_code_value/text()"/>
+        </xsl:message>
+      </xsl:if>
     </mtext>
   </xsl:template>
   

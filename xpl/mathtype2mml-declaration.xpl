@@ -60,6 +60,11 @@
   <p:option name="zero-width" select="'0em'">
     <p:documentation>Only active with option mml-space-handling set to 'mspace'. Value for mspace/width with Mathtype zero-width. Default is '0em'.</p:documentation>
   </p:option>
+  <p:option name="debug-xsl-message" select="'no'">
+    <p:documentation>
+      <p>Output internal xsl:message for debugging (like 'unmatched element' for unsupported features).<br/>Default: 'no'.</p>
+    </p:documentation>
+  </p:option>
 
   <p:import href="mathtype2mml-declaration-internal.xpl"/>
   <p:import href="http://transpect.io/xproc-util/store-debug/xpl/store-debug.xpl"/>
@@ -69,6 +74,7 @@
   <tr:mathtype2mml-internal name="mathtype2mml-internal">
     <p:with-option name="href" select="$href"/>
     <p:with-option name="mml-space-handling" select="$mml-space-handling"/>
+    <p:with-option name="debug" select="$debug"/>
     <p:with-option name="em-width" select="$em-width"/>
     <p:with-option name="en-width" select="$en-width"/>
     <p:with-option name="standard-width" select="$standard-width"/>
@@ -79,7 +85,7 @@
 
   <tr:store-debug>
     <p:input port="source">
-      <p:pipe port="mtef-xml" step="mathtype2mml-internal"></p:pipe>
+      <p:pipe port="mtef-xml" step="mathtype2mml-internal"/>
     </p:input>
     <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/02-mtef2xml')"/>
     <p:with-option name="active" select="$debug"/>
