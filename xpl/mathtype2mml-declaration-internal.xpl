@@ -130,21 +130,21 @@
     </p:input>
   </p:xslt>
 
-  <p:xslt initial-mode="repair-subsup" name="repair-subsup">
-    <p:input port="parameters">
-      <p:empty/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../xsl/repair-subsup.xsl"/>
-    </p:input>
-  </p:xslt>
-  
   <p:xslt initial-mode="combine-elements" name="combine-elements">
     <p:input port="parameters">
       <p:empty/>
     </p:input>
     <p:input port="stylesheet">
       <p:document href="../xsl/combine-elements.xsl"/>
+    </p:input>
+  </p:xslt>
+
+  <p:xslt initial-mode="repair-subsup" name="repair-subsup">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/repair-subsup.xsl"/>
     </p:input>
   </p:xslt>
   
