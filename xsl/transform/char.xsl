@@ -28,18 +28,35 @@
     <xsl:variable name="tmpl-subsup" select="parent::*/preceding-sibling::selector = &no-main-tmpl;" as="xs:boolean"/>
     <xsl:variable name="tmpl-one-main" select="((parent::*/preceding-sibling::selector = &one-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile]))" as="xs:boolean"/>
     <xsl:variable name="tmpl-two-main" select="((parent::*/preceding-sibling::selector = &two-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile][2]))" as="xs:boolean"/>
-    <xsl:variable name="sizename" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym')][1]/local-name()"/>
-    <xsl:variable name="size" as="xs:integer">
+    <xsl:variable name="sizename" select="preceding::*[local-name() = ('full', 'sub', 'sub2', 'sym', 'subsym', 'size')][1]/local-name()"/>
+    <xsl:variable name="size" as="xs:string">
       <!-- TODO: MTEF5 user-defined sizes (equation_options) -->
       <xsl:choose>
-        <xsl:when test="$sizename = 'sub'">58</xsl:when>
-        <xsl:when test="$sizename = 'sub2'">42</xsl:when>
-        <xsl:when test="$sizename = 'sym'">150</xsl:when>
-        <xsl:otherwise>0</xsl:otherwise>
+        <xsl:when test="$sizename = 'sub'">58%</xsl:when>
+        <xsl:when test="$sizename = 'sub2'">42%</xsl:when>
+        <xsl:when test="$sizename = 'sym'">150%</xsl:when>
+        <xsl:when test="$sizename = 'size'">
+          <xsl:variable name="size" select="preceding::size[1]"/>
+          <xsl:choose>
+            <xsl:when test="$size/point_size">
+              <xsl:value-of select="concat(-1 * (number($size/point_size) div 32),'pt')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>100%</xsl:text>
+              <xsl:if test="$debug">
+                <xsl:message>
+                  <xsl:text>default size match: </xsl:text>
+                  <xsl:value-of select="$size/dsize"/>
+                </xsl:message>
+              </xsl:if>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>100%</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     <xsl:if test="boolean($size) and not($tmpl-subsup) and ($tmpl-one-main or $tmpl-two-main)">
-      <xsl:attribute name="mathsize" select="concat($size, '%')"/>
+      <xsl:attribute name="mathsize" select="$size"/>
     </xsl:if>
   </xsl:template>
   
