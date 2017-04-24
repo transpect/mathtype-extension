@@ -33,7 +33,7 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
                 exclude-result-prefixes="xs mml"
                 version="2.0">
 
-  <xsl:template match="matrix/h_just[text() = ('left', 'right')]">
+  <xsl:template match="matrix/h_just[text() = ('left', 'right', 'center')]">
     <xsl:attribute name="columnalign">
       <xsl:value-of select="./text()"/>
     </xsl:attribute>

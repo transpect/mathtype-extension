@@ -19,6 +19,8 @@
   </xsl:template>
 
   <xsl:template match="@mathsize[. = '100%']" mode="clean-up"/>
+  
+  <xsl:template match="@columnalign[. = 'center']" mode="clean-up"/>
 
   <xsl:template match="*[local-name() = ('mtext', 'mo', 'mn')]/@mathvariant[. = 'normal']" mode="clean-up"/>
 

@@ -40,8 +40,8 @@
   </xsl:template>
   
   <!-- fail silently only for explicit elements -->
-  <xsl:template match="options | end | full | mtef_version | platform | product | product_version | product_subversion | sub
-                      | sub2 | symbol | subsym | font"
+  <xsl:template match="options | end | full | mtef_version | platform | product | product_version | product_subversion | size
+                      | sub | sub2 | symbol | subsym | font"
   />
   
   <!-- message for not yet matched elements -->
