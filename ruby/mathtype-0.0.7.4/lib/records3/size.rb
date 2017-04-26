@@ -36,20 +36,16 @@ module Mathtype3
 
     int8 :_size_select
 
-    uint16 :_point_size, onlyif: lambda { _size_select == 101 }
+    mtef16 :_point_size, onlyif: lambda { _size_select == 101 }
     uint8 :_lsize_large_delta, onlyif: lambda { _size_select == 100 }
 
     uint8 :_dsize, onlyif: lambda { _size_select != 100 && _size_select != 101 }
-    uint16 :_dsize_large, onlyif: lambda { _size_select == 100 }
+    mtef16 :_dsize_large, onlyif: lambda { _size_select == 100 }
 
     def dsize
       case _size_select
       when 100
-        if _dsize_large > 255
-          (_dsize_large - (256 << 8)) / 32
-        else
-          _dsize_large / 32
-        end
+        _dsize_large / 32
       when 101
         nil
       else

@@ -17,7 +17,7 @@ module Mathtype5
 
     nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
 
-    int16 :line_spacing, onlyif: (lambda do
+    mtef16 :line_spacing, onlyif: (lambda do
       options & OPTIONS["mtefOPT_LINE_LSPACE"] > 0
     end)
 

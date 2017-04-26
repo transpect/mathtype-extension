@@ -18,16 +18,16 @@ module Mathtype5
     int8 :options
 
     struct :rgb, onlyif: lambda { options & OPTIONS["mtefCOLOR_CMYK"] == 0 } do
-      int16 :r
-      int16 :g
-      int16 :b
+      mtef16 :r
+      mtef16 :g
+      mtef16 :b
     end
 
     struct :cmyk, onlyif: lambda { options & OPTIONS["mtefCOLOR_CMYK"] > 0} do
-      int16 :c
-      int16 :m
-      int16 :y
-      int16 :k
+      mtef16 :c
+      mtef16 :m
+      mtef16 :y
+      mtef16 :k
     end
 
     stringz :color_name, onlyif: (lambda do

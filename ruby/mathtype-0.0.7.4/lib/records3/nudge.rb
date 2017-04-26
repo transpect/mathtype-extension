@@ -20,8 +20,8 @@ module Mathtype3
 
     int8 :_small_dx
     int8 :_small_dy
-    int16 :_large_dx, :onlyif => lambda { has_large_offset }
-    int16 :_large_dy, :onlyif => lambda { has_large_offset }
+    mtef16 :_large_dx, :onlyif => lambda { has_large_offset }
+    mtef16 :_large_dy, :onlyif => lambda { has_large_offset }
 
     def dx
       has_large_offset ? _large_dx : (_small_dx - 128)

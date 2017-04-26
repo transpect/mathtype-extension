@@ -19,7 +19,6 @@ module Mathtype5
     array :nibbles, read_until: lambda { element == 0xF } do
       bit4
     end
-    resume_byte_alignment
   end
 
   class RecordEqnPrefs < BinData::Record
@@ -40,5 +39,6 @@ module Mathtype5
       int8 :font_def
       int8 :font_style, onlyif: lambda { font_def != 0x00 }
     end
+    resume_byte_alignment
   end
 end

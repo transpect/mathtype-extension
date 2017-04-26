@@ -16,7 +16,7 @@ module Mathtype5
 
     array :tab_stops, initial_length: :n_stops do
       int8 :tab_stop_type
-      int16 :tab_stop
+      mtef16 :tab_stop
     end
   end
 end

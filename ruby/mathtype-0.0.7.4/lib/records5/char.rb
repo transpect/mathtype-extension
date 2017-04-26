@@ -28,7 +28,7 @@ module Mathtype5
 
     int8 :_typeface
 
-    int16 :_mt_code_value, onlyif: (lambda do
+    mtef16 :_mt_code_value, onlyif: (lambda do
       options & OPTIONS["mtefOPT_CHAR_ENC_NO_MTCODE"] == 0
     end)
 
@@ -55,7 +55,7 @@ module Mathtype5
         onlyif: font_position_present do
 
       uint8 8
-      uint16 16
+      mtef16 16
     end
 
     array :embellishment_list,
@@ -65,13 +65,7 @@ module Mathtype5
     end
 
     def mt_code_value
-      mt_code = if _mt_code_value < 0
-        65536 + _mt_code_value # Two's complement
-      else
-        _mt_code_value
-      end
-
-      sprintf("0x%04X", mt_code)
+      sprintf("0x%04X", _mt_code_value)
     end
 
     def typeface

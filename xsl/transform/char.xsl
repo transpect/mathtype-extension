@@ -13,6 +13,16 @@
   
   <xsl:import href="../util/hexToDec.xsl"/>
   
+  <xsl:variable name="lsize">
+    <full size="12pt"/>
+    <sub size="58%"/>
+    <sub2 size="42%"/>
+    <sym size="150%"/>
+    <subsym size="100%"/>
+    <user1 size="75%"/>
+    <user2 size="150%"/>
+  </xsl:variable>
+  
   <xsl:template match="mi | mo | mn | mtext">
     <xsl:copy-of select="."/>
   </xsl:template>
@@ -25,6 +35,7 @@
   </xsl:template>
   
   <xsl:template name="mathsize">
+    <xsl:variable name="tmpl-present" select="boolean(parent::tmpl or parent::*/parent::tmpl)" as="xs:boolean"/>
     <xsl:variable name="tmpl-subsup" select="parent::*/preceding-sibling::selector = &no-main-tmpl;" as="xs:boolean"/>
     <xsl:variable name="tmpl-one-main" select="((parent::*/preceding-sibling::selector = &one-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile]))" as="xs:boolean"/>
     <xsl:variable name="tmpl-two-main" select="((parent::*/preceding-sibling::selector = &two-main-tmpl;) and not(parent::*/preceding-sibling::*[self::slot | self::pile][2]))" as="xs:boolean"/>
@@ -32,16 +43,32 @@
     <xsl:variable name="size" as="xs:string">
       <!-- TODO: MTEF5 user-defined sizes (equation_options) -->
       <xsl:choose>
-        <xsl:when test="$sizename = 'sub'">58%</xsl:when>
-        <xsl:when test="$sizename = 'sub2'">42%</xsl:when>
-        <xsl:when test="$sizename = 'sym'">150%</xsl:when>
+        <xsl:when test="$sizename = 'sub'">
+          <xsl:value-of select="$lsize/*[2]/@size"/>
+        </xsl:when>
+        <xsl:when test="$sizename = 'sub2'">
+          <xsl:value-of select="$lsize/*[3]/@size"/>
+        </xsl:when>
+        <xsl:when test="$sizename = 'sym'">
+          <xsl:value-of select="$lsize/*[4]/@size"/>
+        </xsl:when>
         <xsl:when test="$sizename = 'size'">
           <xsl:variable name="size" select="preceding::size[1]"/>
           <xsl:choose>
             <xsl:when test="$size/point_size">
               <xsl:value-of select="concat(-1 * (number($size/point_size) div 32),'pt')"/>
             </xsl:when>
+            <xsl:when test="$size/dsize">
+              <xsl:variable name="lsize-selector" select="$size/lsize/text() + 1"/>
+              <xsl:variable name="full-size" select="number(replace($lsize/*[position() = $lsize-selector]/@size, 'pt', ''))"/>
+              <xsl:variable name="rel-lsize" select="if (not($size/lsize = 0)) then number(replace($lsize/*[$size/lsize]/@size, '%', '')) else 100"/>
+              <xsl:variable name="abs-lsize" select="($full-size * $rel-lsize) div 100"/>
+              <xsl:variable name="abs-size" select="$abs-lsize + $size/dsize"/>
+              <xsl:variable name="rel-size" select="floor(($abs-size * 100) div $full-size)"/>
+              <xsl:value-of select="concat($rel-size, '%')"/>
+            </xsl:when>
             <xsl:otherwise>
+              <!-- TODO: lsize - dsize -->
               <xsl:text>100%</xsl:text>
               <xsl:if test="$debug">
                 <xsl:message>
@@ -55,7 +82,7 @@
         <xsl:otherwise>100%</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="boolean($size) and not($tmpl-subsup) and ($tmpl-one-main or $tmpl-two-main)">
+    <xsl:if test="boolean($size) and (not($tmpl-present) or (not($tmpl-subsup) and ($tmpl-one-main or $tmpl-two-main)))">
       <xsl:attribute name="mathsize" select="$size"/>
     </xsl:if>
   </xsl:template>

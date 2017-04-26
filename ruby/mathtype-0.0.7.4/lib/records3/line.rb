@@ -24,7 +24,7 @@ module Mathtype3
 
     nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
 
-    int16 :line_spacing, onlyif: (lambda do
+    mtef16 :line_spacing, onlyif: (lambda do
       _options & OPTIONS["xfLSPACE"] > 0
     end)
 

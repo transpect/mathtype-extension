@@ -30,7 +30,7 @@ module Mathtype3
 
     int8 :_typeface
 
-    int16 :_mt_code_value
+    mtef16 :_mt_code_value
 
     array :embellishment_list,
         onlyif: lambda { _options & OPTIONS["xfEMBELL"] > 0 },
@@ -39,12 +39,7 @@ module Mathtype3
     end
 
     def mt_code_value
-      mt_code = if _mt_code_value < 0
-        65536 + _mt_code_value # Two's complement
-      else
-        _mt_code_value
-      end
-      sprintf("0x%04X", mt_code)
+      sprintf("0x%04X", _mt_code_value)
     end
 
     def typeface
