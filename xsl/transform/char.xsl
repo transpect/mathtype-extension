@@ -56,7 +56,9 @@
           <xsl:variable name="size" select="preceding::size[1]"/>
           <xsl:choose>
             <xsl:when test="$size/point_size">
-              <xsl:value-of select="concat(-1 * (number($size/point_size) div 32),'pt')"/>
+              <xsl:variable name="size" select="-1 * (number($size/point_size) div 32)"/>
+              <xsl:variable name="fullsize" select="number(replace($lsize/*[1]/@size, 'pt', ''))"/>
+              <xsl:value-of select="concat(floor($size * 100 div $fullsize), '%')"/>
             </xsl:when>
             <xsl:when test="$size/dsize">
               <xsl:variable name="lsize-selector" select="$size/lsize/text() + 1"/>
