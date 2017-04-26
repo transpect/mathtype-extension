@@ -62,8 +62,8 @@
             </xsl:when>
             <xsl:when test="$size/dsize">
               <xsl:variable name="lsize-selector" select="$size/lsize/text() + 1"/>
-              <xsl:variable name="full-size" select="number(replace($lsize/*[position() = $lsize-selector]/@size, 'pt', ''))"/>
-              <xsl:variable name="rel-lsize" select="if (not($size/lsize = 0)) then number(replace($lsize/*[$size/lsize]/@size, '%', '')) else 100"/>
+              <xsl:variable name="full-size" select="number(replace($lsize/*[1]/@size, 'pt', ''))"/>
+              <xsl:variable name="rel-lsize" select="if (not($size/lsize = 0)) then number(replace($lsize/*[position() = $size/lsize]/@size, '%', '')) else 100"/>
               <xsl:variable name="abs-lsize" select="($full-size * $rel-lsize) div 100"/>
               <xsl:variable name="abs-size" select="$abs-lsize + $size/dsize"/>
               <xsl:variable name="rel-size" select="floor(($abs-size * 100) div $full-size)"/>
