@@ -6,6 +6,9 @@
   exclude-result-prefixes="xs"
   version="2.0">
   
+    <xsl:strip-space elements="*"/>
+  <xsl:preserve-space elements="ms mn mtext mi mo"/>
+  
   <xsl:include href="identity.xsl"/>
   <xsl:param name="handle-space" select="'mspace'"/>
   

@@ -21,12 +21,16 @@
   <xsl:strip-space elements="*"/>
   <xsl:preserve-space elements="ms mn mtext mi mo"/>
 
-  <xsl:template match="@* | * | text() | processing-instruction()" mode="#all" priority="-1">
+  <xsl:template match="@* | * | processing-instruction()" mode="#all" priority="-2">
     <xsl:copy>
       <xsl:apply-templates select="@*" mode="#current">
         <xsl:sort select="name()"/>
       </xsl:apply-templates>
       <xsl:apply-templates mode="#current"/>
     </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="text()" mode="#all" priority="-1">
+    <xsl:value-of select="."/>
   </xsl:template>
 </xsl:stylesheet>
