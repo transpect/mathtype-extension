@@ -23,9 +23,11 @@
     <user2 size="150%"/>
   </xsl:variable>
 
-  <xsl:variable name="mtcode-fontmap" select="(document('http://transpect.io/fontmaps/MathType_MTCode.xml'),
-                                               document('../../fontmaps/MathType_MTCode.xml')
-                                               )[1]" as="element(symbols)"/>
+  <xsl:variable name="mtcode-fontmap" select="
+    if (doc-available('http://transpect.io/fontmaps/MathType_MTCode.xml')) 
+    then document('http://transpect.io/fontmaps/MathType_MTCode.xml')/symbols
+    else document('../../fontmaps/MathType_MTCode.xml')/symbols
+                                              " as="element(symbols)"/>
   
   <xsl:variable name="code-range" select="$mtcode-fontmap//symbol/@number" as="attribute(number)*"/>
 
@@ -38,7 +40,7 @@
     <xsl:choose>
       <xsl:when test="lower-case(replace($mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i))">
         <xsl:variable name="code-value" select="replace($mt_code_value, '^0x', '')" as="xs:string"/>
-        <xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/>        
+        <xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="codepoints-to-string(tr:hexToDec($mt_code_value))"/>    
@@ -136,6 +138,16 @@
           <xsl:value-of select="mt_code_value/text()"/>
         </xsl:message>
       </xsl:if>
+    </mtext>
+  </xsl:template>
+  
+  <xsl:template match="char[typeface = '24']" priority="-0.1">
+    <mtext>
+      <xsl:apply-templates select="options"/>
+      <xsl:call-template name="mathsize"/>
+      <xsl:call-template name="charhex">
+        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
+      </xsl:call-template>
     </mtext>
   </xsl:template>
   
