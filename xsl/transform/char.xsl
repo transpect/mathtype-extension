@@ -22,14 +22,30 @@
     <user1 size="75%"/>
     <user2 size="150%"/>
   </xsl:variable>
+
+  <xsl:variable name="mtcode-fontmap" select="(document('http://transpect.io/fontmaps/MathType_MTCode.xml'),
+                                               document('../../fontmaps/MathType_MTCode.xml')
+                                               )[1]" as="element(symbols)"/>
   
+  <xsl:variable name="code-range" select="$mtcode-fontmap//symbol/@number" as="attribute(number)*"/>
+
   <xsl:template match="mi | mo | mn | mtext">
     <xsl:copy-of select="."/>
   </xsl:template>
+  
   <xsl:template name="charhex">
     <xsl:param name="mt_code_value"/>
-    <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
+    <xsl:choose>
+      <xsl:when test="lower-case(replace($mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i))">
+        <xsl:variable name="code-value" select="replace($mt_code_value, '^0x', '')" as="xs:string"/>
+        <xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/>        
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="codepoints-to-string(tr:hexToDec($mt_code_value))"/>    
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
+  
   <xsl:template match="char/options[floor(. div 2) mod 2 = 1]">
     <xsl:attribute name="start-function"/>
   </xsl:template>
@@ -229,19 +245,7 @@
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
     </xsl:element>
-  </xsl:template>
-
-  <!-- SPACING -->
-  
-  <xsl:variable name="mtcode-fontmap" select="document('http://transpect.io/fontmaps/MathType_MTCode.xml')" as="element(symbols)"/>
-  
-  <xsl:variable name="code-range" select="$mtcode-fontmap//symbol/@number" as="attribute(number)*"/>
-  
-  <xsl:template match="char[lower-case(replace(mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i)) 
-                            and typeface = '24']" priority="2">
-    <xsl:variable name="code-value" select="replace(mt_code_value, '^0x', '')" as="xs:string"/>
-    <mtext><xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/></mtext>
-  </xsl:template>
+  </xsl:template>  
 
   <!-- BULLET -->
   <xsl:template match="char[mt_code_value = '0xE98F' and typeface = '11']" priority="2">
