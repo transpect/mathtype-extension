@@ -232,42 +232,15 @@
   </xsl:template>
 
   <!-- SPACING -->
-
-  <!-- EM SPACE -->
-  <xsl:template match="char[mt_code_value = '0xEB05' and typeface = '24']" priority="2">
-    <mtext>&#x2003;</mtext>
-  </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEF05' and typeface = '24']" priority="2">
-    <mtext>&#x2003;</mtext>
-  </xsl:template>
-
-  <!-- THREE-PER-EM SPACE -->
-  <xsl:template match="char[mt_code_value = '0xEB04' and typeface = '24']" priority="2">
-    <mtext>&#x2002;</mtext>
-  </xsl:template>
-
-  <!-- THIN SPACE -->
-  <xsl:template match="char[mt_code_value = '0xEF02' and typeface = '24']" priority="2">
-    <mtext>&#x2009;</mtext>
-  </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEB08' and typeface = '24']" priority="2">
-    <mtext>&#x2009;</mtext>
-  </xsl:template>
-
-  <!-- HAIR SPACE -->
-  <xsl:template match="char[mt_code_value = '0xEF08' and typeface = '24']" priority="2">
-    <mtext>&#xa0;</mtext>
-  </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEB02' and typeface = '24']" priority="2">
-    <mtext>&#xa0;</mtext>
-  </xsl:template>
-  <xsl:template match="char[mt_code_value = '0xEF04' and typeface = '24']" priority="2">
-    <mtext>&#xa0;</mtext>
-  </xsl:template>
-
-  <!-- ZERO WIDTH SPACE -->
-  <xsl:template match="char[mt_code_value = '0xEB01' and typeface = '24']" priority="2">
-    <mtext>&#x200b;</mtext>
+  
+  <xsl:variable name="mtcode-fontmap" select="document('http://transpect.io/fontmaps/MathType_MTCode.xml')" as="element(symbols)"/>
+  
+  <xsl:variable name="code-range" select="$mtcode-fontmap//symbol/@number" as="attribute(number)*"/>
+  
+  <xsl:template match="char[lower-case(replace(mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i)) 
+                            and typeface = '24']" priority="2">
+    <xsl:variable name="code-value" select="replace(mt_code_value, '^0x', '')" as="xs:string"/>
+    <mtext><xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/></mtext>
   </xsl:template>
 
   <!-- BULLET -->
