@@ -10,7 +10,7 @@
   <xsl:preserve-space elements="ms mn mtext mi mo"/>
   
   <xsl:include href="identity.xsl"/>
-  <xsl:param name="handle-space" select="'mspace'"/>
+  <xsl:param name="mml-space-handling" select="'mspace'"/>
   
   <xsl:param name="em-width" select="'1em'"/>
   <xsl:param name="en-width" select="'0.33em'"/>
@@ -22,7 +22,7 @@
   <xsl:template match="mtext[matches(.,'\s')]" mode="handle-whitespace">
     <xsl:variable name="self" select="."/>
     <xsl:choose>
-      <xsl:when test="$handle-space='mspace'">
+      <xsl:when test="$mml-space-handling='mspace'">
         <xsl:analyze-string select="." regex="\s">
           <xsl:matching-substring>
             <xsl:variable name="width">
