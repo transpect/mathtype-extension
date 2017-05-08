@@ -141,7 +141,7 @@
     </mtext>
   </xsl:template>
   
-  <xsl:template match="char[typeface = '24']" priority="-0.1">
+  <xsl:template match="char[typeface = '24']">
     <mtext>
       <xsl:apply-templates select="options"/>
       <xsl:call-template name="mathsize"/>
