@@ -1,3 +1,7 @@
+<!DOCTYPE xsl:stylesheet [
+<!ENTITY two-child-element "('mfrac','mroot', 'msub', 'msup', 'msubsup', 'munder',
+                             'mover', 'munderover', 'mmultiscripts', 'msub')">
+]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	 xmlns="http://www.w3.org/1998/Math/MathML" 
 	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
@@ -8,7 +12,7 @@
   <xsl:template match="msub[count(node()) = 1] | msup[count(node()) = 1] | msubsup[count(node()) le 2]" mode="repair-subsup">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:variable name="base" as="element(*)?" 
-        select="(preceding-sibling::*[1] | parent::mrow[current() is *[1]]/preceding-sibling::*[1])[1]"/>
+        select="(preceding-sibling::*[1] | parent::mrow[current() is *[1]]/preceding-sibling::*[1][not(parent::*/local-name() = &two-child-element;)])[1]"/>
       <xsl:choose>
         <xsl:when test="exists($base)">
           <xsl:apply-templates mode="#current" select="$base">
@@ -25,12 +29,12 @@
 
   <!-- do we expect the base in front of ../mrow/mrow or even ../mrow/mrow/mrow? -->
   <xsl:template
-    match="*[following-sibling::*[1]/self::msub[count(node()) = 1]] |
-           *[following-sibling::*[1]/self::mrow/*[1]/self::msub[count(node()) = 1]] |
-           *[following-sibling::*[1]/self::msup[count(node()) = 1]] |
-           *[following-sibling::*[1]/self::mrow/*[1]/self::msup[count(node()) = 1]] |
-           *[following-sibling::*[1]/self::msubsup[count(node()) le 2]] |
-           *[following-sibling::*[1]/self::mrow/*[1]/self::msubsup[count(node()) le 2]]" mode="repair-subsup"  priority="1">
+    match="*[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msub[count(node()) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msub[count(node()) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msup[count(node()) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msup[count(node()) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msubsup[count(node()) le 2]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msubsup[count(node()) le 2]]" mode="repair-subsup"  priority="1">
     <xsl:param name="keep" select="false()"/>
     <xsl:if test="$keep">
       <xsl:next-match/>
