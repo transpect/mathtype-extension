@@ -3,6 +3,7 @@
   xmlns:xsl		= "http://www.w3.org/1999/XSL/Transform"
   xmlns:fn              = "http://www.w3.org/2005/xpath-functions"
   xmlns:xs		= "http://www.w3.org/2001/XMLSchema"
+  xmlns:mml = "http://www.w3.org/1998/Math/MathML"
   xmlns:saxon		= "http://saxon.sf.net/"
   xmlns:letex		= "http://www.le-tex.de/namespace"
   exclude-result-prefixes = "xs saxon letex fn"
@@ -19,7 +20,7 @@
     />
 
   <xsl:strip-space elements="*"/>
-  <xsl:preserve-space elements="ms mn mtext mi mo"/>
+  <xsl:preserve-space elements="mml:ms mml:mn mml:mtext mml:mi mml:mo"/>
 
   <xsl:template match="@* | * | processing-instruction()" mode="#all" priority="-2">
     <xsl:copy>
