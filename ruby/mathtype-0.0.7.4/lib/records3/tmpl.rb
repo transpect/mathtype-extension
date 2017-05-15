@@ -275,7 +275,12 @@ module Mathtype3
       3 => FENCE_VARIATIONS,
       4 => FENCE_VARIATIONS,
       5 => FENCE_VARIATIONS,
-
+      6 => {
+        0 => FENCE_BOTH
+      },
+      7 => {
+        0 => FENCE_BOTH
+      },
       # Intervals:
       # 0x0000 => "tvINTV_LEFT_LP", #  left fence is left parenthesis
       # 0x0001 => "tvINTV_LEFT_RP", #  left fence is right parenthesis
@@ -697,8 +702,6 @@ module Mathtype3
       },
 
       # Selectors with empty variation:
-      6 => {0=>nil,1=>nil,2=>nil,3=>nil,4=>nil},
-      7 => {0=>nil,1=>nil,2=>nil,3=>nil,4=>nil},
       15 => {0=>nil,1=>nil,2=>nil,3=>nil,4=>nil},
       48 => {0=>nil,1=>nil,2=>nil,3=>nil,4=>nil}
     }
