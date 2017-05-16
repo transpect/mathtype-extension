@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xsl:stylesheet [
   <!ENTITY unicode-fences "('0x0028', '0x0029', '0x005B', '0x005D', '0x007B', '0x007D', '0x2329', '0x232A',
-                            '0xF8F0', '0xF8FB', '0xF8EE', '0xF8F9', '0x301A', '0x301B', '0xFE37', '0xFE38')">
-  <!ENTITY non-unicode-fences "('0xEC07','0xEC08','0xEC09','0xEC0A','0xEC0C','0xEC0D')">
+                            '0x301A', '0x301B', '0xFE37', '0xFE38')">
+  <!ENTITY non-unicode-fences "('0xEC07','0xEC08','0xEC09','0xEC0A','0xEC0C','0xEC0D', '0xF8EE', '0xF8F0',
+                            '0xF8F9', '0xF8FB')">
 ]
 >
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -109,11 +110,17 @@
         <xsl:when test="mt_code_value = ('0xEC09', '0xEC0A')">‖</xsl:when>
         <xsl:when test="mt_code_value = '0xEC0C'">&#x23b5;</xsl:when>
         <xsl:when test="mt_code_value = '0xEC0D'">&#x23b4;</xsl:when>
+        <xsl:when test="mt_code_value = '0xF8EE'">&#x2308;</xsl:when>
+        <xsl:when test="mt_code_value = '0xF8F0'">&#x230a;</xsl:when>
+        <xsl:when test="mt_code_value = '0xF8F9'">&#x2309;</xsl:when>
+        <xsl:when test="mt_code_value = '0xF8FB'">&#x230b;</xsl:when>
         <xsl:otherwise>
           <xsl:if test="$debug">
             <xsl:message>Fence unknown: <xsl:value-of select="mt_code_value"/></xsl:message>
           </xsl:if>
-          <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
+          <xsl:call-template name="charhex">
+            <xsl:with-param name="mt_code_value" select="mt_code_value"/>
+          </xsl:call-template>
         </xsl:otherwise>
       </xsl:choose>
     </mo>
@@ -121,7 +128,9 @@
 
   <xsl:template match="char[mt_code_value = &unicode-fences; and typeface = '22']" priority="2">
     <mo>
-      <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
+      <xsl:call-template name="charhex">
+        <xsl:with-param name="mt_code_value" select="mt_code_value"/>
+      </xsl:call-template>
     </mo>
   </xsl:template>
 
