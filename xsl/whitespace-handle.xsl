@@ -44,7 +44,7 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:variable>
-            <mspace width="$width"/>
+            <mspace width="{$width}"/>
           </xsl:matching-substring>
           <xsl:non-matching-substring>
             <mtext>
