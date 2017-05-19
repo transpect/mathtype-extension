@@ -137,7 +137,7 @@
   xmlns="http://www.w3.org/1998/Math/MathML"
   xpath-default-namespace="http://www.w3.org/1998/Math/MathML">
   
-  <xsl:template match="mn[. = (&operators; , '%') ]" mode="operator-elements">
+  <xsl:template match="*[self::mn or self::mi][. = (&operators; , '%') ]" mode="operator-elements">
     <!-- match against characters in MathML appendix C (https://www.w3.org/TR/2010/REC-MathML3-20101021/appendixc.html) 
          will not match multiple character operator like '||' here.
     -->
