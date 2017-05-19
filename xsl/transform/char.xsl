@@ -9,20 +9,75 @@
   xmlns:tr="http://transpect.io"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:mml="http://www.w3.org/1998/Math/MathML"
   xmlns="http://www.w3.org/1998/Math/MathML">
   
   <xsl:import href="../util/hexToDec.xsl"/>
   
   <xsl:variable name="lsize">
-    <full size="12pt"/>
-    <sub size="58%"/>
-    <sub2 size="42%"/>
-    <sym size="150%"/>
-    <subsym size="100%"/>
-    <user1 size="75%"/>
-    <user2 size="150%"/>
+    <xsl:variable name="sizes" as="element(mml:size)+">
+      <xsl:variable name="unit-map">
+        <unit id="0" unit="in"/>
+        <unit id="1" unit="cm"/>
+        <unit id="2" unit="pt"/>
+        <unit id="3" unit="pc"/>
+        <unit id="4" unit="%"/>
+      </xsl:variable>
+      <xsl:variable as="xs:double" name="full-size"
+        select="number(string-join(//eqn_prefs/sizes[1]/nibbles[position() lt last()]/text(), ''))"/>
+      <size>
+        <xsl:choose>
+          <xsl:when test="//mtef_version = 3"/>
+          <xsl:when test="//eqn_prefs/sizes[1]/unit = 2">
+            <xsl:value-of select="12"/>
+            <xsl:value-of select="'pt'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:if test="$debug">
+              <xsl:message terminate="no">
+                <xsl:text>Equation preferences '</xsl:text>
+                <xsl:value-of select="12"/>
+                <xsl:value-of select="$unit-map/unit[//eqn_prefs/sizes[1]/unit = @id]/@unit"/>
+                <xsl:text>' not supported, using default</xsl:text>
+              </xsl:message>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+      </size>
+      <xsl:for-each select="//eqn_prefs/sizes[position() = (2 to 7)]">
+        <xsl:variable name="cur" select="current()"/>
+        <size>
+          <xsl:choose>
+            <xsl:when test="$cur/unit = 2">
+              <xsl:value-of select="100 * number(string-join($cur/nibbles[position() lt last()], '')) div $full-size"/>
+              <xsl:value-of select="'%'"/>
+            </xsl:when>
+            <xsl:when test="$cur/unit = 4">
+              <xsl:value-of select="string-join($cur/nibbles[position() lt last()], '')"/>
+              <xsl:value-of select="'%'"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="$debug">
+                <xsl:message terminate="no">
+                  <xsl:text>Equation preferences '</xsl:text>
+                  <xsl:value-of select="$cur/nibbles[position() lt last()]"/>
+                  <xsl:value-of select="$unit-map/unit[$cur/unit = @id]/@unit"/>
+                  <xsl:text>' not supported, using default</xsl:text>
+                </xsl:message>
+              </xsl:if>
+            </xsl:otherwise>
+          </xsl:choose>
+        </size>
+      </xsl:for-each>
+    </xsl:variable>
+    <full size="{if ($sizes[1]) then $sizes[1] else '12pt'}"/>
+    <sub size="{if ($sizes[2]) then $sizes[2] else '58%'}"/>
+    <sub2 size="{if ($sizes[3]) then $sizes[3] else '42%'}"/>
+    <sym size="{if ($sizes[4]) then $sizes[4] else '150%'}"/>
+    <subsym size="{if ($sizes[5]) then $sizes[5] else '100%'}"/>
+    <user1 size="{if ($sizes[6]) then $sizes[6] else '75%'}"/>
+    <user2 size="{if ($sizes[7]) then $sizes[7] else '150%'}"/>
   </xsl:variable>
-
   <xsl:variable name="mtcode-fontmap" select="
     if (doc-available('http://transpect.io/fontmaps/MathType_MTCode.xml')) 
     then document('http://transpect.io/fontmaps/MathType_MTCode.xml')/symbols
