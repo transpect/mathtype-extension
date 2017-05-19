@@ -5,7 +5,7 @@
 <!ENTITY two-main-tmpl "('tmDIRAC','tmLDIV','tmFRACT')">
 ]>
 <xsl:stylesheet 
-  exclude-result-prefixes="xs tr" version="2.0"
+  exclude-result-prefixes="xs tr mml" version="2.0"
   xmlns:tr="http://transpect.io"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -209,6 +209,7 @@
   <xsl:template match="char[//mtef/mtef_version = '5' and (128 - number(typeface)) lt 1]">
     <xsl:variable name="font_index" select="256 - number(typeface)"/>
     <xsl:variable name="font" select="(//font_style_def)[position() = $font_index]"/>
+    <xsl:variable name="font-name" select="//font_def[position() = $font/font_def_index]/font_name"/>
     <mi>
       <xsl:apply-templates select="options"/>
       <xsl:call-template name="mathsize"/>
@@ -221,6 +222,7 @@
       <xsl:if test="$font/char_style = 3">
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
+      <xsl:attribute name="font-family" select="$font-name"/>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>
@@ -246,6 +248,7 @@
       <xsl:if test="$font/style = 3">
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
+      <xsl:attribute name="font-family" select="$font/name"/>
       <xsl:call-template name="charhex">
         <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
       </xsl:call-template>

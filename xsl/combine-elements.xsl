@@ -17,11 +17,18 @@
     <xsl:element name="{local-name()}">
       <xsl:apply-templates mode="#current" select="@*"/>
       <xsl:for-each-group  select="node()"
-        group-adjacent="(.[@mathvariant = 'normal' or self::mtext[not(@mathvariant)]]/local-name()[. = ('mtext', 'mi')], '')[1]">
+        group-adjacent="(
+          .[
+            @mathvariant = 'normal' or self::mtext[not(@mathvariant)]
+          ][
+            not(preceding-sibling::*[1]/local-name() = ('mtext','mi')) 
+            or (every $a in ./@* except @mathvariant satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a))
+          ]/local-name()[. = ('mtext', 'mi')], ''
+          )[1]">
         <xsl:choose>
           <xsl:when test="current-grouping-key()">
             <xsl:element name="{current-grouping-key()}">
-              <xsl:apply-templates select="@mathvariant" mode="#current"/>
+              <xsl:apply-templates select="@*" mode="#current"/>
               <xsl:value-of select="current-group()/text()"/>
             </xsl:element>
           </xsl:when>
@@ -36,7 +43,12 @@
   <xsl:template match="*[count(mn) ge 2]" mode="combine-mn">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
-      <xsl:for-each-group group-adjacent="local-name() = 'mn' and (not(preceding-sibling::*[1] = mn) or (every $a in ./@* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)))" select="node()">
+      <xsl:for-each-group 
+        group-adjacent="local-name() = 'mn' and 
+        (
+          not(preceding-sibling::*[1] = mn) 
+          or (every $a in ./@* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a))
+        )" select="node()">
       <xsl:choose>
         <xsl:when test="current-grouping-key()">
           <xsl:choose>

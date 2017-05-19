@@ -6,7 +6,7 @@
   xmlns:mml = "http://www.w3.org/1998/Math/MathML"
   xmlns:saxon		= "http://saxon.sf.net/"
   xmlns:letex		= "http://www.le-tex.de/namespace"
-  exclude-result-prefixes = "xs saxon letex fn"
+  exclude-result-prefixes = "xs saxon letex fn mml"
   xmlns="http://www.w3.org/1998/Math/MathML">
 
   <!-- ================================================================================ -->
