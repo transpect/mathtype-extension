@@ -14,62 +14,105 @@
     exclude-result-prefixes="xs"
     version="2.0">
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'(&msup;)')]" priority="2">
-        <msup>
-            <xsl:next-match/>
-            <xsl:apply-templates select="embell"/>
-        </msup>
-    </xsl:template>
+  <xsl:template match="char[embell]" priority="2">
+    <xsl:call-template name="embell">
+      <xsl:with-param name="embelled-before">
+        <xsl:next-match/>
+      </xsl:with-param>
+      <xsl:with-param name="embells" select="embell"/>
+    </xsl:call-template>
+  </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'(&mover;)')]" priority="2">
-        <mover accent="true">
-            <xsl:next-match/>
-            <xsl:apply-templates select="embell"/>
-        </mover>
-    </xsl:template>
+  <xsl:template name="embell">
+    <xsl:param name="embelled-before"/>
+    <xsl:param as="element(embell)*" name="embells"/>
+    <xsl:variable name="wrapped">
+      <xsl:apply-templates mode="embell" select="$embells[1]/embell">
+        <xsl:with-param name="wrap" select="$embelled-before"/>
+        <xsl:with-param name="embell" select="$embells[1]"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="count($embells) ge 2">
+        <xsl:call-template name="embell">
+          <xsl:with-param name="embelled-before" select="$wrapped"/>
+          <xsl:with-param name="embells" select="$embells[position() ge 2]"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:sequence select="$wrapped"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'(&munder;)')]" priority="2">
-        <munder>
-            <xsl:next-match/>
-            <xsl:apply-templates select="embell"/>
-        </munder>
-    </xsl:template>
+  <xsl:template match="embell[matches(text(), '(&msup;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
+    <msup>
+      <xsl:copy-of select="$wrap"/>
+      <xsl:apply-templates select="$embell"/>
+    </msup>
+  </xsl:template>
 
-  <xsl:template match="char[embell and matches(embell/embell/text(), '(&munderaccent;)')]" priority="2">
+  <xsl:template match="embell[matches(text(), '(&mover;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
+    <mover accent="true">
+      <xsl:copy-of select="$wrap"/>
+      <xsl:apply-templates select="$embell"/>
+    </mover>
+  </xsl:template>
+
+  <xsl:template match="embell[matches(text(), '(&munder;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
     <munder>
-      <xsl:attribute name="accentunder">true</xsl:attribute>
-      <xsl:next-match/>
-      <xsl:apply-templates select="embell"/>
+      <xsl:copy-of select="$wrap"/>
+      <xsl:apply-templates select="$embell"/>
     </munder>
   </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'(&menclose;)')]" priority="2">
-        <menclose>
-            <xsl:choose>
-                <xsl:when test="matches(embell/embell/text(),'(&menclose;)')">
-                    <xsl:attribute name="notation">
-                        <xsl:choose>
-                            <xsl:when test="matches(embell/embell/text(),'embNOT')">updiagonalstrike</xsl:when>
-                            <xsl:when test="matches(embell/embell/text(),'embX_BARS')">updiagonalstrike downdiagonalstrike</xsl:when>
-                            <xsl:when test="matches(embell/embell/text(),'embMBAR')">horizontalstrike</xsl:when>
-                            <xsl:when test="matches(embell/embell/text(),'embUP_BAR')">updiagonalstrike</xsl:when>
-                            <xsl:when test="matches(embell/embell/text(),'embDOWN_BAR')">downdiagonalstrike</xsl:when>
-                        </xsl:choose>
-                    </xsl:attribute>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:next-match/>
-        </menclose>
-    </xsl:template>
+  <xsl:template match="embell[matches(text(), '(&munderaccent;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
+    <munder>
+      <xsl:attribute name="accentunder">true</xsl:attribute>
+      <xsl:copy-of select="$wrap"/>
+      <xsl:apply-templates select="$embell"/>
+    </munder>
+  </xsl:template>
 
-    <xsl:template match="char[embell and matches(embell/embell/text(),'(&mmultiscripts;)')]" priority="2">
-        <mmultiscripts>
-            <xsl:next-match/>
-            <mprescripts/>
-            <none/>
-            <xsl:apply-templates select="embell"/>
-        </mmultiscripts>
-    </xsl:template>
+  <xsl:template match="embell[matches(text(), '(&menclose;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
+    <menclose>
+      <xsl:choose>
+        <xsl:when test="matches($embell, '(&menclose;)')">
+          <xsl:attribute name="notation">
+            <xsl:choose>
+              <xsl:when test="matches($embell, 'embNOT')">updiagonalstrike</xsl:when>
+              <xsl:when test="matches($embell, 'embX_BARS')">updiagonalstrike downdiagonalstrike</xsl:when>
+              <xsl:when test="matches($embell, 'embMBAR')">horizontalstrike</xsl:when>
+              <xsl:when test="matches($embell, 'embUP_BAR')">updiagonalstrike</xsl:when>
+              <xsl:when test="matches($embell, 'embDOWN_BAR')">downdiagonalstrike</xsl:when>
+            </xsl:choose>
+          </xsl:attribute>
+        </xsl:when>
+      </xsl:choose>
+      <xsl:copy-of select="$wrap"/>
+    </menclose>
+  </xsl:template>
+
+  <xsl:template match="embell[matches(text(), '(&mmultiscripts;)')]" mode="embell">
+    <xsl:param as="node()" name="wrap"/>
+    <xsl:param as="element(embell)" name="embell"/>
+    <mmultiscripts>
+      <xsl:copy-of select="$wrap"/>
+      <mprescripts/>
+      <none/>
+      <xsl:apply-templates select="$embell"/>
+    </mmultiscripts>
+  </xsl:template>
 
     <!--
     edot        = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x02D9;</(ns)mo>$-$n</(ns)mover>$n";
@@ -84,22 +127,21 @@
     -->
     <!-- Dots -->
 
-    <xsl:template match="embell[embell='emb1DOT']">
-        <mo>&#x2D9;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'emb1DOT']">
+    <mo>&#x2D9;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'emb2DOT']">
+    <mo>&#xA8;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='emb2DOT']">
-        <mo>&#xA8;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'emb3DOT']">
+    <mo>&#x20DB;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='emb3DOT']">
-        <mo>&#x20DB;</mo>
-    </xsl:template>
-
-    <xsl:template match="embell[embell='emb4DOT']">
-        <mo>&#x20DC;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'emb4DOT']">
+    <mo>&#x20DC;</mo>
+  </xsl:template>
 
     <!--
     edot/u      = "<(ns)munder>$+$n#$n<(ns)mo>&$#x02D9;</(ns)mo>$-$n</(ns)munder>$n";
@@ -114,24 +156,22 @@
     -->
     <!-- Under-dots -->
 
-    <xsl:template match="embell[embell='embU_1DOT']">
-       <mo>&#x2D9;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_1DOT']">
+    <mo>&#x2D9;</mo>
+  </xsl:template>
 
 
-    <xsl:template match="embell[embell='embU_2DOT']">
-       <mo>&#xA8;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_2DOT']">
+    <mo>&#xA8;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'embU_3DOT']">
+    <mo>&#x20DB;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_3DOT']">
-       <mo>&#x20DB;</mo>
-    </xsl:template>
-
-
-    <xsl:template match="embell[embell='embU_4DOT']">
-        <mo>&#x20DC;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_4DOT']">
+    <mo>&#x20DC;</mo>
+  </xsl:template>
 
     <!--
     eprime      = "<(ns)msup>$+$n#$n<(ns)mo>&$#x2032;</(ns)mo>$-$n</(ns)msup>$n";
@@ -146,24 +186,21 @@
      -->
     <!-- Primes -->
 
-    <xsl:template match="embell[embell='emb1PRIME']">
-        <mo>&#x2032;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'emb1PRIME']">
+    <mo>&#x2032;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'emb2PRIME']">
+    <mo>&#x2033;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='emb2PRIME']">
-        <mo>&#x2033;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'emb3PRIME']">
+    <mo>&#x2034;</mo>
+  </xsl:template>
 
-
-    <xsl:template match="embell[embell='emb3PRIME']">
-        <mo>&#x2034;</mo>
-    </xsl:template>
-
-
-    <xsl:template match="embell[embell='embBPRIME']">
-        <mo>&#x2035;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embBPRIME']">
+    <mo>&#x2035;</mo>
+  </xsl:template>
 
     <!--
     etilde      = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x02DC;</(ns)mo>$-$n</(ns)mover>$n";
@@ -174,13 +211,13 @@
     -->
     <!-- Tilde -->
 
-    <xsl:template match="embell[embell='embTILDE']">
-        <mo>&#x2DC;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embTILDE']">
+    <mo>&#x2DC;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_TILDE']">
-        <mo>&#x2DC;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_TILDE']">
+    <mo>&#x2DC;</mo>
+  </xsl:template>
 
     <!--
     ehat        = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x005E;</(ns)mo>$-$n</(ns)mover>$n";
@@ -188,9 +225,9 @@
     -->
     <!-- Hat -->
 
-    <xsl:template match="embell[embell='embHAT']">
-        <mo>^</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embHAT']">
+    <mo>^</mo>
+  </xsl:template>
     <!--
     evec        = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x2192;</(ns)mo>$-$n</(ns)mover>$n";
     evec/l      = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x2190;</(ns)mo>$-$n</(ns)mover>$n";
@@ -217,51 +254,45 @@
     -->
     <!-- Arrows -->
 
-    <xsl:template match="embell[embell='embRARROW']">
-        <mo>&#x2192;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embRARROW']">
+    <mo>&#x2192;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embLARROW']">
-        <mo>&#x2190;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embLARROW']">
+    <mo>&#x2190;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embBARROW']">
-        <mo>&#x2194;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embBARROW']">
+    <mo>&#x2194;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embR1ARROW']">
-        <mo>&#x21C0;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embR1ARROW']">
+    <mo>&#x21C0;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'embL1ARROW']">
+    <mo>&#x21BC;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embL1ARROW']">
-        <mo>&#x21BC;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_RARROW']">
+    <mo>&#x2192;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'embU_LARROW']">
+    <mo>&#x2190;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_RARROW']">
-        <mo>&#x2192;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_BARROW']">
+    <mo>&#x2194;</mo>
+  </xsl:template>
 
+  <xsl:template match="embell[embell = 'embU_R1ARROW']">
+    <mo>&#x21C1;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_LARROW']">
-        <mo>&#x2190;</mo>
-    </xsl:template>
-
-
-    <xsl:template match="embell[embell='embU_BARROW']">
-        <mo>&#x2194;</mo>
-    </xsl:template>
-
-
-    <xsl:template match="embell[embell='embU_R1ARROW']">
-        <mo>&#x21C1;</mo>
-    </xsl:template>
-
-
-    <xsl:template match="embell[embell='embU_L1ARROW']">
-        <mo>&#x21BD;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_L1ARROW']">
+    <mo>&#x21BD;</mo>
+  </xsl:template>
 
     <!--
     eobar       = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x00AF;</(ns)mo>$-$n</(ns)mover>$n";
@@ -272,14 +303,13 @@
      -->
     <!-- Bars -->
 
-    <xsl:template match="embell[embell='embOBAR']">
-        <mo>&#xAF;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embOBAR']">
+    <mo>&#xAF;</mo>
+  </xsl:template>
 
-
-    <xsl:template match="embell[embell='embU_BAR']">
-        <mo>_</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_BAR']">
+    <mo>_</mo>
+  </xsl:template>
 
     <!--
     earc        = "<(ns)mover accent='true'>$+$n#$n<(ns)mo>&$#x2322;</(ns)mo>$-$n</(ns)mover>$n";
@@ -293,21 +323,21 @@
     -->
     <!-- Arcs -->
 
-    <xsl:template match="embell[embell='embFROWN']">
-        <mo>&#x2322;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embFROWN']">
+    <mo>&#x2322;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embSMILE']">
-        <mo>&#x2323;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embSMILE']">
+    <mo>&#x2323;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_FROWN']">
-        <mo>&#x2322;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_FROWN']">
+    <mo>&#x2322;</mo>
+  </xsl:template>
 
-    <xsl:template match="embell[embell='embU_SMILE']">
-        <mo>&#x2323;</mo>
-    </xsl:template>
+  <xsl:template match="embell[embell = 'embU_SMILE']">
+    <mo>&#x2323;</mo>
+  </xsl:template>
 
     <!--
     enot = "<(ns)menclose notation='updiagonalstrike'>$+$n#$-$n</(ns)menclose>$n";
