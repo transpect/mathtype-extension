@@ -29,14 +29,13 @@
         <xsl:choose>
           <xsl:when test="//mtef_version = 3"/>
           <xsl:when test="//eqn_prefs/sizes[1]/unit = 2">
-            <xsl:value-of select="12"/>
-            <xsl:value-of select="'pt'"/>
+            <xsl:text>12pt</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:if test="$debug">
               <xsl:message terminate="no">
                 <xsl:text>Equation preferences '</xsl:text>
-                <xsl:value-of select="12"/>
+                <xsl:text>12</xsl:text>
                 <xsl:value-of select="$unit-map/unit[//eqn_prefs/sizes[1]/unit = @id]/@unit"/>
                 <xsl:text>' not supported, using default</xsl:text>
               </xsl:message>
@@ -70,13 +69,13 @@
         </size>
       </xsl:for-each>
     </xsl:variable>
-    <full size="{if ($sizes[1]) then $sizes[1] else '12pt'}"/>
-    <sub size="{if ($sizes[2]) then $sizes[2] else '58%'}"/>
-    <sub2 size="{if ($sizes[3]) then $sizes[3] else '42%'}"/>
-    <sym size="{if ($sizes[4]) then $sizes[4] else '150%'}"/>
-    <subsym size="{if ($sizes[5]) then $sizes[5] else '100%'}"/>
-    <user1 size="{if ($sizes[6]) then $sizes[6] else '75%'}"/>
-    <user2 size="{if ($sizes[7]) then $sizes[7] else '150%'}"/>
+    <full size="{if (normalize-space($sizes[1])) then $sizes[1] else '12pt'}"/>
+    <sub size="{if (normalize-space($sizes[2])) then $sizes[2] else '58%'}"/>
+    <sub2 size="{if (normalize-space($sizes[3])) then $sizes[3] else '42%'}"/>
+    <sym size="{if (normalize-space($sizes[4])) then $sizes[4] else '150%'}"/>
+    <subsym size="{if (normalize-space($sizes[5])) then $sizes[5] else '100%'}"/>
+    <user1 size="{if (normalize-space($sizes[6])) then $sizes[6] else '75%'}"/>
+    <user2 size="{if (normalize-space($sizes[7])) then $sizes[7] else '150%'}"/>
   </xsl:variable>
   <xsl:variable name="mtcode-fontmap" select="
     if (doc-available('http://transpect.io/fontmaps/MathType_MTCode.xml')) 
