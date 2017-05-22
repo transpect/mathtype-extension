@@ -102,7 +102,7 @@
     <p:input port="stylesheet">
       <p:document href="../xsl/transform.xsl"/>
     </p:input>
-    <p:with-param name="debug" select="$debug"/>
+    <p:with-param name="debug" select="$debug"><p:empty/></p:with-param>
   </p:xslt>
   
   <p:xslt initial-mode="handle-whitespace" name="handle-whitespace">
