@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet exclude-result-prefixes="xs" version="2.0"
+<xsl:stylesheet exclude-result-prefixes="xs c" version="2.0"
+  xmlns:c="http://www.w3.org/ns/xproc-step"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns="http://www.w3.org/1998/Math/MathML">
@@ -52,6 +53,10 @@
         <xsl:value-of select="local-name()"/>
       </xsl:message>
     </xsl:if>
+  </xsl:template>
+  
+  <xsl:template match="c:errors">
+    <xsl:copy-of select="." copy-namespaces="yes"/>
   </xsl:template>
   
   <xsl:include href="transform/int.xsl"/>
