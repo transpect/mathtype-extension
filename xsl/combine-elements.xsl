@@ -22,7 +22,11 @@
             @mathvariant = 'normal' or self::mtext[not(@mathvariant)]
           ][
             not(preceding-sibling::*[1]/local-name() = ('mtext','mi')) 
-            or (every $a in ./@* except @mathvariant satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a))
+            or (every $a in ./@* except @mathvariant satisfies (
+              (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)
+              or
+              (some $pa in following-sibling::*[1]/@* satisfies $pa = $a)
+            ))
           ]/local-name()[. = ('mtext', 'mi')], ''
           )[1]">
         <xsl:choose>
