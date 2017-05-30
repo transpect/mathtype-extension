@@ -13,6 +13,7 @@
   xmlns="http://www.w3.org/1998/Math/MathML">
   
   <xsl:import href="../util/hexToDec.xsl"/>
+  <xsl:import href="../util/decToHex.xsl"/>
   
   <xsl:variable name="lsize">
     <xsl:variable name="sizes" as="element(mml:size)+">
@@ -77,6 +78,7 @@
     <user1 size="{if (normalize-space($sizes[6])) then $sizes[6] else '75%'}"/>
     <user2 size="{if (normalize-space($sizes[7])) then $sizes[7] else '150%'}"/>
   </xsl:variable>
+  
   <xsl:variable name="mtcode-fontmap" select="
     if (doc-available('http://transpect.io/fontmaps/MathType_MTCode.xml')) 
     then document('http://transpect.io/fontmaps/MathType_MTCode.xml')/symbols
@@ -90,20 +92,22 @@
   </xsl:template>
   
   <xsl:template name="charhex">
-    <xsl:param name="mt_code_value"/>
-    <xsl:choose>
-      <xsl:when test="lower-case(replace($mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i))">
-        <xsl:variable name="code-value" select="replace($mt_code_value, '^0x', '')" as="xs:string"/>
-        <xsl:value-of select="$mtcode-fontmap//symbol[lower-case(@number) eq lower-case($code-value)]/@char"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="codepoints-to-string(tr:hexToDec($mt_code_value))"/>    
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:if test="lower-case(replace(mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i))">
+      <xsl:attribute name="font-position" select="replace(mt_code_value, '^0x', '')"/>
+      <xsl:attribute name="font-family" select="'MathType MTCode'"/>
+      <xsl:attribute name="default-font"/>
+    </xsl:if>
+    <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
   </xsl:template>
   
   <xsl:template match="char/options[floor(. div 2) mod 2 = 1]">
     <xsl:attribute name="start-function"/>
+  </xsl:template>
+  
+  <xsl:template match="char/font_position">
+    <xsl:variable name="font-position-hex" select="tr:decToHex(text())"/>
+    <xsl:variable name="pad" select="string-join(for $i in (1 to 4 - string-length($font-position-hex)) return '0','')"/>
+    <xsl:attribute name="font-position" select="concat($pad, $font-position-hex)"/>
   </xsl:template>
   
   <xsl:template name="mathsize">
@@ -165,10 +169,9 @@
   <xsl:template match="char[not(variation) or variation != 'textmode']" priority="-0.1">
     <mi>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
       <xsl:if test="$debug">
         <xsl:message terminate="no">
           <xsl:text>default character match: </xsl:text>
@@ -182,10 +185,9 @@
   <xsl:template match="char[variation = 'textmode']" priority="-0.1">
     <mtext>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
       <xsl:if test="$debug">
         <xsl:message terminate="no">
           <xsl:text>default character match: </xsl:text>
@@ -198,19 +200,19 @@
   <xsl:template match="char[typeface = '24']">
     <mtext>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </mtext>
   </xsl:template>
   
   <xsl:template match="char[//mtef/mtef_version = '5' and (128 - number(typeface)) lt 1]">
     <xsl:variable name="font_index" select="256 - number(typeface)"/>
     <xsl:variable name="font" select="(//font_style_def)[position() = $font_index]"/>
-    <xsl:variable name="font-name" select="//font_def[position() = $font/font_def_index]/font_name"/>
+    <xsl:variable name="font-name" select="(//font_def[font_name])[position() = $font/font_def_index]/font_name"/>
     <mi>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
       <xsl:if test="$font/char_style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
@@ -222,9 +224,7 @@
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
       <xsl:attribute name="font-family" select="$font-name"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </mi>
   </xsl:template>
   
@@ -236,6 +236,7 @@
     </xsl:variable>
     <mi>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
       <xsl:if test="$font/style = 0">
         <xsl:attribute name="mathvariant">normal</xsl:attribute>
@@ -248,17 +249,13 @@
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
       <xsl:attribute name="font-family" select="$font/name"/>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </mi>
   </xsl:template>
   
   <xsl:template match="char[//mtef/mtef_version = '5' and typeface = (1 to 12)]">
     <xsl:variable name="char">
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </xsl:variable>
     <xsl:variable name="element-name">
       <xsl:choose>
@@ -282,6 +279,9 @@
     <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
+      <xsl:attribute name="font-family" select="//font_def[position() = $font/font_def]/font_name"/>
+      <xsl:attribute name="default-font"/>
       <xsl:call-template name="mathsize"/>
       <xsl:value-of select="$char"/>
     </xsl:element>
@@ -289,9 +289,7 @@
   
   <xsl:template match="char[//mtef/mtef_version = '3' and typeface = (1 to 12)]">
     <xsl:variable name="char">
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </xsl:variable>
     <xsl:variable name="element-name">
       <xsl:choose>
@@ -307,12 +305,13 @@
         <xsl:attribute name="mathvariant" select="'bold'"/>
       </xsl:if>
       <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
+      <xsl:attribute name="font-family" select="if (typeface = (4, 5, 6)) then 'Symbol' else ''"/>
+      <xsl:attribute name="default-font"/>
       <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
         <xsl:call-template name="mathsize"/>
       </xsl:if>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value/text()"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </xsl:element>
   </xsl:template>  
 

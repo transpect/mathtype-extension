@@ -6,10 +6,24 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:mml="http://www.w3.org/1998/Math/MathML"
   version="1.0"
+  name="mathtype2mml-internal"
   type="tr:mathtype2mml-internal">
 
   <p:documentation>Convert an OLE-Object containing a Mathtype equation to MathML.
   Uses Jruby to create an XML-representation of the MTEF formula.</p:documentation>
+
+  <p:input port="additional-font-maps" primary="false" sequence="true">
+    <p:documentation>
+      A sequence of &lt;symbols&gt;, containing mapped characters.
+      Each &lt;symbols&gt; is required to contain the name of its @font-family as an attribute @name.
+      If no @name is present, there will be an attempt to extract it from the base_uri (filename).
+      Example, the value of @char is the unicode character that will be in the mml output:
+      <symbols name="Times New Roman">
+        <symbol number="002F" entity="&#x002f;" char="&#x002f;"/>
+      </symbols>
+    </p:documentation>
+    <p:empty/>
+  </p:input>
 
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
@@ -21,6 +35,10 @@
   <p:output port="xml2mml" primary="false" sequence="true">
     <p:documentation>First mml produced, possibly invalid.</p:documentation>
     <p:pipe port="result" step="xml2mml"/>
+  </p:output>
+  <p:output port="map-fonts" primary="false" sequence="true">
+    <p:documentation>Replaced characters for which a font-map was available.</p:documentation>
+    <p:pipe port="result" step="map-fonts"/>
   </p:output>
   <p:output port="handle-whitespace" primary="false" sequence="true">
     <p:documentation>Whitespace translated according to option mml-space-handling (default: mspace).</p:documentation>
@@ -88,9 +106,9 @@
   <p:option name="zero-width" select="'0em'">
     <p:documentation>Only active with option mml-space-handling set to 'mspace'. Value for mspace/width with Mathtype zero-width. Default is '0em'.</p:documentation>
   </p:option>
-
+  
   <p:import href="mtef2xml-declaration.xpl"/>
-
+  
   <tr:mtef2xml name="mtef2xml">
 	 <p:with-option name="href" select="$href"/>
   </tr:mtef2xml>
@@ -104,7 +122,21 @@
     </p:input>
     <p:with-param name="debug" select="$debug"><p:empty/></p:with-param>
   </p:xslt>
-  
+
+  <p:xslt initial-mode="map-fonts" name="map-fonts">
+    <p:input port="source">
+      <p:pipe port="result" step="xml2mml"/>
+      <p:document href="../fontmaps/MathType_MTCode.xml"/>
+      <p:pipe port="additional-font-maps" step="mathtype2mml-internal"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/map-fonts.xsl"/>
+    </p:input>
+  </p:xslt>
+
   <p:xslt initial-mode="handle-whitespace" name="handle-whitespace">
     <p:input port="parameters">
       <p:empty/>

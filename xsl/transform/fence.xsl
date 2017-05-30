@@ -118,9 +118,7 @@
           <xsl:if test="$debug">
             <xsl:message>Fence unknown: <xsl:value-of select="mt_code_value"/></xsl:message>
           </xsl:if>
-          <xsl:call-template name="charhex">
-            <xsl:with-param name="mt_code_value" select="mt_code_value"/>
-          </xsl:call-template>
+          <xsl:call-template name="charhex"/>
         </xsl:otherwise>
       </xsl:choose>
     </mo>
@@ -128,9 +126,7 @@
 
   <xsl:template match="char[mt_code_value = &unicode-fences; and typeface = '22']" priority="2">
     <mo>
-      <xsl:call-template name="charhex">
-        <xsl:with-param name="mt_code_value" select="mt_code_value"/>
-      </xsl:call-template>
+      <xsl:call-template name="charhex"/>
     </mo>
   </xsl:template>
 

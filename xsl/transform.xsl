@@ -9,6 +9,7 @@
   
   <xsl:preserve-space elements="mi ms mo mn mtext"/>
   
+  <xsl:output indent="yes"></xsl:output>
   <xsl:param name="debug" select="'no'"/>
   
   <xsl:template match="root">
@@ -42,7 +43,7 @@
   
   <!-- fail silently only for explicit elements -->
   <xsl:template match="options | end | full | mtef_version | platform | product | product_version | product_subversion | size
-                      | sub | sub2 | symbol | sym | subsym | font"
+                      | sub | sub2 | symbol | sym | subsym | font | font_def| font_style_def"
   />
   
   <!-- message for not yet matched elements -->

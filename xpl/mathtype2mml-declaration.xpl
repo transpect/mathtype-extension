@@ -6,12 +6,25 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:mml="http://www.w3.org/1998/Math/MathML"
   version="1.0"
+  name="mathtype2mml"
   type="tr:mathtype2mml">
 
   <p:documentation>Convert an OLE-Object containing a Mathtype equation to MathML.
   Uses Jruby to create an XML-representation of the MTEF formula.
   This step requires xproc-util.
   Conversion without xproc-util is provided by tr:mathtype2mml-internal.</p:documentation>
+
+  <p:input port="additional-font-maps" primary="false" sequence="true">
+    <p:documentation>
+      A sequence of &lt;symbols&gt;, containing mapped characters.
+      Each &lt;symbols&gt; is required to contain the name of its font-family as an attribute @name.
+      Example, the value of @char is the unicode character that will be in the mml output:
+      <symbols name="Times New Roman">
+        <symbol number="002F" entity="&#x002f;" char="&#x002f;"/>
+      </symbols>
+    </p:documentation>
+    <p:empty/>
+  </p:input>
 
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
@@ -72,6 +85,9 @@
   <p:variable name="basename" select="replace($href,  '^.+/(.+)\.[a-z]+$', '$1')"/>
 
   <tr:mathtype2mml-internal name="mathtype2mml-internal">
+    <p:input port="additional-font-maps">
+      <p:pipe port="additional-font-maps" step="mathtype2mml"/>
+    </p:input>
     <p:with-option name="href" select="$href"/>
     <p:with-option name="mml-space-handling" select="$mml-space-handling"/>
     <p:with-option name="debug" select="$debug"/>
@@ -108,9 +124,18 @@
 
       <tr:store-debug>
         <p:input port="source">
+          <p:pipe port="map-fonts" step="mathtype2mml-internal"/>
+        </p:input>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/06-map-fonts')"/>
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
+
+      <tr:store-debug>
+        <p:input port="source">
           <p:pipe port="handle-whitespace" step="mathtype2mml-internal"/>
         </p:input>
-        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/05-handle-whitespace')"/>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/08-handle-whitespace')"/>
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -119,7 +144,7 @@
         <p:input port="source">
           <p:pipe port="operator-elements" step="mathtype2mml-internal"/>
         </p:input>
-        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/06-operator-elements')"/>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/10-operator-elements')"/>
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -128,7 +153,7 @@
         <p:input port="source">
           <p:pipe port="combine-elements" step="mathtype2mml-internal"/>
         </p:input>
-        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/07-combine-elements')"/>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/12-combine-elements')"/>
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -137,7 +162,7 @@
         <p:input port="source">
           <p:pipe port="repair-subsup" step="mathtype2mml-internal"/>
         </p:input>
-        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/08-repair-subsup')"/>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/14-repair-subsup')"/>
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
@@ -146,7 +171,7 @@
         <p:input port="source">
           <p:pipe port="clean-up" step="mathtype2mml-internal"/>
         </p:input>
-        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/10-clean-up')"/>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/20-clean-up')"/>
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>

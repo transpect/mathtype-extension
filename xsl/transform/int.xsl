@@ -34,7 +34,7 @@
             <xsl:if test="variation = 'tvINT_EXPAND'">
               <xsl:attribute name="stretchy" select="'true'"/>
             </xsl:if>
-            <xsl:copy-of select="$operator/*/@* except @stretchy"/>
+            <xsl:copy-of select="$operator/*/@* except ($operator/*/(@stretchy | @font-position))"/>
             <xsl:variable name="char-code" as="xs:integer">
               <xsl:choose>
                 <xsl:when test="(slot|pile|char)[4]/mt_code_value = '0xEE00'">
