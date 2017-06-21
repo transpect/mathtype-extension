@@ -114,6 +114,10 @@
   </tr:mtef2xml>
 
   <p:xslt name="xml2mml">
+    <p:input port="source">
+      <p:pipe port="result" step="mtef2xml"/>
+      <p:document href="../fontmaps/MathType_MTCode.xml"/>
+    </p:input>
     <p:input port="parameters">
       <p:empty/>
     </p:input>

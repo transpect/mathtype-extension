@@ -6,23 +6,11 @@
 	 xmlns:tr="http://transpect.io"
 	 version="2.0">
   <xsl:import href="identity.xsl"/>
+  <xsl:import href="util/symbol-map-base-uri-to-name.xsl"/>
 
   <xsl:variable as="document-node(element(symbols))*" name="font-maps" select="collection()[symbols]"/>
 
   <xsl:key name="symbol-by-number" match="symbol" use="lower-case(@number)"/>
-
-  <xsl:function name="tr:symbol-map-base-uri-to-name" as="xs:string">
-    <xsl:param name="symbols" as="document-node(element(symbols))"/>
-    <xsl:sequence 
-      select="(
-        $symbols/symbols/@mathtype-name, 
-        translate(
-          replace(base-uri($symbols/symbols), '^.+/([^./]+)\.xml$', '$1'),
-          '_',
-          ' '
-        )
-      )[1]"/>
-  </xsl:function>
 
   <xsl:template match="mml:*[@font-position]" mode="map-fonts">
     <xsl:copy>

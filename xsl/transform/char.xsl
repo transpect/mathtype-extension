@@ -14,6 +14,7 @@
   
   <xsl:import href="../util/hexToDec.xsl"/>
   <xsl:import href="../util/decToHex.xsl"/>
+  <xsl:import href="../util/symbol-map-base-uri-to-name.xsl"/>
   
   <xsl:variable name="lsize">
     <xsl:variable name="sizes" as="element(mml:size)+">
@@ -79,11 +80,8 @@
     <user2 size="{if (normalize-space($sizes[7])) then $sizes[7] else '150%'}"/>
   </xsl:variable>
   
-  <xsl:variable name="mtcode-fontmap" select="
-    if (doc-available('http://transpect.io/fontmaps/MathType_MTCode.xml')) 
-    then document('http://transpect.io/fontmaps/MathType_MTCode.xml')/symbols
-    else document('../../fontmaps/MathType_MTCode.xml')/symbols
-                                              " as="element(symbols)"/>
+<xsl:variable name="mtcode-fontmap" as="element(symbols)"
+    select="collection()[position() gt 1][tr:symbol-map-base-uri-to-name(.) = 'MathType MTCode']/symbols"/>
   
   <xsl:variable name="code-range" select="$mtcode-fontmap//symbol/@number" as="attribute(number)*"/>
 
