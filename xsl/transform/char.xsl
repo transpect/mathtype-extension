@@ -298,14 +298,19 @@
         <xsl:otherwise>mi</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+    <xsl:variable name="mathvariant">
+      <xsl:choose>
+        <xsl:when test="typeface = ('3', '4')">italic</xsl:when>
+        <xsl:when test="typeface = ('7')">bold</xsl:when>
+        <xsl:otherwise>normal</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
-      <xsl:if test="typeface = '7'">
-        <xsl:attribute name="mathvariant" select="'bold'"/>
-      </xsl:if>
       <xsl:apply-templates select="options"/>
       <xsl:apply-templates select="font_position"/>
       <xsl:attribute name="font-family" select="if (typeface = (4, 5, 6)) then 'Symbol' else ''"/>
       <xsl:attribute name="default-font"/>
+      <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
         <xsl:call-template name="mathsize"/>
       </xsl:if>
