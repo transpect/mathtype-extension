@@ -37,9 +37,27 @@
            *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msubsup[count(node()) le 2]]" mode="repair-subsup"  priority="1">
     <xsl:param name="keep" select="false()"/>
     <xsl:if test="$keep">
-      <xsl:next-match/>
+      <xsl:next-match>
+        <xsl:with-param name="keep" select="$keep"/>
+      </xsl:next-match>
     </xsl:if>
   </xsl:template>
+  
+  <xsl:template match="*[preceding-sibling::*[1]/local-name() = 'mmultiscripts'][starts-with(following-sibling::*[1]/local-name(), 'msu')]" mode="repair-subsup" priority="2">
+    <!-- base with preceding mmultiscripts and following msu(b|p|bsup) becomes one mmultiscripts -->
+    <xsl:message select="'real mmulti!'"></xsl:message>
+    <mmultiscripts>
+      <xsl:next-match>
+        <xsl:with-param name="keep" select="true()"/>
+      </xsl:next-match>
+      <xsl:apply-templates select="following-sibling::*[1]/node()"/>
+      <mprescripts/>
+      <xsl:apply-templates select="preceding-sibling::*[1]/node()[preceding-sibling::mprescripts]"/>
+    </mmultiscripts>
+  </xsl:template>
+
+  <xsl:template match="mmultiscripts[starts-with(following-sibling::*[2]/local-name(), 'msu')]" mode="repair-subsup" priority="2"/>
+  <xsl:template match="*[starts-with(local-name(), 'msu')][preceding-sibling::*[2]/local-name() = 'mmultiscripts']" mode="repair-subsup" priority="2"/>
 
   <xsl:template match="mmultiscripts[not(count(mprescripts/preceding-sibling::*) mod 2 = 1)]" mode="repair-subsup">
     <mmultiscripts>
