@@ -51,7 +51,7 @@
         group-adjacent="local-name() = 'mn' and 
         (
           not(preceding-sibling::*[1] = mn) 
-          or (every $a in ./@* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a))
+          or (every $a in @* satisfies (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a))
         )" select="node()">
       <xsl:choose>
         <xsl:when test="current-grouping-key()">
@@ -80,16 +80,21 @@
 
   <xsl:template match="mi/@start-function" mode="detect-functions"/>
   <xsl:template match="mn" mode="detect-functions">
-    <xsl:variable name="name">
-      <xsl:choose>
-        <xsl:when test="text() = $functions">mi</xsl:when>
-        <xsl:otherwise>mn</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:element name="{$name}">
-      <xsl:apply-templates mode="#current" select="@* except @start-function"/>
-      <xsl:value-of select="text()"/>
-    </xsl:element>
+    <xsl:variable name="self" select="."/>
+    <xsl:analyze-string select="text()" regex="{string-join($functions,'|')}">
+      <xsl:matching-substring>
+        <mi>
+          <xsl:apply-templates mode="#current" select="$self/@* except $self/@start-function"/>
+          <xsl:value-of select="current()"/>
+        </mi>
+      </xsl:matching-substring>
+      <xsl:non-matching-substring>
+        <mn>
+          <xsl:apply-templates mode="#current" select="$self/@* except $self/@start-function"/>
+          <xsl:value-of select="current()"/>
+        </mn>
+      </xsl:non-matching-substring>
+    </xsl:analyze-string>
   </xsl:template>
   
   <xsl:template match="/" mode="combine-elements">
