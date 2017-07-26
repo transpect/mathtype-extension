@@ -2,11 +2,11 @@
 <!DOCTYPE xsl:stylesheet [
   <!ENTITY functions "('ln','max','min','cos','sin')">
 ]>
-<xsl:stylesheet 
-	 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	 xmlns="http://www.w3.org/1998/Math/MathML"
 	 xpath-default-namespace="http://www.w3.org/1998/Math/MathML"
 	 version="2.0">
+  
   <xsl:import href="identity.xsl"/>
 
   <xsl:template match="mrow[count(*) = 1]" mode="clean-up">
@@ -27,6 +27,13 @@
   <xsl:template match="mi[string-length(.) = 1]/@mathvariant[. = 'italic']" mode="clean-up"/>
 
   <xsl:template match="mi[string-length(.) gt 1]/@mathvariant[. = 'normal']" mode="clean-up"/>
+  
+  <xsl:template match="mn[matches(., '^\p{L}$')]" mode="clean-up">
+    <mi>
+      <xsl:copy-of select="@mathvariant"/>
+      <xsl:apply-templates select="@* except @mathvariant, node()" mode="#current"/>
+    </mi>
+  </xsl:template>
 
   <xsl:template match="munderover[count(child::*[position() gt 1]/node()) = 0]" mode="clean-up" priority="2">
     <xsl:apply-templates select="node()[1]" mode="clean-up"/>
