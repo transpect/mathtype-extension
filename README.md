@@ -4,7 +4,7 @@ An mathtype extension step for XML Calabash that converts a Mathtype Equation em
 
 Incorporates (J)Ruby mathtype gem: https://github.com/sbulka/mathtype
 
-XSL adapted from: https://github.com/jure/mathtype_to_mathml/tree/master/lib/xsl
+XSLT adapted from: https://github.com/jure/mathtype_to_mathml/tree/master/lib/xsl
 
 Written by Sebastian Bulka, le-tex publishing services GmbH
 
