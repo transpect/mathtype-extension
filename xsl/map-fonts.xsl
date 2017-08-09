@@ -17,7 +17,7 @@
       <xsl:apply-templates select="@* except @font-position" mode="#current"/>
       <xsl:variable as="xs:string?" name="symbol">
         <xsl:variable name="font-position" select="lower-case(@font-position)"/>
-        <xsl:variable name="font-family" select="@font-family" as="xs:string"/>
+        <xsl:variable name="font-family" select="@font-family" as="xs:string?"/>
         <xsl:if test="$font-family">
           <xsl:variable name="selected-map" as="document-node(element(symbols))?" 
             select="($font-maps[tr:symbol-map-base-uri-to-name(.) = $font-family])[last()]"/>
