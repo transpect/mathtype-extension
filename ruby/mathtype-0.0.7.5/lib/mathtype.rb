@@ -1,34 +1,39 @@
 require "mathtype/version"
-require "bindata"
-require "ole/storage"
 require "nokogiri"
-require_relative "records/bintypes.rb"
+require_relative "file_parser/parser.rb"
 require_relative "records3/mtef.rb"
 require_relative "records5/mtef.rb"
 
-
 module Mathtype
   class Converter
+    attr_reader :parser
     attr_reader :xml
     attr_reader :builder
     attr_reader :version
     def initialize(equation)
-      ole = Ole::Storage.open(equation, "rb+")
-      eq = ole.file.read("Equation Native")[28..-1]
-      ole.close
-      @version = eq[0].unpack('C')[0].to_i
+      set_parser(equation)
+      raise ::NotImplementedError, "Only .wmf and .bin (OLE.-Object) currently supported, name supplied: #{equation}" unless @parser.equation
+      @version = @parser.equation[0].unpack('C')[0].to_i
       raise ::NotImplementedError, "Only MTEF Version 3 and 5 currently supported, version is #{version}" unless (version==3 or version==5)
       case @version
       when 3
-        data = Mathtype3::Equation.read(eq).snapshot
+        data = Mathtype3::Equation.read(@parser.equation).snapshot
       when 5
-        data = Mathtype5::Equation.read(eq).snapshot
+        data = Mathtype5::Equation.read(@parser.equation).snapshot
       end
       @builder = Nokogiri::XML::Builder.new do |xml|
         @xml = xml
         xml.root do
           process(object: data)
         end
+      end
+    end
+
+    def set_parser(equation)
+      if equation.end_with?(".bin")
+        @parser = Mathtype::OleFileParser.new equation
+      else equation.end_with?(".wmf")
+        @parser = Mathtype::WmfFileParser.new equation
       end
     end
 
