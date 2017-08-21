@@ -1,6 +1,7 @@
 require "mathtype/version"
 require "nokogiri"
 require_relative "file_parser/parser.rb"
+require_relative "records/bintypes.rb"
 require_relative "records3/mtef.rb"
 require_relative "records5/mtef.rb"
 
