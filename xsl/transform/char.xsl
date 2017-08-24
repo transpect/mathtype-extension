@@ -195,6 +195,16 @@
     </mtext>
   </xsl:template>
   
+  <xsl:template match="char[typeface = '23' and mt_code_value = '0x0009']">
+    <mtext>
+      <xsl:apply-templates select="options"/>
+      <xsl:apply-templates select="font_position"/>
+      <xsl:call-template name="mathsize"/>
+      <xsl:value-of select="'&#x2003;'"/>
+      <!-- TODO: use malignmark? before/after/instead of space? -->
+    </mtext>
+  </xsl:template>
+  
   <xsl:template match="char[typeface = '24']">
     <mtext>
       <xsl:apply-templates select="options"/>
