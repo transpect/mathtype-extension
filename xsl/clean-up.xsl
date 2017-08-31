@@ -28,11 +28,23 @@
 
   <xsl:template match="mi[string-length(.) gt 1]/@mathvariant[. = 'normal']" mode="clean-up"/>
   
-  <xsl:template match="mn[matches(., '^\p{L}$')]" mode="clean-up">
-    <mi>
-      <xsl:copy-of select="@mathvariant"/>
-      <xsl:apply-templates select="@* except @mathvariant, node()" mode="#current"/>
-    </mi>
+  <xsl:template match="mn[matches(., '\p{L}')]" mode="clean-up">
+    <xsl:variable name="context" select="self::*" as="node()"/>
+    <xsl:variable name="split">
+      <xsl:analyze-string select="text()" regex="\p{L}+">
+        <xsl:matching-substring>
+          <mi>
+            <xsl:copy-of select="$context/@*, current()"/>
+          </mi>
+        </xsl:matching-substring>
+        <xsl:non-matching-substring>
+          <mn>
+            <xsl:copy-of select="$context/@*, current()"/>
+          </mn>
+        </xsl:non-matching-substring>
+      </xsl:analyze-string>
+    </xsl:variable>
+    <xsl:apply-templates select="$split" mode="#current"/>
   </xsl:template>
 
   <xsl:template match="munderover[count(child::*[position() gt 1]/node()) = 0]" mode="clean-up" priority="2">
