@@ -194,6 +194,10 @@
       </xsl:if>
     </mtext>
   </xsl:template>
+
+  <xsl:template match="char[mt_code_value eq '0xEF00' and typeface eq '23']">
+    <malignmark edge="left"/>
+  </xsl:template>
   
   <xsl:template match="char[typeface = '23' and mt_code_value = '0x0009']">
     <mtext>
@@ -201,8 +205,11 @@
       <xsl:apply-templates select="font_position"/>
       <xsl:call-template name="mathsize"/>
       <xsl:value-of select="'&#x2003;'"/>
-      <!-- TODO: use malignmark? before/after/instead of space? -->
     </mtext>
+  </xsl:template>
+
+  <xsl:template match="char[mt_code_value eq '0xEF00' and typeface eq '23']">
+    <malignmark edge="left"/>
   </xsl:template>
   
   <xsl:template match="char[typeface = '24']">
