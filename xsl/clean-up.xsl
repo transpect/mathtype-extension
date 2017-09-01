@@ -30,8 +30,9 @@
   
   <xsl:template match="mn[matches(., '\p{L}')]" mode="clean-up">
     <xsl:variable name="context" select="self::*" as="node()"/>
+    <xsl:variable name="regex" select="'\p{L}+'"/>
     <xsl:variable name="split">
-      <xsl:analyze-string select="text()" regex="\p{L}+">
+      <xsl:analyze-string select="text()" regex="{$regex}">
         <xsl:matching-substring>
           <mi>
             <xsl:copy-of select="$context/@*, current()"/>
