@@ -32,18 +32,20 @@
     <xsl:variable name="context" select="self::*" as="node()"/>
     <xsl:variable name="regex" select="'\p{L}+'"/>
     <xsl:variable name="split">
-      <xsl:analyze-string select="text()" regex="{$regex}">
-        <xsl:matching-substring>
-          <mi>
-            <xsl:copy-of select="$context/@*, current()"/>
-          </mi>
-        </xsl:matching-substring>
-        <xsl:non-matching-substring>
-          <mn>
-            <xsl:copy-of select="$context/@*, current()"/>
-          </mn>
-        </xsl:non-matching-substring>
-      </xsl:analyze-string>
+      <mrow>
+        <xsl:analyze-string select="text()" regex="{$regex}">
+          <xsl:matching-substring>
+            <mi>
+              <xsl:copy-of select="$context/@*, current()"/>
+            </mi>
+          </xsl:matching-substring>
+          <xsl:non-matching-substring>
+            <mn>
+              <xsl:copy-of select="$context/@*, current()"/>
+            </mn>
+          </xsl:non-matching-substring>
+        </xsl:analyze-string>
+      </mrow>
     </xsl:variable>
     <xsl:apply-templates select="$split" mode="#current"/>
   </xsl:template>
