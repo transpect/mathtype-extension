@@ -9,6 +9,20 @@
   
   <xsl:import href="identity.xsl"/>
 
+  <xsl:template match="/math" mode="clean-up" as="element(math)">
+    <xsl:variable name="single-mrow">
+      <xsl:apply-templates select="." mode="single-mrow"/>
+    </xsl:variable>
+    <math>
+      <xsl:apply-templates select="@*" mode="#current"/>
+      <xsl:apply-templates select="$single-mrow/math/node()" mode="#current"/>
+    </math>
+  </xsl:template>
+
+  <xsl:template match="mrow[count(node()) = 1]/mrow" mode="single-mrow">
+    <xsl:apply-templates mode="#current"/>
+  </xsl:template>
+
   <xsl:template match="mrow[count(*) = 1]" mode="clean-up">
     <xsl:apply-templates mode="#current"/>
   </xsl:template>
@@ -27,28 +41,6 @@
   <xsl:template match="mi[string-length(.) = 1]/@mathvariant[. = 'italic']" mode="clean-up"/>
 
   <xsl:template match="mi[string-length(.) gt 1]/@mathvariant[. = 'normal']" mode="clean-up"/>
-  
-  <xsl:template match="mn[matches(., '\p{L}')]" mode="clean-up">
-    <xsl:variable name="context" select="self::*" as="node()"/>
-    <xsl:variable name="regex" select="'\p{L}+'"/>
-    <xsl:variable name="split">
-      <mrow>
-        <xsl:analyze-string select="text()" regex="{$regex}">
-          <xsl:matching-substring>
-            <mi>
-              <xsl:copy-of select="$context/@*, current()"/>
-            </mi>
-          </xsl:matching-substring>
-          <xsl:non-matching-substring>
-            <mn>
-              <xsl:copy-of select="$context/@*, current()"/>
-            </mn>
-          </xsl:non-matching-substring>
-        </xsl:analyze-string>
-      </mrow>
-    </xsl:variable>
-    <xsl:apply-templates select="$split" mode="#current"/>
-  </xsl:template>
 
   <xsl:template match="munderover[count(child::*[position() gt 1]/node()) = 0]" mode="clean-up" priority="2">
     <xsl:apply-templates select="node()[1]" mode="clean-up"/>
