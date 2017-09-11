@@ -56,6 +56,10 @@
     <p:documentation>The mml with combined mtext|mn elements where applicable.</p:documentation>
     <p:pipe port="result" step="combine-elements"/>
   </p:output>
+  <p:output port="split-elements" primary="false" sequence="true">
+    <p:documentation>The mml where characters in mn are extracted to mi.</p:documentation>
+    <p:pipe port="result" step="split-elements"/>
+  </p:output>
   <p:output port="clean-up" primary="false" sequence="true">
     <p:documentation>Dissolved mrows with exactly one child element.</p:documentation>
     <p:pipe port="result" step="clean-up"/>
@@ -172,6 +176,15 @@
     </p:input>
     <p:input port="stylesheet">
       <p:document href="../xsl/combine-elements.xsl"/>
+    </p:input>
+  </p:xslt>
+
+  <p:xslt initial-mode="split-elements" name="split-elements">
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/split-elements.xsl"/>
     </p:input>
   </p:xslt>
 

@@ -157,6 +157,15 @@
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
+      
+      <tr:store-debug>
+        <p:input port="source">
+          <p:pipe port="split-elements" step="mathtype2mml-internal"/>
+        </p:input>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/13-combine-elements')"/>
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
 
       <tr:store-debug>
         <p:input port="source">
