@@ -81,5 +81,17 @@
       <xsl:apply-templates select="node()[2]" mode="clean-up"/>
     </msub>
   </xsl:template>
+  
+  <!-- move malignmarks before the element which should be the reference for alignment -->
+  
+  <xsl:template match="*[following-sibling::*[1][self::malignmark]]" mode="clean-up">
+    <xsl:variable name="malignmark" select="following-sibling::*[1][self::malignmark]" as="element(malignmark)"/>
+    <xsl:copy-of select="$malignmark"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*, node()" mode="#current"/>
+    </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="malignmark[preceding-sibling::*[1]]" mode="clean-up"/>
 
 </xsl:stylesheet>
