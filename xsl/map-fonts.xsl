@@ -17,10 +17,10 @@
       <xsl:apply-templates select="@* except @font-position" mode="#current"/>
       <xsl:variable as="xs:string?" name="symbol">
         <xsl:variable name="font-position" select="lower-case(@font-position)"/>
-        <xsl:variable name="font-family" select="@font-family" as="xs:string?"/>
-        <xsl:if test="$font-family">
+        <xsl:variable name="fontfamily" select="@fontfamily" as="xs:string?"/>
+        <xsl:if test="$fontfamily">
           <xsl:variable name="selected-map" as="document-node(element(symbols))?" 
-            select="($font-maps[tr:symbol-map-base-uri-to-name(.) = $font-family])[last()]"/>
+            select="($font-maps[tr:symbol-map-base-uri-to-name(.) = $fontfamily])[last()]"/>
           <xsl:sequence select="if (exists($selected-map))
                                 then key('symbol-by-number', $font-position, $selected-map)/@char
                                 else ()"/>
@@ -38,7 +38,7 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="@font-family[. = ('Times New Roman', 'Symbol', 'Courier New', 'MT Extra')]" mode="map-fonts"/>
-  <xsl:template match="mml:*[@default-font]/@font-family | @default-font" mode="map-fonts" priority="2"/>
+  <xsl:template match="@fontfamily[. = ('Times New Roman', 'Symbol', 'Courier New', 'MT Extra')]" mode="map-fonts"/>
+  <xsl:template match="mml:*[@default-font]/@fontfamily | @default-font" mode="map-fonts" priority="2"/>
   
 </xsl:stylesheet>

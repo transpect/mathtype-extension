@@ -92,7 +92,7 @@
   <xsl:template name="charhex">
     <xsl:if test="lower-case(replace(mt_code_value, '^0x', '')) = (for $i in $code-range return lower-case($i))">
       <xsl:attribute name="font-position" select="replace(mt_code_value, '^0x', '')"/>
-      <xsl:attribute name="font-family" select="'MathType MTCode'"/>
+      <xsl:attribute name="fontfamily" select="'MathType MTCode'"/>
       <xsl:attribute name="default-font"/>
     </xsl:if>
     <xsl:value-of select="codepoints-to-string(tr:hexToDec(mt_code_value))"/>
@@ -238,7 +238,7 @@
       <xsl:if test="$font/char_style = 3">
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
-      <xsl:attribute name="font-family" select="$font-name"/>
+      <xsl:attribute name="fontfamily" select="$font-name"/>
       <xsl:call-template name="charhex"/>
     </mi>
   </xsl:template>
@@ -263,7 +263,7 @@
       <xsl:if test="$font/style = 3">
         <xsl:attribute name="mathvariant">bold-italic</xsl:attribute>
       </xsl:if>
-      <xsl:attribute name="font-family" select="$font/name"/>
+      <xsl:attribute name="fontfamily" select="$font/name"/>
       <xsl:call-template name="charhex"/>
     </mi>
   </xsl:template>
@@ -295,7 +295,7 @@
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:apply-templates select="options"/>
       <xsl:apply-templates select="font_position"/>
-      <xsl:attribute name="font-family" select="//font_def[position() = $font/font_def]/font_name"/>
+      <xsl:attribute name="fontfamily" select="//font_def[position() = $font/font_def]/font_name"/>
       <xsl:attribute name="default-font"/>
       <xsl:call-template name="mathsize"/>
       <xsl:value-of select="$char"/>
@@ -325,7 +325,7 @@
     <xsl:element name="{$element-name}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates select="options"/>
       <xsl:apply-templates select="font_position"/>
-      <xsl:attribute name="font-family" select="if (typeface = (4, 5, 6)) then 'Symbol' else ''"/>
+      <xsl:attribute name="fontfamily" select="if (typeface = (4, 5, 6)) then 'Symbol' else ''"/>
       <xsl:attribute name="default-font"/>
       <xsl:attribute name="mathvariant" select="$mathvariant"/>
       <xsl:if test="not(ancestor::tmpl[selector = ('tmSUB', 'tmSUP', 'tmSUBSUP')])">
