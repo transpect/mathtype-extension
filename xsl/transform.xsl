@@ -60,6 +60,7 @@
     <xsl:copy-of select="." copy-namespaces="yes"/>
   </xsl:template>
   
+  <xsl:include href="transform/nudge.xsl"/>
   <xsl:include href="transform/int.xsl"/>
   <xsl:include href="transform/lim.xsl"/>
   <xsl:include href="transform/frac.xsl"/>
