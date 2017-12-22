@@ -8,6 +8,14 @@ XSLT adapted from: https://github.com/jure/mathtype_to_mathml/tree/master/lib/xs
 
 Written by Sebastian Bulka, le-tex publishing services GmbH
 
+Development was sponsored by 
+
+* [Carl Hanser Verlag](http://www.hanser-fachbuch.de/)
+* [VDE Verband der Elektrotechnik Elektronik Informationstechnik e.V.](https://www.vde.com/)
+* [STM Document Engineering Private Limited](http://www.stmdocs.in/)
+
+If you or your organization benefit from this tool, if you are interested in supporting the continuous maintenance, or if you have a feature request: All development costs have not been covered yet; we do welcome more sponsors. If you are interested, please get in touch with @sbulka, @mkraetke, or @gimsieke.
+
 # Usage
   There are different ways to call the xproc-step.
 ## Standalone
