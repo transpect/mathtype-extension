@@ -1,3 +1,6 @@
-install: ./install-dependencies.sh
+install:
+    - ./install-dependencies.sh
+    - echo `readlink -f .`
+    - ls -al
 
 script: SAXON_CP=saxon/saxon9he.jar xspec-master/bin/xspec.sh xspec/combine-elements.xspec
