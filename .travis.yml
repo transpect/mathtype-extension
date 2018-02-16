@@ -1,6 +1,7 @@
+env:
+    - SAXON_CP=saxon/saxon9he.jar
+
 install:
     - $(TRAVIS_BUILD_DIR)/install-dependencies.sh
-    - echo `readlink -f .`
-    - ls -al
 
-script: SAXON_CP=saxon/saxon9he.jar xspec-master/bin/xspec.sh xspec/combine-elements.xspec
+script: xspec-master/bin/xspec.sh xspec/combine-elements.xspec
