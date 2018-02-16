@@ -1,5 +1,5 @@
 install:
-    - ./install-dependencies.sh
+    - $(TRAVIS_BUILD_DIR)/install-dependencies.sh
     - echo `readlink -f .`
     - ls -al
 
