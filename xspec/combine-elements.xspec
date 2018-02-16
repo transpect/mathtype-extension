@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-  stylesheet="/home/sbulka/dev/MathType/github/mathtype-extension/xsl/combine-elements.xsl">
+  stylesheet="../xsl/combine-elements.xsl">
   <x:scenario label="Given two msubs">
     <x:scenario label="which are adjacent">
       <x:context mode="combine-others">
