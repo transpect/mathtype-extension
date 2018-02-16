@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  stylesheet="/home/sbulka/dev/MathType/github/mathtype-extension/xsl/combine-elements.xsl">
+  <x:scenario label="Given two msubs">
+    <x:scenario label="which are adjacent">
+      <x:context mode="combine-others">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mi>1</mi> 
+          </msub>
+          <msub>
+            <mi>2</mi>
+          </msub>
+        </math>
+      </x:context>
+      <x:expect label="they should be joined to one msub, with a mrow wrapper">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mrow>
+              <mi>1</mi>
+              <mi>2</mi>
+            </mrow>
+          </msub>
+        </math>
+      </x:expect>
+    </x:scenario>
+    <x:scenario label="divided by one element">
+      <x:context mode="combine-others">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mi>1</mi> 
+          </msub>
+          <mrow/>
+          <msub>
+            <mi>2</mi>
+          </msub>
+        </math>
+      </x:context>
+      <x:expect label="nothing should be modified">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mi>1</mi>
+          </msub>
+          <mrow/>
+          <msub>
+            <mi>2</mi>
+          </msub>
+        </math>
+      </x:expect>
+    </x:scenario>
+  </x:scenario>
+</x:description>
