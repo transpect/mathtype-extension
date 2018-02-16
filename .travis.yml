@@ -1,0 +1,3 @@
+install: ./install-dependencies.sh
+
+script: SAXON_CP=saxon/saxon9he.jar xspec-master/bin/xspec.sh xspec/combine-elements.xspec
