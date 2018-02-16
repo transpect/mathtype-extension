@@ -97,9 +97,36 @@
     </xsl:analyze-string>
   </xsl:template>
   
+  <xsl:template match="msub[following-sibling::*[1][self::msub]]" mode="combine-others">
+    <xsl:variable name="self" select="."/>
+    <xsl:variable name="following-msubs">
+      <xsl:variable name="following-nodes" select="(following-sibling::node())"/>
+      <xsl:for-each select="$following-nodes[not(preceding-sibling::*[not(self::msub)])]">
+        <xsl:sequence select="."></xsl:sequence>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:copy>
+      <xsl:choose>
+        <xsl:when test="empty($following-msubs)">
+          <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <mrow>
+            <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
+          </mrow>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:copy>
+  </xsl:template>
+  
+  <xsl:template match="msub[preceding-sibling::*[1][self::msub]]" mode="combine-others" priority="2"/>
+  
   <xsl:template match="/" mode="combine-elements">
+    <xsl:variable name="combine-others">
+      <xsl:apply-templates mode="combine-others" select="."/>
+    </xsl:variable>
     <xsl:variable name="combine-mn">
-      <xsl:apply-templates mode="combine-mn" select="."/>
+      <xsl:apply-templates mode="combine-mn" select="$combine-others"/>
     </xsl:variable>
     <xsl:variable name="combine-mtext">
       <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
