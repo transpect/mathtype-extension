@@ -1,3 +1,5 @@
+language: shell
+
 env:
     - SAXON_CP=saxon/saxon9he.jar
 
