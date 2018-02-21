@@ -44,6 +44,36 @@
     </xsl:element>
   </xsl:template>
   
+  <xsl:template match="*[mi[matches(., '^\s$')]]" mode="combine-mi">
+    <xsl:element name="{local-name()}">
+      <xsl:apply-templates mode="#current" select="@*"/>
+      <xsl:for-each-group  select="node()"
+        group-adjacent="(
+          .[not(@mathvariant)][
+            not(preceding-sibling::*[1]/local-name() = 'mi')
+            or (every $a in ./@* except @mathvariant satisfies (
+              (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)
+              or
+              (some $pa in following-sibling::*[1]/@* satisfies $pa = $a)
+            ))
+          ]/local-name()[. = 'mi'], ''
+          )[1]">
+        <xsl:choose>
+          <xsl:when test="current-grouping-key() and matches(string-join(current-group(), ''), '\s')">
+            <xsl:element name="{current-grouping-key()}">
+              <xsl:apply-templates select="@*" mode="#current"/>
+              <xsl:attribute name="mathvariant" select="'italic'"/>
+              <xsl:value-of select="current-group()/text()"/>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="#current" select="current-group()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each-group>
+    </xsl:element>
+  </xsl:template>
+  
   <xsl:template match="*[count(mn) ge 2]" mode="combine-mn">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
@@ -102,7 +132,7 @@
     <xsl:variable name="following-msubs">
       <xsl:variable name="following-nodes" select="(following-sibling::node())"/>
       <xsl:for-each select="$following-nodes[not(preceding-sibling::*[not(self::msub)])]">
-        <xsl:sequence select="."></xsl:sequence>
+        <xsl:sequence select="."/>
       </xsl:for-each>
     </xsl:variable>
     <xsl:copy>
@@ -121,15 +151,18 @@
   
   <xsl:template match="msub[preceding-sibling::*[1][self::msub]]" mode="combine-others" priority="2"/>
   
-  <xsl:template match="/" mode="combine-elements">
+  <xsl:template match="math" mode="combine-elements">
     <xsl:variable name="combine-others">
       <xsl:apply-templates mode="combine-others" select="."/>
     </xsl:variable>
     <xsl:variable name="combine-mn">
       <xsl:apply-templates mode="combine-mn" select="$combine-others"/>
     </xsl:variable>
+    <xsl:variable name="combine-mi">
+      <xsl:apply-templates mode="combine-mi" select="$combine-mn"/>
+    </xsl:variable>
     <xsl:variable name="combine-mtext">
-      <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
+      <xsl:apply-templates mode="combine-mtext" select="$combine-mi"/>
     </xsl:variable>
     <xsl:apply-templates mode="detect-functions" select="$combine-mtext"/>
   </xsl:template>
