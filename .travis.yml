@@ -6,4 +6,4 @@ env:
 install:
     - cd ${TRAVIS_BUILD_DIR} && ./install-dependencies.sh
 
-script: cd ${TRAVIS_BUILD_DIR} && execute-tests.sh
+script: cd ${TRAVIS_BUILD_DIR} && ./execute-tests.sh
