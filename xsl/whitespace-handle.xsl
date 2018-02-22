@@ -16,7 +16,7 @@
   <xsl:param name="hair-width" select="'0.08em'"/>
   <xsl:param name="zero-width" select="'0em'"/>
 
-  <xsl:template match="mtext[matches(.,'\s')]" mode="handle-whitespace">
+  <xsl:template match="*[self::mtext or self::mi][matches(.,'\s')]" mode="handle-whitespace">
     <xsl:variable name="self" select="."/>
     <xsl:choose>
       <xsl:when test="$mml-space-handling='mspace'">
