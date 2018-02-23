@@ -23,6 +23,38 @@
           </msub>
         </math>
       </x:expect>
+      <x:scenario label="containing another nested msub">
+        <x:context mode="combine-others">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+            <msub>
+              <mrow>
+                <mi>λ</mi>
+              </mrow>
+            </msub>
+            <msub>
+              <mrow>
+                <msub>
+                  <mrow>
+                    <mi>λ</mi>
+                  </mrow>
+                </msub>
+              </mrow>
+            </msub>
+          </math>
+        </x:context>
+        <x:expect label="only the outer msubs should be joined">
+          <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+            <msub>
+              <mrow>
+                <mi>λ</mi>
+                <msub>
+                  <mi>λ</mi>
+                </msub>
+              </mrow>
+            </msub>
+          </math>
+        </x:expect>
+      </x:scenario>
     </x:scenario>
     <x:scenario label="divided by one element">
       <x:context mode="combine-elements">

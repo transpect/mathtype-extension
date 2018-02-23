@@ -127,29 +127,32 @@
     </xsl:analyze-string>
   </xsl:template>
   
-  <xsl:template match="msub[following-sibling::*[1][self::msub]]" mode="combine-others">
-    <xsl:variable name="self" select="."/>
-    <xsl:variable name="following-msubs">
-      <xsl:variable name="following-nodes" select="(following-sibling::node())"/>
-      <xsl:for-each select="$following-nodes[not(preceding-sibling::*[not(self::msub)])]">
-        <xsl:sequence select="."/>
-      </xsl:for-each>
-    </xsl:variable>
+  <xsl:template match="*[count(msub) gt 1 or count(msup) gt 1]" mode="combine-others">
     <xsl:copy>
-      <xsl:choose>
-        <xsl:when test="empty($following-msubs)">
-          <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <mrow>
-            <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
-          </mrow>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:apply-templates select="@*"/>
+      <xsl:for-each-group select="node()" group-adjacent="name()">
+        <xsl:choose>
+          <xsl:when test="count(current-group()) = 1">
+            <xsl:apply-templates select="current-group()" mode="#current"/>
+          </xsl:when>
+          <xsl:when test="current-grouping-key() = ('msub', 'msup')">
+            <xsl:element name="{current-grouping-key()}">
+              <mrow>
+                <xsl:apply-templates select="current-group()/node()" mode="#current"/>
+              </mrow>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="current-group()" mode="#current"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each-group>
     </xsl:copy>
   </xsl:template>
   
-  <xsl:template match="msub[preceding-sibling::*[1][self::msub]]" mode="combine-others" priority="2"/>
+  <xsl:template match="mrow[count(element()) = 1][parent::msub or parent::msup]" mode="combine-others">
+    <xsl:apply-templates select="node()" mode="#current"/>
+  </xsl:template>
   
   <xsl:template match="math" mode="combine-elements">
     <xsl:variable name="combine-others">
