@@ -80,6 +80,56 @@
         </math>
       </x:expect>
     </x:scenario>
+    <x:scenario label="where both are embellishments">
+      <x:context mode="combine-elements">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">a</mi>
+            <mo>′</mo>
+          </msup>
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">b</mi>
+            <mo>″</mo>
+          </msup>
+        </math>
+      </x:context>
+      <x:expect label="they must not be joined">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">a</mi>
+            <mo>′</mo>
+          </msup>
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">b</mi>
+            <mo>″</mo>
+          </msup>
+        </math>
+      </x:expect>
+    </x:scenario>
+    <x:scenario label="where the first ist an embellishment">
+      <x:context mode="combine-elements">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">a</mi>
+            <mo>′</mo>
+          </msup>
+          <msup>
+            <mn mathsize="100%">2</mn>
+          </msup>
+        </math>
+      </x:context>
+      <x:expect label="they are not joined">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi mathsize="100%" mathvariant="italic">a</mi>
+            <mo>′</mo>
+          </msup>
+          <msup>
+            <mn mathsize="100%">2</mn>
+          </msup>
+        </math>
+      </x:expect>
+    </x:scenario>
   </x:scenario>
   
   <x:scenario label="Given multiple mi">

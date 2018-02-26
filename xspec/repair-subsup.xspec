@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+  stylesheet="../xsl/repair-subsup.xsl">
+  <x:scenario label="Given a msub with one child">
+    <x:scenario label="and a preceding mi">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi mathsize="100%">a</mi>
+          <msub>
+            <mo>1</mo>
+          </msub>
+        </math>
+      </x:context>
+      <x:expect label="the mi is the base of msub">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mi mathsize="100%">a</mi>
+            <mo>1</mo>
+          </msub>
+        </math>
+      </x:expect>
+    </x:scenario>
+    <x:scenario label="and no preceding element">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mo>1</mo>
+          </msub>
+        </math>
+      </x:context>
+      <x:expect label="an empty mrow is the base of msub">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mrow/>
+            <mo>1</mo>
+          </msub>
+        </math>
+      </x:expect>
+    </x:scenario>
+  </x:scenario>
+  <x:scenario label="Given a msub with two children">
+    <x:scenario label="and no other element">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi>a</mi>
+            <mo>′</mo>
+          </msup>
+        </math>
+      </x:context>
+      <x:expect label="nothing needs to be done">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msup>
+            <mi>a</mi>
+            <mo>′</mo>
+          </msup>
+        </math>
+      </x:expect>
+    </x:scenario>
+  </x:scenario>
+</x:description>
