@@ -130,7 +130,7 @@
   <xsl:template match="*[count(msub) gt 1 or count(msup) gt 1]" mode="combine-others">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
-      <xsl:for-each-group select="node()" group-adjacent="name()">
+      <xsl:for-each-group select="node()" group-adjacent="concat(name(), if (count(child::*) gt 1) then position() else '')">
         <xsl:choose>
           <xsl:when test="count(current-group()) = 1">
             <xsl:apply-templates select="current-group()" mode="#current"/>
