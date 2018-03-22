@@ -46,11 +46,18 @@
   <xsl:template match="*[preceding-sibling::*[1]/local-name() = 'mmultiscripts'][starts-with(following-sibling::*[1]/local-name(), 'msu')]" mode="repair-subsup" priority="2">
     <!-- base with preceding mmultiscripts and following msu(b|p|bsup) becomes one mmultiscripts -->
     <xsl:message select="'real mmulti!'"></xsl:message>
+    <xsl:variable name="fs1" select="following-sibling::*[1]" as="element(*)"/>
     <mmultiscripts>
       <xsl:next-match>
         <xsl:with-param name="keep" select="true()"/>
       </xsl:next-match>
-      <xsl:apply-templates select="following-sibling::*[1]/node()"/>
+      <xsl:if test="local-name($fs1) = 'msup'">
+        <mrow/>
+      </xsl:if>
+      <xsl:apply-templates select="$fs1/node()"/>
+      <xsl:if test="local-name($fs1) = 'msub'">
+        <mrow/>
+      </xsl:if>
       <mprescripts/>
       <xsl:apply-templates select="preceding-sibling::*[1]/node()[preceding-sibling::mprescripts]"/>
     </mmultiscripts>
