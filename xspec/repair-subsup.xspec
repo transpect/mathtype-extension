@@ -60,7 +60,7 @@
   </x:scenario>
   <x:scenario label="Given a preliminary mmultiscripts with a following base element">
     <x:scenario label="and a subscript">
-      <x:context mode="repair-multiscripts-sub">
+      <x:context mode="repair-subsup">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <mrow>
             <mmultiscripts>
@@ -98,7 +98,7 @@
       </x:expect>
     </x:scenario>
     <x:scenario label="and a superscript">
-      <x:context mode="repair-multiscripts-sup">
+      <x:context mode="repair-subsup">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <mrow>
             <mmultiscripts>
@@ -137,7 +137,7 @@
       </x:expect>
     </x:scenario>
     <x:scenario label="and a subsup">
-      <x:context mode="repair-multiscripts-subsup">
+      <x:context mode="repair-subsup">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <mrow>
             <mmultiscripts>
