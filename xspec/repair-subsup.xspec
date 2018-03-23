@@ -58,4 +58,173 @@
       </x:expect>
     </x:scenario>
   </x:scenario>
+  <x:scenario label="Given a preliminary mmultiscripts with a following base element">
+    <x:scenario label="and a subscript">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+            <mi mathsize="100%" mathvariant="italic">C</mi>
+            <msub>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+            </msub>
+          </mrow>
+        </math>
+      </x:context>
+      <x:expect label="base and sub will be inserted before mprescripts; an empty mrow is created">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mi mathsize="100%" mathvariant="italic">C</mi>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow/>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+          </mrow> </math>
+      </x:expect>
+    </x:scenario>
+    <x:scenario label="and a superscript">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+            <mi mathsize="100%" mathvariant="italic">C</mi>
+            <msup>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+            </msup>
+          </mrow>
+        </math>
+      </x:context>
+      <x:expect label="the base, a newly created empty mrow, and the sup will be inserted before mprescripts">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mi mathsize="100%" mathvariant="italic">C</mi>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+          </mrow>
+        </math>
+      </x:expect>
+    </x:scenario>
+    <x:scenario label="and a subsup">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+            <mi mathsize="100%" mathvariant="italic">C</mi>
+            <msubsup>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+            </msubsup>
+          </mrow>
+        </math>
+      </x:context>
+      <x:expect label="the base and the subsup’s children will be inserted before mprescripts">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mi mathsize="100%" mathvariant="italic">C</mi>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+          </mrow>
+        </math>
+      </x:expect>
+    </x:scenario>
+		<x:scenario label="and an element following the subsup">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+            <mi mathsize="100%" mathvariant="italic">C</mi>
+            <msubsup>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+            </msubsup>
+          </mrow>
+					<mi>C</mi>
+        </math>
+      </x:context>
+      <x:expect label="the base and the subsup’s children will be inserted before mprescripts, the following element will be kept after the mmultiscripts">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mi mathsize="100%" mathvariant="italic">C</mi>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+          </mrow>
+					<mi>C</mi>
+        </math>
+      </x:expect>
+    </x:scenario>
+  </x:scenario>
 </x:description>
