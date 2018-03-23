@@ -180,5 +180,51 @@
         </math>
       </x:expect>
     </x:scenario>
+		<x:scenario label="and an element following the subsup">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+            <mi mathsize="100%" mathvariant="italic">C</mi>
+            <msubsup>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+            </msubsup>
+          </mrow>
+					<mi>C</mi>
+        </math>
+      </x:context>
+      <x:expect label="the base and the subsup’s children will be inserted before mprescripts, the following element will be kept after the mmultiscripts">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mrow>
+            <mmultiscripts>
+              <mi mathsize="100%" mathvariant="italic">C</mi>
+              <mrow>
+                <mn mathvariant="normal">4</mn>
+              </mrow>
+              <mrow>
+                <mn mathvariant="normal">5</mn>
+              </mrow>
+              <mprescripts/>
+              <mrow/>
+              <mrow>
+                <mn mathvariant="normal">9</mn>
+              </mrow>
+            </mmultiscripts>
+          </mrow>
+					<mi>C</mi>
+        </math>
+      </x:expect>
+    </x:scenario>
   </x:scenario>
 </x:description>
