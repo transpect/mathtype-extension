@@ -20,6 +20,25 @@
         </math>
       </x:expect>
     </x:scenario>
+    <x:scenario label="and a preceding mi; plus: there is a PI in the msub">
+      <x:context mode="repair-subsup">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <mi>a</mi>
+          <msub><?mtef2mml element nudge not supported in mathml. values dx: -244 dy: -256?>
+            <mn>1</mn>
+          </msub>
+        </math>
+      </x:context>
+      <x:expect label="the mi is the base of msub; the PI is retained">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <msub>
+            <mi>a</mi>
+            <?mtef2mml element nudge not supported in mathml. values dx: -244 dy: -256?>
+            <mn>1</mn>
+          </msub>
+        </math>
+      </x:expect>
+    </x:scenario>
     <x:scenario label="and no preceding element">
       <x:context mode="repair-subsup">
         <math xmlns="http://www.w3.org/1998/Math/MathML">

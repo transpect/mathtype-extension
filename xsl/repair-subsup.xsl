@@ -9,7 +9,7 @@
   
   <xsl:import href="identity.xsl"/>
   
-  <xsl:template match="msub[count(node()) = 1] | msup[count(node()) = 1] | msubsup[count(node()) le 2]" mode="repair-subsup">
+  <xsl:template match="msub[count(*) = 1] | msup[count(*) = 1] | msubsup[count(*) le 2]" mode="repair-subsup">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:variable name="base" as="element(*)?" 
         select="(preceding-sibling::*[1] | parent::mrow[current() is *[1]]/preceding-sibling::*[1][not(parent::*/local-name() = &two-child-element;)])[1]"/>
@@ -29,12 +29,12 @@
 
   <!-- do we expect the base in front of ../mrow/mrow or even ../mrow/mrow/mrow? -->
   <xsl:template
-    match="*[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msub[count(node()) = 1]] |
-           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msub[count(node()) = 1]] |
-           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msup[count(node()) = 1]] |
-           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msup[count(node()) = 1]] |
-           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msubsup[count(node()) le 2]] |
-           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msubsup[count(node()) le 2]]" mode="repair-subsup"  priority="1">
+    match="*[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msub[count(*) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msub[count(*) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msup[count(*) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msup[count(*) = 1]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::msubsup[count(*) le 2]] |
+           *[not(parent::*/local-name() = &two-child-element;)][following-sibling::*[1]/self::mrow/*[1]/self::msubsup[count(*) le 2]]" mode="repair-subsup"  priority="1">
     <xsl:param name="keep" select="false()"/>
     <xsl:if test="$keep">
       <xsl:next-match>
@@ -78,7 +78,7 @@
           <mrow/>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:apply-templates mode="#current" select="node()"/>
+      <xsl:apply-templates mode="#current"/>
     </mmultiscripts>
   </xsl:template>
 
