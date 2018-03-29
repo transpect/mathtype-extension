@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/transpect/mathtype-extension.svg?branch=master)](https://travis-ci.org/transpect/mathtype-extension)
+
 # mathtype-extension
 
 An extension step for XML Calabash that converts a Mathtype Equation (MTEF) to MathML.
@@ -31,6 +33,10 @@ If you or your organization benefit from this tool, if you are interested in sup
 2. Call &lt;tr:mathtype2mml-internal&gt; from your pipeline.  
 	No xproc-util needed, but no debug-files stored therefore.  
 	The debug is still available on xproc-ports, if you want to use them yourself.
+
+## From other front-end pipelines such as docx2tex
+
+See https://github.com/transpect/docx2tex (note the MathType extension submodule might not be up to date)
 
 # Options
 Configure tr:mathtype2mml step by passing options to it:

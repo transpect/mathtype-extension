@@ -6,4 +6,5 @@ env:
 install:
     - cd ${TRAVIS_BUILD_DIR} && ./install-dependencies.sh
 
-script: cd ${TRAVIS_BUILD_DIR} && xspec-master/bin/xspec.sh xspec/combine-elements.xspec
+script: cd ${TRAVIS_BUILD_DIR} && ./execute-tests.sh
+

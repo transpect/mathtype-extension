@@ -44,6 +44,36 @@
     </xsl:element>
   </xsl:template>
   
+  <xsl:template match="*[mi[matches(., '^\s$')]]" mode="combine-mi">
+    <xsl:element name="{local-name()}">
+      <xsl:apply-templates mode="#current" select="@*"/>
+      <xsl:for-each-group  select="node()"
+        group-adjacent="(
+          .[not(@mathvariant)][
+            not(preceding-sibling::*[1]/local-name() = 'mi')
+            or (every $a in ./@* except @mathvariant satisfies (
+              (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)
+              or
+              (some $pa in following-sibling::*[1]/@* satisfies $pa = $a)
+            ))
+          ]/local-name()[. = 'mi'], ''
+          )[1]">
+        <xsl:choose>
+          <xsl:when test="current-grouping-key() and matches(string-join(current-group(), ''), '\s')">
+            <xsl:element name="{current-grouping-key()}">
+              <xsl:apply-templates select="@*" mode="#current"/>
+              <xsl:attribute name="mathvariant" select="'italic'"/>
+              <xsl:value-of select="current-group()/text()"/>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates mode="#current" select="current-group()"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each-group>
+    </xsl:element>
+  </xsl:template>
+  
   <xsl:template match="*[count(mn) ge 2]" mode="combine-mn">
     <xsl:element name="{local-name()}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates mode="#current" select="@*"/>
@@ -97,39 +127,45 @@
     </xsl:analyze-string>
   </xsl:template>
   
-  <xsl:template match="msub[following-sibling::*[1][self::msub]]" mode="combine-others">
-    <xsl:variable name="self" select="."/>
-    <xsl:variable name="following-msubs">
-      <xsl:variable name="following-nodes" select="(following-sibling::node())"/>
-      <xsl:for-each select="$following-nodes[not(preceding-sibling::*[not(self::msub)])]">
-        <xsl:sequence select="."></xsl:sequence>
-      </xsl:for-each>
-    </xsl:variable>
+  <xsl:template match="*[count(msub) gt 1 or count(msup) gt 1]" mode="combine-others">
     <xsl:copy>
-      <xsl:choose>
-        <xsl:when test="empty($following-msubs)">
-          <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <mrow>
-            <xsl:apply-templates select="@*, node(), $following-msubs/*/node()" mode="#current"/>
-          </mrow>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:apply-templates select="@*"/>
+      <xsl:for-each-group select="node()" group-adjacent="concat(name(), if (count(child::*) gt 1) then position() else '')">
+        <xsl:choose>
+          <xsl:when test="count(current-group()) = 1">
+            <xsl:apply-templates select="current-group()" mode="#current"/>
+          </xsl:when>
+          <xsl:when test="current-grouping-key() = ('msub', 'msup')">
+            <xsl:element name="{current-grouping-key()}">
+              <mrow>
+                <xsl:apply-templates select="current-group()/node()" mode="#current"/>
+              </mrow>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="current-group()" mode="#current"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each-group>
     </xsl:copy>
   </xsl:template>
   
-  <xsl:template match="msub[preceding-sibling::*[1][self::msub]]" mode="combine-others" priority="2"/>
+  <xsl:template match="mrow[count(element()) = 1][parent::msub or parent::msup]" mode="combine-others">
+    <xsl:apply-templates select="node()" mode="#current"/>
+  </xsl:template>
   
-  <xsl:template match="/" mode="combine-elements">
+  <xsl:template match="math" mode="combine-elements">
     <xsl:variable name="combine-others">
       <xsl:apply-templates mode="combine-others" select="."/>
     </xsl:variable>
     <xsl:variable name="combine-mn">
       <xsl:apply-templates mode="combine-mn" select="$combine-others"/>
     </xsl:variable>
+    <xsl:variable name="combine-mi">
+      <xsl:apply-templates mode="combine-mi" select="$combine-mn"/>
+    </xsl:variable>
     <xsl:variable name="combine-mtext">
-      <xsl:apply-templates mode="combine-mtext" select="$combine-mn"/>
+      <xsl:apply-templates mode="combine-mtext" select="$combine-mi"/>
     </xsl:variable>
     <xsl:apply-templates mode="detect-functions" select="$combine-mtext"/>
   </xsl:template>
