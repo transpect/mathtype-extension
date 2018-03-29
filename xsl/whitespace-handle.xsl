@@ -16,18 +16,21 @@
   <xsl:param name="hair-width" select="'0.08em'"/>
   <xsl:param name="zero-width" select="'0em'"/>
 
-  <xsl:template match="*[self::mtext or self::mi][matches(.,'\s')]" mode="handle-whitespace">
+  <xsl:template match="*[self::mtext or self::mi][matches(.,'\s|[&#x2000;-&#x200b;]')]" mode="handle-whitespace">
     <xsl:variable name="self" select="."/>
     <xsl:choose>
       <xsl:when test="$mml-space-handling='mspace'">
-        <xsl:analyze-string select="." regex="\s">
+        <xsl:analyze-string select="." regex="\s|[&#x2000;-&#x200b;]">
           <xsl:matching-substring>
             <xsl:variable name="width">
               <xsl:choose>
+                <xsl:when test=". = '&#x2002;'">
+                  <xsl:value-of select="$en-width"/>
+                </xsl:when>
                 <xsl:when test=". = '&#x2003;'">
                   <xsl:value-of select="$em-width"/>
                 </xsl:when>
-                <xsl:when test=". = '&#x2002;'">
+                <xsl:when test=". = '&#x2004;'">
                   <xsl:value-of select="$en-width"/>
                 </xsl:when>
                 <xsl:when test=". = '&#x2009;'">
