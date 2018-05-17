@@ -32,7 +32,7 @@
         />
       </xsl:if>
     </xsl:variable>
-    <xsl:variable name="is-text-char" select="string-to-codepoints(($symbol, .)) = $text-code-points" as="xs:boolean"/>
+    <xsl:variable name="is-text-char" select="string-to-codepoints(($symbol, .)[1]) = $text-code-points" as="xs:boolean"/>
     <xsl:element name="{('mtext'[$is-text-char], name())[1]}" namespace="http://www.w3.org/1998/Math/MathML">
       <xsl:apply-templates select="@* except @font-position" mode="#current"/>
       <xsl:if test="$is-text-char">

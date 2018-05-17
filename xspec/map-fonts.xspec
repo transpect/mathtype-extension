@@ -670,4 +670,17 @@
       <mtext>÷</mtext>
     </x:expect>
   </x:scenario>
+  <x:scenario label="Using font Symbol (without font-maps defined)" pending="">
+    <x:context mode="map-fonts">
+      <mo mathvariant="normal"
+          font-position="003D"
+          fontfamily="Symbol">=</mo>
+    </x:context>
+    <x:expect label="everything is unchanged">
+      <mo
+        mathvariant="normal"
+        font-position="003D"
+        fontfamily="Symbol">=</mo>
+    </x:expect>
+  </x:scenario>
 </x:description>
