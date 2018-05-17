@@ -4,7 +4,7 @@
 
 An extension step for XML Calabash that converts a Mathtype Equation (MTEF) to MathML.
 
-Incorporates (J)Ruby mathtype gem: https://github.com/sbulka/mathtype
+Incorporates (J)Ruby mathtype gem: https://github.com/sbulka/mathtype (forked from [Jure Triglav](https://github.com/jure)'s gem)
 
 XSLT adapted from: https://github.com/jure/mathtype_to_mathml/tree/master/lib/xsl
 
