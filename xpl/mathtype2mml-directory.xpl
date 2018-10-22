@@ -18,7 +18,7 @@
     <p:documentation>Output directory for MathML (option 'store-mml' is set to 'true')</p:documentation>
   </p:option>
   <p:option name="type" required="true">
-    <p:documentation>wmf, bin, eps</p:documentation>
+    <p:documentation>possible values in order of conversion quality: bin, wmf, eps</p:documentation>
   </p:option>
   <p:option name="mml-ext" select="'.mml'">
     <p:documentation>File extension for MathML result</p:documentation>
@@ -26,7 +26,9 @@
   <p:option name="debug" select="'no'"/>
   <p:option name="debug-dir-uri" select="concat($target-dir, 'debug/')"/>
   
-  <p:input port="additional-font-maps"/>
+  <p:input port="additional-font-maps">
+    <p:empty/>
+  </p:input>
   
   <p:output port="result" primary="true">
     <p:documentation>'c:results' xml document with all MathML (or error) results.</p:documentation>
@@ -47,9 +49,9 @@
       </p:directory-list>
       <cx:message>
         <p:with-option name="message" 
-          select="concat('Number of files found to process: ', 
-                  count(/*/c:file), ' (source-dir: ''', $source-dir, ''', 
-                  include-filter: ''', $include, ''', exclude-filter: ''', $exclude, ''')')"/>
+          select="concat('Number of files found to process: ', count(/*/c:file), 
+                    ' (source-dir: ''', $source-dir, ''', include-filter: ''', 
+                    $include, ''', exclude-filter: ''', $exclude, ''')')"/>
       </cx:message>
       <p:viewport match="c:directory/c:file" name="process-files">
         <p:output port="result" primary="true"/>
