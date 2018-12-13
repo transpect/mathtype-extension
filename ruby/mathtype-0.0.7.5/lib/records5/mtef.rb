@@ -1,6 +1,3 @@
-require_relative "end"
-require_relative "nudge"
-require_relative "ruler"
 require_relative "line"
 require_relative "embell"
 require_relative "char"
@@ -8,7 +5,6 @@ require_relative "pile"
 require_relative "tmpl"
 require_relative "eqn_prefs"
 require_relative "font_def"
-require_relative "typesizes"
 require_relative "font_style_def"
 require_relative "matrix"
 require_relative "encoding_def"
@@ -19,6 +15,19 @@ require_relative "color_def"
 require_relative "future"
 
 module Mathtype5
+  class RecordEnd < Mathtype::RecordEnd; end
+  class RecordNudge < Mathtype::RecordNudge; end
+  class RecordRuler < Mathtype::RecordRuler; end
+  class RecordNudge < Mathtype::RecordNudge; end
+  class RecordFull < Mathtype::RecordFull; end
+  class RecordSub < Mathtype::RecordSub; end
+  class RecordSub2 < Mathtype::RecordSub2; end
+  class RecordSym < Mathtype::RecordSym; end
+  class RecordSubsym < Mathtype::RecordSubsym; end
+
+  HALIGN = Mathtype::HALIGN
+  VALIGN = Mathtype::VALIGN
+
   RECORD_NAMES = {
     0 => "end",
     1 => "slot",
@@ -64,27 +73,12 @@ module Mathtype5
     "mtefCOLOR_NAME" => 0x04,             # color has a name, else no name
   }
 
-  HALIGN = {
-    1 => "left",
-    2 => "center",
-    3 => "right",
-    4 => "al", # relational
-    5 => "dec" # decimal
-  }
-
-  VALIGN = {
-    0 => "top_baseline",
-    1 => "center_baseline",
-    2 => "bottom_baseline",
-    3 => "center", # vertical centering
-    4 => "axis" # math axis (center of +,-, brace points, etc.)
-  }
-
   ## Payload is the most important class to understand.
   ## This abstraction allows recursive formats.
   ## eg. lists can contain lists can contain lists.
 
   class Payload < BinData::Choice
+    opt = {:_options => :options}
     record_end 0 # end is a reserved keyword
     record_line 1
     record_char 2
@@ -110,24 +104,17 @@ module Mathtype5
 
   class NamedRecord < BinData::Record
     int8 :record_type
-    payload :payload, :onlyif => :not_end_tag?, :selection => :record_type
+    payload :payload, :onlyif => :not_end_tag?, :selection => :record_type, :options => :record_options
 
     def not_end_tag?
       record_type != 0
     end
   end
 
-  class Equation < BinData::Record
-    include Snapshot
+  class Equation < Mathtype::Equation
     EXPOSED_IN_SNAPSHOT = %i(mtef_version platform product product_version
       product_subversion application_key equation_options equation)
 
-    endian :little
-    uint8 :mtef_version
-    uint8 :platform
-    uint8 :product
-    uint8 :product_version
-    uint8 :product_subversion
     stringz :application_key
     uint8 :_equation_options
 

@@ -28,7 +28,7 @@ module Mathtype5
       row_parts col_parts object_list)
     int8 :options
 
-    nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
 
     int8 :_valign
     int8 :_h_just

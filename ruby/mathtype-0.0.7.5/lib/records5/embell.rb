@@ -92,7 +92,7 @@ module Mathtype5
 
     int8 :options
 
-    nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
 
     int8 :_embell
 

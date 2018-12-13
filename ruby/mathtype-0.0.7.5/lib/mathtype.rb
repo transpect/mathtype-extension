@@ -1,9 +1,10 @@
 require "mathtype/version"
 require "nokogiri"
 require_relative "file_parser/parser.rb"
-require_relative "records/bintypes.rb"
+require_relative "records/mtef.rb"
 require_relative "records3/mtef.rb"
 require_relative "records5/mtef.rb"
+
 
 module Mathtype
   class Converter
@@ -13,7 +14,7 @@ module Mathtype
     attr_reader :version
     def initialize(equation)
       set_parser(equation)
-      raise ::NotImplementedError, "Only .wmf and .bin (OLE.-Object) currently supported, name supplied: #{equation}" unless @parser.equation
+      raise ::NotImplementedError, "Equation format not supported. Only .eps, .wmf and .bin (OLE-Object) currently supported, supplied was: #{equation}" unless @parser.equation
       @version = @parser.equation[0].unpack('C')[0].to_i
       raise ::NotImplementedError, "Only MTEF Version 3 and 5 currently supported, version is #{version}" unless (version==3 or version==5)
       case @version
@@ -33,8 +34,10 @@ module Mathtype
     def set_parser(equation)
       if equation.end_with?(".bin")
         @parser = Mathtype::OleFileParser.new equation
-      else equation.end_with?(".wmf")
+      elsif equation.end_with?(".wmf")
         @parser = Mathtype::WmfFileParser.new equation
+      else
+        @parser = Mathtype::EpsFileParser.new equation
       end
     end
 

@@ -1,17 +1,26 @@
-require_relative "end"
-require_relative "nudge"
-require_relative "ruler"
 require_relative "line"
 require_relative "embell"
 require_relative "char"
 require_relative "pile"
 require_relative "tmpl"
 require_relative "font"
-require_relative "typesizes"
 require_relative "matrix"
 require_relative "size"
 
 module Mathtype3
+  class RecordEnd < Mathtype::RecordEnd; end
+  class RecordNudge < Mathtype::RecordNudge; end
+  class RecordRuler < Mathtype::RecordRuler; end
+  class RecordNudge < Mathtype::RecordNudge; end
+  class RecordFull < Mathtype::RecordFull; end
+  class RecordSub < Mathtype::RecordSub; end
+  class RecordSub2 < Mathtype::RecordSub2; end
+  class RecordSym < Mathtype::RecordSym; end
+  class RecordSubsym < Mathtype::RecordSubsym; end
+
+  HALIGN = Mathtype::HALIGN
+  VALIGN = Mathtype::VALIGN
+
   RECORD_NAMES = {
     0 => "end",
     1 => "slot",
@@ -42,22 +51,6 @@ module Mathtype3
     "xfLSPACE" => 0x04,        # line spacing value follows tag
     # Option flag values for LINE and PILE records:
     "xfRULER" => 0x02,           # RULER record follows LINE or PILE record
-  }
-
-  HALIGN = {
-    1 => "left",
-    2 => "center",
-    3 => "right",
-    4 => "al", # relational
-    5 => "dec" # decimal
-  }
-
-  VALIGN = {
-    0 => "top_baseline",
-    1 => "center_baseline",
-    2 => "bottom_baseline",
-    3 => "center", # vertical centering
-    4 => "axis" # math axis (center of +,-, brace points, etc.)
   }
 
   class Payload < BinData::Choice
@@ -93,17 +86,9 @@ module Mathtype3
     end
   end
 
-  class Equation < BinData::Record
-    include Snapshot
+  class Equation < Mathtype::Equation
     EXPOSED_IN_SNAPSHOT = %i(mtef_version platform product product_version
       product_subversion equation)
-
-    endian :little
-    uint8 :mtef_version
-    uint8 :platform
-    uint8 :product
-    uint8 :product_version
-    uint8 :product_subversion
 
     array :equation, read_until: lambda { element.record_type == 0 } do
       named_record

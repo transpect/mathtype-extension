@@ -32,7 +32,7 @@ module Mathtype3
 
     virtual :_tag_options, :value => lambda{ _options }
 
-    nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
 
     int8 :_valign
     int8 :_h_just

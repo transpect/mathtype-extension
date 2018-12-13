@@ -93,7 +93,7 @@ module Mathtype3
 
     virtual :_tag_options, :value => lambda{ _options }
 
-    nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { _options & OPTIONS["xfLMOVE"] > 0 }
 
     int8 :_embell
     int8 :_none

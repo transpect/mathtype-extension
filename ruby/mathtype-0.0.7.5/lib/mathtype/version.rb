@@ -1,3 +1,3 @@
 module Mathtype
-  VERSION = "0.0.7.5"
+  VERSION = "0.1.0"
 end

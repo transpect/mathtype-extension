@@ -24,7 +24,7 @@ module Mathtype5
     endian :little
     int8 :options
 
-    nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
 
     int8 :_typeface
 
@@ -47,7 +47,7 @@ module Mathtype5
       char_enc_char_8 = options & OPTIONS["mtefOPT_CHAR_ENC_CHAR_8"] > 0
       char_enc_char_16 = options & OPTIONS["mtefOPT_CHAR_ENC_CHAR_16"] > 0
 
-      return true if char_enc_char_8 || char_enc_char_16
+      char_enc_char_8 || char_enc_char_16
     end
 
     choice :font_position,

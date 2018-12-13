@@ -38,14 +38,20 @@ module Mathtype5
     mtef16 :_dsize_large, onlyif: lambda { _size_select == 100 }
 
     def dsize
+      __dsize = nil
       case _size_select
       when 100
-        _dsize_large / 32
+        if _dsize_large > 255
+         __dsize = -(_dsize_large.getlow)
+        else
+         __dsize = _dsize_large
+        end
       when 101
-        nil
+        __dsize = nil
       else
-        (_dsize - 128) / 32 # in 32nds of a point
+        __dsize = (_dsize - 128) # in 32nds of a point
       end
+      __dsize / 32
     end
 
     def lsize

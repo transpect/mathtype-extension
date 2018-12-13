@@ -15,7 +15,7 @@ module Mathtype5
     endian :little
     int8 :options
 
-    nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
+    record_nudge :nudge, onlyif: lambda { options & OPTIONS["mtefOPT_NUDGE"] > 0 }
 
     mtef16 :line_spacing, onlyif: (lambda do
       options & OPTIONS["mtefOPT_LINE_LSPACE"] > 0
