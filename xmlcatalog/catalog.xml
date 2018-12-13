@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" xml:base=".">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
     <rewriteURI uriStartString="http://transpect.le-tex.de/calabash-extensions/ltx-mathtype/" rewritePrefix="../"/>
     <rewriteURI uriStartString="http://transpect.io/calabash-extensions/mathtype-extension/" rewritePrefix="../"/>
