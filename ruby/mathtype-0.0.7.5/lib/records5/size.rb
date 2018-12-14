@@ -47,7 +47,7 @@ module Mathtype5
          __dsize = _dsize_large
         end
       when 101
-        __dsize = nil
+        __dsize = _dsize
       else
         __dsize = (_dsize - 128) # in 32nds of a point
       end
