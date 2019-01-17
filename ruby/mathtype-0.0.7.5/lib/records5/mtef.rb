@@ -13,6 +13,7 @@ require_relative "size"
 require_relative "color"
 require_relative "color_def"
 require_relative "future"
+require_relative "comment"
 
 module Mathtype5
   class RecordEnd < Mathtype::RecordEnd; end
@@ -49,7 +50,8 @@ module Mathtype5
     17 => "font_def",
     18 => "eqn_prefs",
     19 => "encoding_def",
-    100 => "future"
+    100 => "future",
+    102 => "mt_comment"
   }
 
   OPTIONS = {
@@ -100,6 +102,7 @@ module Mathtype5
     record_eqn_prefs 18
     record_encoding_def 19
     record_future 100
+    record_mt_comment 102
   end
 
   class NamedRecord < BinData::Record
