@@ -8,7 +8,7 @@
 
 module Mathtype5
   class RecordFontDef < BinData::Record
-    uint8 :enc_def_index
+    mt_uint :enc_def_index
     stringz :font_name
   end
 end

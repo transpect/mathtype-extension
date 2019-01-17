@@ -8,6 +8,6 @@
 
 module Mathtype5
   class RecordColor < BinData::Record
-    int8 :color_def_index
+    mt_uint :color_def_index
   end
 end

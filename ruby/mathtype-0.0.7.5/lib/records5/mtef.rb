@@ -1,3 +1,5 @@
+require_relative 'mtuint'
+
 require_relative "line"
 require_relative "embell"
 require_relative "char"

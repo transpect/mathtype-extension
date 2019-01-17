@@ -8,7 +8,7 @@
 
 module Mathtype5
   class RecordMtComment < BinData::Record
-    uint8 :comment_length
+    mt_uint :comment_length
     stringz :comment_type
     stringz :comment_data
   end
