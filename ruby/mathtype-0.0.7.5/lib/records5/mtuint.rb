@@ -3,13 +3,11 @@ module Mathtype
     uint8 :_first
     uint8 :_second, onlyif: lambda { _first == 0xFF }
     uint8 :_third, onlyif: lambda { _first == 0xFF }
+
     def get
-      case _first
-      when 0xFF
-        (_third << 0x8) | _second
-      else
-        _first
-      end
+      _first < 0xFF ?
+        _first :
+        _third << 0x8 | _second
     end
   end
 end
