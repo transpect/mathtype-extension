@@ -38,7 +38,23 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
       <xsl:value-of select="./text()"/>
     </xsl:attribute>
   </xsl:template>
-  
+
+  <xsl:template name="map-parts-to-linestyle">
+    <xsl:param name="parts" as="node()*"/>
+    <xsl:variable name="raw-strings" as="xs:string*">
+      <xsl:for-each select="$parts">
+        <xsl:choose>
+          <xsl:when test=". = '0'">none</xsl:when>
+          <xsl:when test=". = '1'">solid</xsl:when>
+          <xsl:when test=". = '2'">dashed</xsl:when>
+          <!-- TODO: dotted? not allowed in MathML-->
+          <xsl:otherwise>dashed</xsl:otherwise>
+        </xsl:choose>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:value-of select="if ($raw-strings = ('solid', 'dashed')) then $raw-strings else ()"/>
+  </xsl:template>
+
   <xsl:template match="matrix">
     <!-- TODO: frames -->
     <xsl:variable name="rows" select="number(rows)" as="xs:double"/>
@@ -54,6 +70,35 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
         <xsl:text> cols.</xsl:text>
       </xsl:message>
     </xsl:if>
+    <xsl:variable name="frame" as="xs:string*">
+      <xsl:variable name="distinct-borders" as="xs:string*">
+        <xsl:variable name="map-names" as="xs:string">
+          <xsl:call-template name="map-parts-to-linestyle">
+            <xsl:with-param name="parts" select="
+              row_parts[position() = (1, last())],
+              col_parts[position() = (1, last())]"/>
+          </xsl:call-template>
+        </xsl:variable>
+        <xsl:sequence select="distinct-values(tokenize($map-names, ' '))"/>
+      </xsl:variable>
+      <!-- altering frame per-side is not allowed on mtable -->
+      <xsl:value-of select="
+        if (
+          $distinct-borders[1] = ('solid', 'dashed') and
+          count($distinct-borders) eq 1)
+        then $distinct-borders[1]
+        else ()"/>
+    </xsl:variable>
+    <xsl:variable name="rowlines" as="xs:string*">
+      <xsl:call-template name="map-parts-to-linestyle">
+        <xsl:with-param name="parts" select="row_parts[not(position() = (1, last()))]"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="columnlines" as="xs:string*">
+      <xsl:call-template name="map-parts-to-linestyle">
+        <xsl:with-param name="parts" select="cow_parts[not(position() = (1, last()))]"/>
+      </xsl:call-template>
+    </xsl:variable>
     <xsl:variable name="matrix_elements">
       <xsl:apply-templates select="slot | pile"/>
     </xsl:variable>
@@ -63,6 +108,15 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
       </xsl:apply-templates>
     </xsl:variable>
     <mtable>
+      <xsl:if test="$frame">
+        <xsl:attribute name="frame" select="$frame"/>
+      </xsl:if>
+      <xsl:if test="$rowlines">
+        <xsl:attribute name="rowlines" select="$rowlines"/>
+      </xsl:if>
+      <xsl:if test="$columnlines">
+        <xsl:attribute name="columnlines" select="$columnlines"/>
+      </xsl:if>
       <xsl:apply-templates select="h_just"/>
       <xsl:for-each-group group-starting-with="mml:mtd[start-row]" select="$with-start-rows-att/mml:*">
         <mtr>
