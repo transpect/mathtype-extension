@@ -50,7 +50,7 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
         <xsl:text> slot|pile. </xsl:text>
         <xsl:value-of select="$rows"/>
         <xsl:text> rows. </xsl:text>
-        <xsl:value-of select="$rows"/>
+        <xsl:value-of select="$cols"/>
         <xsl:text> cols.</xsl:text>
       </xsl:message>
     </xsl:if>
