@@ -96,7 +96,7 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
     </xsl:variable>
     <xsl:variable name="columnlines" as="xs:string*">
       <xsl:call-template name="map-parts-to-linestyle">
-        <xsl:with-param name="parts" select="cow_parts[not(position() = (1, last()))]"/>
+        <xsl:with-param name="parts" select="col_parts[not(position() = (1, last()))]"/>
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="matrix_elements">
