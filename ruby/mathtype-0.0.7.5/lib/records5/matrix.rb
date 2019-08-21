@@ -36,16 +36,12 @@ module Mathtype5
     int8 :rows
     int8 :cols
 
-    bit :_realign_rows, nbits: lambda { realign(rows) }
-
-    array :row_parts, initial_length: lambda { rows + 1 } do
-      bit nbits: 2
+    array :_row_parts, initial_length: lambda { (rows + 4) / 4 } do
+      matrix_line_byte
     end
 
-    bit :_realign_cols, nbits: lambda { realign(cols) }
-
-    array :col_parts, initial_length: lambda { cols + 1 } do
-      bit nbits: 2
+    array :_col_parts, initial_length: lambda { (cols + 4) / 4 } do
+      matrix_line_byte
     end
 
     array :object_list, read_until: lambda { element.record_type == 0 } do
@@ -63,9 +59,19 @@ module Mathtype5
     def v_just
       VALIGN[_v_just]
     end
-    def realign (nparts)
-      offset = (((nparts +  1) * 2) % 8)
-      return offset == 0 ? 0 : (8 - offset)
+
+    def truncate_parts parts, cnt
+      full_parts = cnt / 4
+      all = [parts.first(full_parts), parts.last]
+      all.flatten[0 .. (full_parts*4 + cnt%4)]
+    end
+
+    def row_parts
+      truncate_parts _row_parts, rows
+    end
+
+    def col_parts
+      truncate_parts _col_parts, cols
     end
   end
 end
