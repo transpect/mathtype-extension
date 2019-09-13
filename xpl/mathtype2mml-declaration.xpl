@@ -198,6 +198,10 @@
                   <xsl:apply-templates select="@*, node()"/>
                 </xsl:element>
               </xsl:template>
+
+              <xsl:template match="processing-instruction() | comment()">
+                <xsl:copy/>
+              </xsl:template>
             </xsl:stylesheet>
           </p:inline>
         </p:input>

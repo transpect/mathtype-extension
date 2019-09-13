@@ -32,6 +32,9 @@
   </xsl:template>
   <xsl:template match="slot">
     <mrow>
+      <xsl:variable name="self" as="node()" select="."/>
+      <xsl:variable name="nudge" as="node()*" select=".//nudge[(ancestor::slot)[last()] = $self]"/>
+      <xsl:apply-templates select="$nudge"/>
       <xsl:apply-templates/>
     </mrow>
   </xsl:template>
