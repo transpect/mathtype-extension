@@ -7,7 +7,7 @@ module Mathtype
     end
 
     def checksum
-      @equation.bytes.reduce(:+).to_s(16).upcase
+      (@equation.bytes.reduce(:+) & 0xFFFF).to_s(16).upcase
     end
 
     def read_from_file(path)
