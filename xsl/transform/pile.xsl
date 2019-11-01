@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="xs"
     xmlns="http://www.w3.org/1998/Math/MathML"
-    version="1.0">
+    version="2.0">
 
     <!-- The translation of a pile using this form of translation string is performed with the following steps:
 
@@ -27,11 +27,34 @@
     </xsl:template>
 
     <xsl:template match="pile/slot" mode="wrap">
-        <mtr>
+      <xsl:param name="horizontal-align" as="xs:string?"/>
+      <xsl:param name="group-by-equal-sign" as="xs:boolean?"/>
+      <mtr>
+        <xsl:choose>
+          <xsl:when test="$horizontal-align eq 'al' and $group-by-equal-sign">
+            <xsl:for-each-group select="*" group-adjacent="exists(mt_code_value[. eq '0x003D']
+                                                                 |preceding-sibling::char/mt_code_value[. eq '0x003D'])">
+              <xsl:choose>
+                <xsl:when test=" current-grouping-key() eq true()">
+                  <mtd columnalign="left">
+                    <xsl:apply-templates select="current-group()"/>
+                  </mtd>
+                </xsl:when>
+                <xsl:otherwise>
+                  <mtd columnalign="left">
+                    <xsl:apply-templates select="current-group()"/>
+                  </mtd>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each-group>
+          </xsl:when>
+          <xsl:otherwise>
             <mtd>
-                <xsl:apply-templates select="."/>
+              <xsl:apply-templates select="."/>
             </mtd>
-        </mtr>
+          </xsl:otherwise>
+        </xsl:choose>
+      </mtr>
     </xsl:template>
 
     <xsl:template match="pile[halign='right']">
@@ -47,9 +70,15 @@
     </xsl:template>
 
     <xsl:template match="pile[halign='al']">
-        <mtable>
-            <xsl:apply-templates select="slot" mode="wrap"/>
-        </mtable>
+      <mtable>
+        <xsl:apply-templates select="slot" mode="wrap">
+          <xsl:with-param name="horizontal-align" select="halign" as="xs:string?"/>
+          <xsl:with-param name="group-by-equal-sign" as="xs:boolean?"
+                          select="slot/char/mt_code_value[. eq '0x003D']
+                                  and (every $i in slot
+                                       satisfies exists($i/char/mt_code_value[. eq '0x003D']))"/>
+        </xsl:apply-templates>
+      </mtable>
     </xsl:template>
 
 </xsl:stylesheet>
