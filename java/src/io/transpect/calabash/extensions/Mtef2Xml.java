@@ -14,6 +14,9 @@ import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
+import net.sf.saxon.om.AttributeMap;
+import net.sf.saxon.om.EmptyAttributeMap;
+import com.xmlcalabash.util.TypeUtils;
 
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.Processor;
@@ -46,11 +49,14 @@ public class Mtef2Xml extends DefaultStep {
     private XdmNode createXMLError(String message, String file, XProcRuntime runtime){
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
-        tree.addStartElement(XProcConstants.c_errors);
-        tree.addAttribute(new QName("code"), "formula-error");
-        tree.addAttribute(new QName("href"), file);
-        tree.addStartElement(XProcConstants.c_error);
-        tree.addAttribute(new QName("code"), "error");
+				AttributeMap attrs = EmptyAttributeMap.getInstance();
+				attrs.put(TypeUtils.attributeInfo(new QName("code"), "formula-error"));
+				attrs.put(TypeUtils.attributeInfo(new QName("href"), file));
+        tree.addStartElement(XProcConstants.c_errors, attrs);
+				
+				attrs = EmptyAttributeMap.getInstance();
+				attrs.put(TypeUtils.attributeInfo(new QName("code"), "error"));
+        tree.addStartElement(XProcConstants.c_error,attrs);
         tree.addText(message);
         tree.addEndElement();
         tree.addEndElement();
@@ -65,7 +71,6 @@ public class Mtef2Xml extends DefaultStep {
 
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
-        tree.startContent();
 		  try {
 		  		Processor proc = new Processor(false);
             DocumentBuilder builder = proc.newDocumentBuilder();
