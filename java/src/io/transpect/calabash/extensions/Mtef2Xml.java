@@ -16,6 +16,7 @@ import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
 import net.sf.saxon.om.AttributeMap;
 import net.sf.saxon.om.EmptyAttributeMap;
+import net.sf.saxon.om.SingletonAttributeMap;
 import com.xmlcalabash.util.TypeUtils;
 
 import net.sf.saxon.s9api.DocumentBuilder;
@@ -50,13 +51,11 @@ public class Mtef2Xml extends DefaultStep {
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
 				AttributeMap attrs = EmptyAttributeMap.getInstance();
-				attrs.put(TypeUtils.attributeInfo(new QName("code"), "formula-error"));
-				attrs.put(TypeUtils.attributeInfo(new QName("href"), file));
+				attrs = attrs.put(TypeUtils.attributeInfo(new QName("code"), "formula-error"));
+				attrs = attrs.put(TypeUtils.attributeInfo(new QName("href"), file));
         tree.addStartElement(XProcConstants.c_errors, attrs);
 				
-				attrs = EmptyAttributeMap.getInstance();
-				attrs.put(TypeUtils.attributeInfo(new QName("code"), "error"));
-        tree.addStartElement(XProcConstants.c_error,attrs);
+        tree.addStartElement(XProcConstants.c_error,SingletonAttributeMap.of(TypeUtils.attributeInfo(new QName("code"), "error")));
         tree.addText(message);
         tree.addEndElement();
         tree.addEndElement();
@@ -74,7 +73,7 @@ public class Mtef2Xml extends DefaultStep {
 		  try {
 		  		Processor proc = new Processor(false);
             DocumentBuilder builder = proc.newDocumentBuilder();
-				this.ole2xmlConverter.convertFormula(file);
+						this.ole2xmlConverter.convertFormula(file);
             StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
             XdmNode doc = builder.build(new StreamSource(reader));
 
