@@ -112,6 +112,15 @@
         <p:with-option name="active" select="$debug"/>
         <p:with-option name="base-uri" select="$debug-dir-uri"/>
       </tr:store-debug>
+      
+      <tr:store-debug>
+        <p:input port="source">
+          <p:pipe port="color-range" step="mathtype2mml-internal"/>
+        </p:input>
+        <p:with-option name="pipeline-step" select="concat('mathtype2mml/', $basename, '/03-color-range')"/>
+        <p:with-option name="active" select="$debug"/>
+        <p:with-option name="base-uri" select="$debug-dir-uri"/>
+      </tr:store-debug>
 
       <tr:store-debug>
         <p:input port="source">

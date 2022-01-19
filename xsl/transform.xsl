@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet exclude-result-prefixes="xs c" version="2.0"
   xmlns:c="http://www.w3.org/ns/xproc-step"
+  xmlns:tr="http://transpect.io"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns="http://www.w3.org/1998/Math/MathML">
@@ -8,6 +9,10 @@
   <xsl:strip-space elements="*"/>
   
   <xsl:preserve-space elements="mi ms mo mn mtext"/>
+  
+  <xsl:include href="util/decToHex.xsl"/>
+  
+  <xsl:key name="color-def" match="color_def" use="color_def_index"/>
   
   <xsl:output indent="yes"></xsl:output>
   <xsl:param name="debug" select="'no'"/>
@@ -63,6 +68,23 @@
     <xsl:copy-of select="." copy-namespaces="yes"/>
   </xsl:template>
   
+  <xsl:template match="color_range[not(@index = 0)]">
+    <mrow>
+      <xsl:attribute name="mathcolor" select="string-join(('#', 
+                                                           key('color-def', @index)/rgb/*/(if(. eq '0')
+                                                                                           then '00'
+                                                                                           else tr:decToHex(.)
+                                                                                           )
+                                                           ), '')"/>
+      <xsl:apply-templates select="node()"/>
+    </mrow>
+  </xsl:template>
+  
+  <xsl:template match="color_range">
+    <xsl:apply-templates/>
+  </xsl:template>
+  
+  <xsl:include href="transform/color-range.xsl"/>
   <xsl:include href="transform/nudge.xsl"/>
   <xsl:include href="transform/int.xsl"/>
   <xsl:include href="transform/lim.xsl"/>
