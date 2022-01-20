@@ -69,15 +69,24 @@
   </xsl:template>
   
   <xsl:template match="color_range[not(@index = 0)]">
-    <mrow>
-      <xsl:attribute name="mathcolor" select="string-join(('#', 
-                                                           key('color-def', @index)/rgb/*/(if(. eq '0')
-                                                                                           then '00'
-                                                                                           else tr:decToHex(.)
-                                                                                           )
-                                                           ), '')"/>
-      <xsl:apply-templates select="node()"/>
-    </mrow>
+    <xsl:variable name="rgb" as="xs:string*" 
+                  select="key('color-def', @index)/rgb/*/(if(. eq '0')
+                                                          then '00'
+                                                          else tr:decToHex(.)
+                                                          )"/>
+    <xsl:choose>
+      <xsl:when test="exists($rgb)
+                      and (every $val in $rgb satisfies $val ne '00')">
+        <mrow>
+          <xsl:attribute name="mathcolor" 
+                         select="string-join(('#', $rgb), '')"/>
+          <xsl:apply-templates/>
+        </mrow>    
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   
   <xsl:template match="color_range">
