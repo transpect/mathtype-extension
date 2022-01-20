@@ -11,18 +11,24 @@
   </xsl:template>
   
   <xsl:template match="/*" mode="color-range">
+    <xsl:variable name="black-color-indices" as="xs:string*"
+                  select="//color_def[every $rgb in rgb/* 
+                                      satisfies $rgb = 0]/following-sibling::*[1][self::color]/color_def_index"/>
     <xsl:copy>
       <xsl:apply-templates select="@*" mode="#current"/>
-      <xsl:apply-templates select="//color_def, node()" mode="#current"/>
+      <xsl:apply-templates select="//color_def, node()" mode="#current">
+        <xsl:with-param name="black-color-indices" select="$black-color-indices" as="xs:string*" tunnel="yes"/>
+      </xsl:apply-templates>
     </xsl:copy>
   </xsl:template>
   
   <xsl:template match="*[color]" mode="color-range">
+    <xsl:param name="black-color-indices" as="xs:string*" tunnel="yes"/>
     <xsl:copy>
       <xsl:apply-templates select="@*" mode="#current"/>
       <xsl:for-each-group select="*" group-starting-with="color">
         <xsl:choose>
-          <xsl:when test="current-group()[self::color]/color_def_index[not(. = 0)]">
+          <xsl:when test="current-group()[self::color]/color_def_index[not(. = (0, $black-color-indices))]">
             <color_range index="{current-group()[self::color]/color_def_index}" xmlns="">
               <xsl:apply-templates select="current-group()[not(self::color_def)]" mode="#current"/>
             </color_range>

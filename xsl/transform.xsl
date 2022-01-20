@@ -75,8 +75,8 @@
                                                           else tr:decToHex(.)
                                                           )"/>
     <xsl:choose>
-      <xsl:when test="exists($rgb)
-                      and (every $val in $rgb satisfies $val ne '00')">
+      <xsl:when test="    exists($rgb)
+                      and string-join($rgb, '') ne '000000'">
         <mrow>
           <xsl:attribute name="mathcolor" 
                          select="string-join(('#', $rgb), '')"/>
