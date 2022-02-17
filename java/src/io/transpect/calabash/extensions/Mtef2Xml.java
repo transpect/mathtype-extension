@@ -21,9 +21,11 @@ import com.xmlcalabash.util.TypeUtils;
 
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.Serializer;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.om.*;
 
 
 @XMLCalabash(
@@ -62,6 +64,32 @@ public class Mtef2Xml extends DefaultStep {
         tree.endDocument();
         return tree.getResult();        
     }
+		
+		private String serializeNode(XdmNode node){
+			try {
+				
+			Processor processor = new Processor(false); // False = does not required a feature from a licensed version of Saxon.
+			Serializer serializer = processor.newSerializer();
+			serializer.setOutputProperty(Serializer.Property.OMIT_XML_DECLARATION, "no");
+			serializer.setOutputProperty(Serializer.Property.INDENT, "yes");
+			return serializer.serializeNodeToString(node);}
+			catch (SaxonApiException saxex) {
+				return "exception";
+			}
+		}
+		
+		private String getPoolContent(NamePool pool){
+			String ret = "";
+			for (int i = 1024; i <1090; i++)
+			{
+				try {
+					ret = ret + i + "-" + pool.getUnprefixedQName(i) + "|";
+				} catch (Exception e){
+					ret = ret + i;
+				}
+			}
+			return ret;
+		}
 	 
     public void run() throws SaxonApiException {
         super.run();
@@ -71,12 +99,14 @@ public class Mtef2Xml extends DefaultStep {
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
 		  try {
-		  		Processor proc = new Processor(false);
-            DocumentBuilder builder = proc.newDocumentBuilder();
-						this.ole2xmlConverter.convertFormula(file);
-            StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
-            XdmNode doc = builder.build(new StreamSource(reader));
-
+		  		Processor proc = runtime.getProcessor();
+					DocumentBuilder builder = proc.newDocumentBuilder();
+					
+          this.ole2xmlConverter.convertFormula(file);
+					StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
+					
+					
+					XdmNode doc = builder.build(new StreamSource(reader));
 		  		tree.addSubtree(doc);
 
 		  } catch (Exception e) {
