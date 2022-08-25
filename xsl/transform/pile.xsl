@@ -33,7 +33,8 @@
         <xsl:choose>
           <xsl:when test="$horizontal-align eq 'al' and $group-by-equal-sign">
             <xsl:for-each-group select="*" group-adjacent="exists(mt_code_value[. eq '0x003D']
-                                                                 |preceding-sibling::char/mt_code_value[. eq '0x003D'])">
+                                                                 |preceding-sibling::char/mt_code_value[. eq '0x003D']
+                                                                 |following-sibling::char/mt_code_value[. eq '0x003D'])">
               <xsl:choose>
                 <xsl:when test=" current-grouping-key() eq true()">
                   <mtd columnalign="left">
@@ -74,9 +75,7 @@
         <xsl:apply-templates select="slot" mode="wrap">
           <xsl:with-param name="horizontal-align" select="halign" as="xs:string?"/>
           <xsl:with-param name="group-by-equal-sign" as="xs:boolean?"
-                          select="slot/char/mt_code_value[. eq '0x003D']
-                                  and (every $i in slot
-                                       satisfies exists($i/char/mt_code_value[. eq '0x003D']))"/>
+                          select="exists(slot/char/mt_code_value[. eq '0x003D'])"/>
         </xsl:apply-templates>
       </mtable>
     </xsl:template>
