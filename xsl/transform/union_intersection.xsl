@@ -9,14 +9,14 @@
 
     <xsl:template match="tmpl[selector='tmINTER' and (not(variation='tvBO_UPPER') and not(variation='tvBO_UPPER'))]">
         <mstyle displaystyle="true">
-            <mo>&#x2229;</mo> <xsl:apply-templates select="slot[1] | pile[1]"/>
+            <mo>&#x22C2;</mo> <xsl:apply-templates select="slot[1] | pile[1]"/>
         </mstyle>
     </xsl:template>
 
     <xsl:template match="tmpl[selector='tmINTER' and variation='tvBO_LOWER']">
         <mstyle displaystyle="true">
             <munder>
-                <mo>&#x2229;</mo>
+                <mo>&#x22C2;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
             </munder>
         <xsl:apply-templates select="slot[1] | pile[1]"/>
@@ -26,7 +26,7 @@
     <xsl:template match="tmpl[selector='tmINTER']">
         <mstyle displaystyle="true">
             <munderover>
-                <mo>&#x2229;</mo>
+                <mo>&#x22C2;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
                 <xsl:apply-templates select="slot[3] | pile[3]"/>
             </munderover>
@@ -37,7 +37,7 @@
     <xsl:template match="tmpl[selector='tmINTER' and not(variation='tvBO_SUM') and variation='tvBO_LOWER']">
       <mstyle displaystyle="true">
         <msub>
-            <mo>&#x2229;</mo>
+            <mo>&#x22C2;</mo>
             <xsl:apply-templates select="slot[2] | pile[2]"/>
         </msub>
         <xsl:apply-templates select="slot[1] | pile[1]"/>
@@ -47,7 +47,7 @@
     <xsl:template match="tmpl[selector='tmINTER' and not(variation='tvBO_SUM')]">
         <mstyle displaystyle="true">
             <msubsup>
-                <mo>&#x2229;</mo>
+                <mo>&#x22C2;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
                 <xsl:apply-templates select="slot[3] | pile[3]"/>
             </msubsup>
@@ -57,14 +57,14 @@
 
     <xsl:template match="tmpl[selector='tmUNION' and (not(variation='tvBO_UPPER') and not(variation='tvBO_UPPER'))]">
       <mstyle displaystyle="true">
-        <mo>&#x222A;</mo> <xsl:apply-templates select="slot[1] | pile[1]"/>
+        <mo>&#x22C3;</mo> <xsl:apply-templates select="slot[1] | pile[1]"/>
         </mstyle>
     </xsl:template>
 
     <xsl:template match="tmpl[selector='tmUNION' and variation='tvBO_LOWER']">
         <mstyle displaystyle="true">
             <munder>
-                <mo>&#x222A;</mo>
+                <mo>&#x22C3;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
             </munder>
             <xsl:apply-templates select="slot[1] | pile[1]"/>
@@ -74,7 +74,7 @@
     <xsl:template match="tmpl[selector='tmUNION']">
         <mstyle displaystyle="true">
             <munderover>
-                <mo>&#x222A;</mo>
+                <mo>&#x22C3;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
                 <xsl:apply-templates select="slot[3] | pile[3]"/>
             </munderover>
@@ -85,7 +85,7 @@
     <xsl:template match="tmpl[selector='tmUNION' and not(variation='tvBO_SUM') and variation='tvBO_LOWER']">
         <mstyle displaystyle="true">
             <msub>
-                <mo>&#x222A;</mo>
+                <mo>&#x22C3;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
             </msub>
         <xsl:apply-templates select="slot[1] | pile[1]"/>
@@ -95,7 +95,7 @@
     <xsl:template match="tmpl[selector='tmUNION' and not(variation='tvBO_SUM') ]">
         <mstyle displaystyle="true">
             <msubsup>
-                <mo>&#x222A;</mo>
+                <mo>&#x22C3;</mo>
                 <xsl:apply-templates select="slot[2] | pile[2]"/>
                 <xsl:apply-templates select="slot[3] | pile[3]"/>
             </msubsup>

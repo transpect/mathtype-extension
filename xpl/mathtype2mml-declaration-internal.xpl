@@ -28,6 +28,10 @@
   <p:output port="result" primary="true" sequence="true">
     <p:documentation>The MathML equation from file @href.</p:documentation>
   </p:output>
+  <p:output port="color-range" primary="false" sequence="true">
+    <p:documentation>color-range.</p:documentation>
+    <p:pipe port="result" step="color-range"/>
+  </p:output>
   <p:output port="mtef-xml" primary="false" sequence="true">
     <p:documentation>The xml produced by mtef2xml step.</p:documentation>
     <p:pipe port="result" step="mtef2xml"/>
@@ -117,9 +121,22 @@
 	 <p:with-option name="href" select="$href"/>
   </tr:mtef2xml>
 
-  <p:xslt name="xml2mml">
+  <p:xslt initial-mode="color-range" name="color-range">
     <p:input port="source">
       <p:pipe port="result" step="mtef2xml"/>
+    </p:input>
+    <p:input port="parameters">
+      <p:empty/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="../xsl/transform.xsl"/>
+    </p:input>
+    <p:with-param name="debug" select="$debug"><p:empty/></p:with-param>
+  </p:xslt>
+
+  <p:xslt name="xml2mml">
+    <p:input port="source">
+      <p:pipe port="result" step="color-range"/>
       <p:document href="../fontmaps/MathType_MTCode.xml"/>
     </p:input>
     <p:input port="parameters">

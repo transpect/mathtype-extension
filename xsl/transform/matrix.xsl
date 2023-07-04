@@ -33,12 +33,6 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
                 exclude-result-prefixes="xs mml"
                 version="2.0">
 
-  <xsl:template match="matrix/h_just[text() = ('left', 'right', 'center')]">
-    <xsl:attribute name="columnalign">
-      <xsl:value-of select="./text()"/>
-    </xsl:attribute>
-  </xsl:template>
-
   <xsl:template name="map-parts-to-linestyle">
     <xsl:param name="parts" as="node()*"/>
     <xsl:variable name="raw-strings" as="xs:string*">
@@ -70,6 +64,11 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
         <xsl:text> cols.</xsl:text>
       </xsl:message>
     </xsl:if>
+    <!-- Bug in MathType parser. Apparently the parser stores the h_just values wrong. -->
+    <xsl:variable name="columnalign" as="xs:string?" 
+                  select="     if(not(h_just))        then 'left'
+                          else if(h_just eq 'center') then 'right'
+                          else ()"/>
     <xsl:variable name="frame" as="xs:string*">
       <xsl:variable name="distinct-borders" as="xs:string*">
         <xsl:variable name="map-names" as="xs:string">
@@ -108,6 +107,9 @@ matelem/last/r   = "<(ns)mtd columnalign='right'>$+$n#$-$n</(ns)mtd>";
       </xsl:apply-templates>
     </xsl:variable>
     <mtable>
+      <xsl:if test="$columnalign">
+        <xsl:attribute name="columnalign" select="$columnalign"/>
+      </xsl:if>
       <xsl:if test="$frame">
         <xsl:attribute name="frame" select="$frame"/>
       </xsl:if>

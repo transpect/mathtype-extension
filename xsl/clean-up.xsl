@@ -93,5 +93,7 @@
   </xsl:template>
   
   <xsl:template match="malignmark[preceding-sibling::*[1]]" mode="clean-up"/>
+  
+  <xsl:template match="mtext[matches(., '^[&#xef0a;]$')]" mode="clean-up"/>
 
 </xsl:stylesheet>
