@@ -14,12 +14,18 @@ import com.xmlcalabash.io.WritablePipe;
 import com.xmlcalabash.library.DefaultStep;
 import com.xmlcalabash.runtime.XAtomicStep;
 import com.xmlcalabash.util.TreeWriter;
+import net.sf.saxon.om.AttributeMap;
+import net.sf.saxon.om.EmptyAttributeMap;
+import net.sf.saxon.om.SingletonAttributeMap;
+import com.xmlcalabash.util.TypeUtils;
 
 import net.sf.saxon.s9api.DocumentBuilder;
 import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.Serializer;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.om.*;
 
 
 @XMLCalabash(
@@ -28,11 +34,11 @@ import net.sf.saxon.s9api.XdmNode;
 
 public class Mtef2Xml extends DefaultStep {
     private WritablePipe result = null;
-	 private Ole2XmlConverter ole2xmlConverter;
+   private Ole2XmlConverter ole2xmlConverter;
 
     public Mtef2Xml(XProcRuntime runtime, XAtomicStep step) {
-		  super(runtime,step);
-		  this.ole2xmlConverter = new Ole2XmlConverter();
+      super(runtime,step);
+      this.ole2xmlConverter = new Ole2XmlConverter();
     }
 
     public void setOutput(String port, WritablePipe pipe) {
@@ -46,18 +52,18 @@ public class Mtef2Xml extends DefaultStep {
     private XdmNode createXMLError(String message, String file, XProcRuntime runtime){
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
-        tree.addStartElement(XProcConstants.c_errors);
-        tree.addAttribute(new QName("code"), "formula-error");
-        tree.addAttribute(new QName("href"), file);
-        tree.addStartElement(XProcConstants.c_error);
-        tree.addAttribute(new QName("code"), "error");
+        AttributeMap attrs = EmptyAttributeMap.getInstance();
+        attrs = attrs.put(TypeUtils.attributeInfo(new QName("code"), "formula-error"));
+        attrs = attrs.put(TypeUtils.attributeInfo(new QName("href"), file));
+        tree.addStartElement(XProcConstants.c_errors, attrs);
+        
+        tree.addStartElement(XProcConstants.c_error,SingletonAttributeMap.of(TypeUtils.attributeInfo(new QName("code"), "error")));
         tree.addText(message);
         tree.addEndElement();
         tree.addEndElement();
         tree.endDocument();
         return tree.getResult();        
     }
-	 
     public void run() throws SaxonApiException {
         super.run();
 
@@ -65,20 +71,21 @@ public class Mtef2Xml extends DefaultStep {
 
         TreeWriter tree = new TreeWriter(runtime);
         tree.startDocument(step.getNode().getBaseURI());
-        tree.startContent();
-		  try {
-		  		Processor proc = new Processor(false);
-            DocumentBuilder builder = proc.newDocumentBuilder();
-				this.ole2xmlConverter.convertFormula(file);
-            StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
-            XdmNode doc = builder.build(new StreamSource(reader));
+      try {
+          Processor proc = runtime.getProcessor();
+          DocumentBuilder builder = proc.newDocumentBuilder();
+          
+          this.ole2xmlConverter.convertFormula(file);
+          StringReader reader = new StringReader(this.ole2xmlConverter.getFormula());
+          
+          
+          XdmNode doc = builder.build(new StreamSource(reader));
+          tree.addSubtree(doc);
 
-		  		tree.addSubtree(doc);
-
-		  } catch (Exception e) {
-		  		System.err.println("[ERROR] Mtef2Xml: " + e.getMessage());
-		  		result.write(createXMLError(e.getMessage(), file, runtime));
-		  }
+      } catch (Exception e) {
+          System.err.println("[ERROR] Mtef2Xml: " + e.getMessage());
+          result.write(createXMLError(e.getMessage(), file, runtime));
+      }
         tree.endDocument();
         result.write(tree.getResult());
     }
