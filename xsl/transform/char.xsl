@@ -269,9 +269,6 @@
   </xsl:template>
   
   <xsl:template match="char[//mtef/mtef_version = '5' and typeface = (1 to 12)]">
-    <xsl:variable name="char">
-      <xsl:call-template name="charhex"/>
-    </xsl:variable>
     <xsl:variable name="element-name">
       <xsl:choose>
         <xsl:when test="variation='textmode'">mtext</xsl:when>
@@ -298,14 +295,11 @@
       <xsl:attribute name="fontfamily" select="//font_def[position() = $font/font_def]/font_name"/>
       <xsl:attribute name="default-font"/>
       <xsl:call-template name="mathsize"/>
-      <xsl:value-of select="$char"/>
+      <xsl:call-template name="charhex"/>
     </xsl:element>
   </xsl:template>
   
   <xsl:template match="char[//mtef/mtef_version = '3' and typeface = (1 to 12)]">
-    <xsl:variable name="char">
-      <xsl:call-template name="charhex"/>
-    </xsl:variable>
     <xsl:variable name="element-name">
       <xsl:choose>
         <xsl:when test="variation='textmode'">mtext</xsl:when>
