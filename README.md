@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/transpect/mathtype-extension.svg?branch=master)](https://travis-ci.org/transpect/mathtype-extension)
-
 # mathtype-extension
 
 An extension step for XML Calabash that converts a Mathtype Equation (MTEF) to MathML.
