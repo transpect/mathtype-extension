@@ -18,17 +18,16 @@
       <xsl:apply-templates mode="#current" select="@*"/>
       <xsl:for-each-group  select="node()"
         group-adjacent="(
-          .[
-            @mathvariant = 'normal' or self::mtext[not(@mathvariant)]
-          ][
-            not(preceding-sibling::*[1]/local-name() = ('mtext','mi')) 
-            or (every $a in ./@* except @mathvariant satisfies (
-              (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)
-              or
-              (some $pa in following-sibling::*[1]/@* satisfies $pa = $a)
-            ))
-          ]/local-name()[. = ('mtext', 'mi')], ''
-          )[1]">
+                         .[@mathvariant = 'normal' or self::mtext[not(@mathvariant)]]
+                          [not(following-sibling::*[1]/local-name() = ('msup','msub'))]
+                          [not(preceding-sibling::*[1]/local-name() = ('mtext','mi')) 
+                            or (every $a in ./@* except @mathvariant satisfies (
+                               (some $pa in preceding-sibling::*[1]/@* satisfies $pa = $a)
+                               or
+                               (some $pa in following-sibling::*[1]/@* satisfies $pa = $a)
+                             ))
+                           ]/local-name()[. = ('mtext', 'mi')], ''
+                           )[1]">
         <xsl:choose>
           <xsl:when test="current-grouping-key()">
             <xsl:element name="{current-grouping-key()}">
