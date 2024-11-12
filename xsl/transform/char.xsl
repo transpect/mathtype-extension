@@ -30,6 +30,9 @@
       <size>
         <xsl:choose>
           <xsl:when test="//mtef_version = 3"/>
+          <xsl:when test="//mtef_version = 5 and //eqn_prefs/sizes[1]/unit = 2">
+            <xsl:value-of select="$full-size, 'pt'" separator=""/>
+          </xsl:when>
           <xsl:when test="//eqn_prefs/sizes[1]/unit = 2">
             <xsl:text>12pt</xsl:text>
           </xsl:when>
