@@ -82,6 +82,47 @@
     </msub>
   </xsl:template>
   
+  <!-- Fix cases where mstyle is placed incorrectly and has no effect: 
+  
+       <munderover>                               <mstyle displaystile="block">
+         <mstyle displaystile="block">              <munderover>
+           <mo>∑</mo>                                 <mo>∑</mo>
+         </mstyle>                                    <mrow>    
+         <mrow>                                         <mi>i</mi>
+           <mi>i</mi>                                   <mo>=</mo>
+           <mo>=</mo>                                   <mn>1</mn>
+           <mn>1</mn>                                 </mrow>
+         </mrow>                                      <mn>13</mn>
+         <mn>13</mn>                                </munderover>
+       </munderover>                              </mstyle>
+  -->
+  
+  <xsl:template match="*[local-name() = ('msubsup', 
+                                         'munderover', 
+                                         'munder', 
+                                         'mover')][*[1][self::mstyle[@displaystyle]][*[1] = '&#x2211;']]" mode="clean-up" priority="5">
+    <xsl:variable name="display" select="mstyle[1]/@displaystyle" as="attribute(displaystyle)"/>
+    <mstyle displaystyle="{$display}">
+      <xsl:next-match/>
+    </mstyle>
+  </xsl:template>
+  
+  <xsl:template match="*[local-name() = ('msubsup', 
+                                         'munderover', 
+                                         'munder', 
+                                         'mover')]/*[1][self::mstyle[@displaystyle]]" mode="clean-up">
+    <xsl:choose>
+      <xsl:when test="@* except @displaystyle">
+        <xsl:copy>
+          <xsl:apply-templates select="@* except @displaystyle, node()" mode="#current"/>
+        </xsl:copy>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="*" mode="#current"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
   <!-- move malignmarks before the element which should be the reference for alignment -->
   
   <xsl:template match="*[following-sibling::*[1][self::malignmark]]" mode="clean-up">
